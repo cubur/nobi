@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-mist text-ink font-sans; }
+}
+
+@layer utilities {
+  /* iOS safe area bottom padding for fixed bottom nav */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* board grid pattern for backgrounds */
+.board-texture {
+  background-color: #DCB167;
+  background-image: linear-gradient(#B8944A 1px, transparent 1px),
+    linear-gradient(90deg, #B8944A 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* stone animations */
+.stone-placed { animation: stoneDrop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes stoneDrop {
+  0% { transform: scale(1.4); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
