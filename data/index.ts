@@ -3,12 +3,14 @@ import { ghostdraft } from "@/data/companies/ghostdraft";
 import { enginy } from "@/data/companies/enginy";
 import { tightly } from "@/data/companies/tightly";
 import { buzzboard } from "@/data/companies/buzzboard";
+import { kestra } from "@/data/companies/kestra";
 
 export const COMPANIES: Record<string, CompanyModule> = {
   ghostdraft,
   enginy,
   tightly,
   buzzboard,
+  kestra,
 };
 
 export function getCompany(slug: string): CompanyModule | undefined {
