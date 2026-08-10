@@ -2,313 +2,224 @@ import type { Unit } from "@/data/types";
 
 export const kestraUnit4: Unit = {
   id: "unit4",
-  title: "The Product Engineer Role",
+  title: "Building the AI Roadmap",
   description:
-    "What 'Product Engineer' actually means at an early-stage startup, how it differs from pure SWE and PM, and what shipping AI features full-stack looks like day to day.",
+    "How to structure Kestra's AI roadmap — the short-term wins vs. platform bets, how to communicate the roadmap to different audiences, and how to make the hard sequencing calls.",
   companySlug: "kestra",
   goTerm: "Amashi",
   goReading: "あまし",
   goMeaning:
-    "Remaining — the stones still to be played. A Product Engineer's job is to see what's left to build on the board and play it without waiting for permission.",
+    "Thickness — accumulated influence that doesn't score directly but constrains future possibilities. Platform AI investments are amashi: they don't ship features immediately, but they make every future AI feature easier to build and harder for competitors to match.",
   color: "crimson",
   lessons: [
     {
       id: "4-1",
       unitId: "unit4",
       companySlug: "kestra",
-      title: "Product Engineer vs. PM vs. SWE",
+      title: "The Kestra AI Roadmap Structure",
       tldr:
-        "A Product Engineer is a full-stack engineer with product judgment — they can spec, build, and ship a feature end-to-end without a PM writing requirements or a separate frontend/backend engineer. At Kestra's stage and size, this is the most efficient model for shipping AI features.",
-      skills: ["Role framing", "Startup engineering", "Scope ownership"],
-      xp: 20,
+        "A coherent AI roadmap has three layers: quick wins (visible value now), platform investments (infrastructure that compounds), and strategic bets (where to own the market). Learn how to balance all three.",
+      skills: ["Roadmap planning", "Prioritization", "Platform thinking"],
+      xp: 25,
       content: [
         {
-          heading: "What a Product Engineer actually does",
-          body: `The Product Engineer title means different things at different companies. At an early-stage startup like Kestra (post-Series A, growing fast), it typically means:\n\n**You write the code.** Unlike a PM, you don't hand off to engineers — you are the engineer. You implement the feature you design.\n\n**You own the product judgment.** Unlike a pure SWE, you don't wait for a PM to tell you what to build. You talk to users, read support tickets, watch usage data, and form opinions about what matters. Then you build it.\n\n**You work across the stack.** A backend engineer who needs a frontend colleague to add a button is a bottleneck. A Product Engineer ships the backend change AND the frontend change in the same PR.\n\n**You ship to production.** The job posting says "production-level experience, not prototype portfolios." This is the most important phrase in the entire description. They've been burned by candidates who demo well but can't operate their code at scale, handle edge cases, write tests, or think about performance and reliability.\n\n**The day-to-day at Kestra:** read a user request or identify a gap in the AI features. Write a brief spec (often a GitHub issue or internal doc). Implement the backend (Java + Micronaut): new task plugin, new API endpoint, new DB migration. Implement the frontend (Vue.js): new UI component, new dashboard view. Write tests. Code review with a colleague. Ship. Iterate based on user feedback.`,
+          heading: "Three layers of an AI roadmap",
+          body: `**Layer 1: Quick wins (0–3 months)**\nFeatures that deliver visible customer value without deep platform investment. They validate that Kestra is serious about AI, generate early feedback, and give engineering a manageable scope to start.\n\nExamples for Kestra:\n- First-party LLM task types (Anthropic, OpenAI, Bedrock) with production-ready defaults: retry, timeout, structured output parsing\n- Per-run AI cost logging (token usage + cost added to execution metadata)\n- AI-assisted flow debugging: on task failure, call an LLM with the error and recent logs to suggest root cause\n\n**Layer 2: Platform investments (3–9 months)**\nInfrastructure that doesn't ship as a customer-visible feature immediately but makes the next 12 months of AI features much easier to build. Often the most important and most undervalued layer.\n\nExamples for Kestra:\n- Eval framework integration: native support for running eval datasets against a flow, tracking accuracy over time\n- Human-in-the-loop as a first-class task type: pause/resume workflow pending external approval, with timeout and escalation\n- AI-specific observability: per-step agent execution traces, cost and latency dashboards at the flow level\n\n**Layer 3: Strategic bets (9–18 months)**\nLarger investments where Kestra can potentially own a market position if they move early enough.\n\nExamples for Kestra:\n- Agent-as-workflow: a native agent loop task type that makes Kestra the default orchestration layer for production AI agents\n- AI workflow marketplace: community-contributed and Kestra-curated blueprints with quality signals and usage stats\n- AI governance layer: audit trail, prompt versioning, model version pinning for regulated industries`,
           goAnalogy: {
-            term: "Kodawari",
-            reading: "こだわり",
+            term: "Myōshu",
+            reading: "みょうしゅ",
             meaning:
-              "Attachment — the tendency to over-invest in a local fight. A Product Engineer must avoid kodawari: don't perfect a feature in isolation, ship it, learn from real users, and iterate.",
+              "A brilliant or unexpected move that dramatically changes the position. Strategic bets are potential myōshu: if the timing is right and competitors haven't seen it coming, a well-executed platform bet can reframe the entire competitive landscape.",
           },
         },
         {
-          heading: "Why this role exists at Kestra's stage",
-          body: `Kestra has 25M in Series A funding and is growing. They need to ship fast — particularly AI features, which are the current market priority.\n\n**The alternative staffing model:** hire a PM to spec features + a backend engineer + a frontend engineer. Three people, lots of handoffs, slower cycles, higher cost.\n\n**The Product Engineer model:** one person who understands the product, writes backend code, writes frontend code, and ships end-to-end. Faster cycles, lower overhead, more ownership.\n\n**Why it works at this stage:** Kestra's product surface isn't so complex that it requires deep specialization everywhere. A Product Engineer who can write solid Java plugins AND basic Vue.js UI covers 80% of AI feature development without needing a separate frontend engineer for every PR.\n\n**What this means for you as a candidate:**\n- Don't pitch yourself as "primarily backend" or "primarily product" — pitch as full-stack with product judgment\n- Show you can move from idea → spec → implementation → ship independently\n- Show you've done this with AI/LLM features specifically — not just designed them\n- "Production-level experience" means: your code runs at scale, you've dealt with real failures, you've had to optimize, you've written the tests\n\n**The risk they're hiring against:** someone who's great at prototyping but writes fragile code that breaks in production, or someone with good product instincts but too slow to implement without a team doing the work.`,
+          heading: "How to sequence the roadmap",
+          body: `The hard part of roadmap planning isn't identifying the right things to build — it's sequencing them given limited engineering capacity and competing customer pressures.\n\n**Sequencing principles for AI features:**\n\n**1. Platform before features (usually)**\nBuilding AI features on top of weak platform foundations creates technical debt that's expensive to unwind. Shipping the first LLM task type with proper retry, cost logging, and structured output parsing upfront means every future AI feature inherits those properties. Skipping the platform work means every feature has its own bespoke retry logic.\n\n**2. Instrumentation before optimization**\nYou can't optimize what you can't measure. Build cost and latency instrumentation before optimizing cost and latency. Build eval infrastructure before tuning accuracy. Data comes before decisions.\n\n**3. Validated pain before innovative features**\nBuild for the pain you've validated in customer interviews before building for the pain you've hypothesized from market analysis. Your hypotheses might be right, but validated pain has lower risk.\n\n**4. Anchor customer before broad release**\nFor novel AI features, find one design partner customer who will use it seriously and give honest feedback before broad launch. Their usage patterns will teach you more than 3 more months of internal spec work.\n\n**5. Internal before external**\nSome AI features (AI-assisted flow generation, AI debugging assistant) can be tested internally on Kestra's own workflows before shipping to customers. Internal usage surfaces failure modes cheaply.`,
         },
         {
-          heading: "The collaboration model",
-          body: `Even though a Product Engineer works more autonomously than a typical engineer, collaboration is constant:\n\n**With product/design:** Kestra likely has a product function even at this size. The Product Engineer collaborates on roadmap and priorities, gets design direction on major features, and flags product trade-offs. But they don't wait for a requirements document — they shape the spec themselves.\n\n**With backend engineers:** for features that require deep architectural changes (new Kafka topic, new Elasticsearch index mapping, changes to the execution model), the Product Engineer works closely with Kestra's backend engineers. They don't work in isolation on infrastructure changes.\n\n**With the AI team:** Kestra likely has an AI-focused engineering function (or this role IS that function). Prompt design, model selection, eval frameworks — these are collaborative decisions even if the Product Engineer implements them.\n\n**With users:** the job posting says "collaborate closely with product and backend teams on rapid feature releases" and "create product interfaces and documentation making AI workflows accessible." This implies user-facing communication — you may write documentation, run user calls, or engage with the open-source community on GitHub/Discord.\n\n**The founder chat (4th interview stage):** the final round is a founder discussion. This tells you Kestra's founders care personally about AI direction. Be ready to discuss AI product strategy — what you'd build, why, and in what order. Show you think like a founder, not just a feature implementer.`,
+          heading: "The roadmap communication problem",
+          body: `A Kestra AI roadmap will be read by four very different audiences. The same roadmap document doesn't work for all four:\n\n**Engineering:** wants specificity — what to build, what the success criteria are, how it fits with the existing codebase, what not to build\n\n**Sales:** wants stories — "what can I tell a customer this quarter?" and "what's coming that I can use in a Q4 deal?"\n\n**Investors:** wants the narrative — where is the market going, how does Kestra win, what does success look like in 18 months?\n\n**Customers (design partners):** want to know when their specific pain will be addressed — not the full roadmap, just their slice\n\n**The PM skill:** translate the same underlying decisions into language that works for each audience. An engineering spec becomes a sales one-pager becomes an investor slide becomes a customer commitment. The underlying decisions are the same; the framing is different.\n\n**The one thing to avoid:** making commitments to customers that aren't reflected in the engineering roadmap. Customer expectations set by sales conversations that aren't backed by committed engineering work create trust debt that's very expensive to repay.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "Kestra's job posting says 'production-level experience, not prototype portfolios.' What specific evidence would demonstrate production-level experience with AI features?",
+            "You have 3 engineering sprints (6 weeks). Option A: ship 4 quick-win AI features (LLM task types for the top 4 providers). Option B: build the eval framework infrastructure that all future AI features will depend on. No additional engineering capacity is available. Which do you choose and why?",
           options: [
-            "A GitHub repo with a well-documented LLM demo app that got stars",
-            "Evidence of shipping an LLM-powered feature to real users: handling rate limits, writing retry logic, adding latency monitoring, dealing with model version changes, and measuring real-world quality",
-            "Fine-tuning a language model and publishing the results",
-            "Completing the Anthropic API quickstart tutorial and building a chatbot",
+            "Option A — 4 features shipped is visible progress; infrastructure is invisible to customers",
+            "Option B — if the eval framework doesn't exist, you have no way to know if Option A's features meet quality thresholds before or after shipping. Building features without eval infrastructure creates unmeasurable quality risk",
+            "Option A — quick wins generate customer feedback that informs what infrastructure to build",
+            "Split the time: 3 sprints on one provider's LLM task type, done properly with eval framework included",
           ],
-          correct: 1,
+          correct: 3,
           explanation:
-            "Production experience means your code ran with real users, at real scale, with real failure modes. Prototype experience ends at the demo. The difference shows in whether you've written retry logic for rate limits, added latency P95 monitoring, handled context window overflows gracefully, or dealt with model deprecations mid-service.",
+            "Option D is the right answer: scope one feature and do it properly, rather than four features without the infrastructure to measure them. An LLM task type built with a basic eval framework (test against 50 canonical examples, track accuracy in CI) ships with a quality signal. Four LLM task types shipped without any eval infrastructure ship with unknown quality. The instinct that 'infrastructure is invisible' is wrong — the quality problems it prevents are very visible to customers.",
         },
         {
           type: "multiple-choice",
           question:
-            "You've identified that Kestra's existing AI task plugin for calling LLMs doesn't support streaming output. Users want to see partial responses in the execution log viewer. Who do you talk to first?",
+            "A sales rep commits to a customer: 'Kestra will have AI flow generation by end of Q3.' You haven't committed to that timeline. What do you do?",
           options: [
-            "The product manager — to get it prioritized on the roadmap",
-            "The frontend engineer — streaming requires UI changes before the backend matters",
-            "Check if streaming is architecturally feasible in Kestra's task execution model, then raise it with backend engineers if the plugin architecture needs changes and with the product function if it needs roadmap prioritization",
-            "File a GitHub issue and wait for community feedback before investing time",
+            "Adjust the roadmap to hit Q3 — sales commitments are revenue-critical",
+            "Tell the customer the timeline is wrong",
+            "Have a direct conversation with the sales rep: explain the actual timeline, understand what they told the customer, agree on how to reset the customer's expectations, and establish a process to prevent unilateral timeline commitments in the future",
+            "Put AI flow generation on the roadmap but deprioritize other items to make it fit",
           ],
           correct: 2,
           explanation:
-            "Product Engineering is sequenced: architecture first (can we do it?), then technical scoping (what needs to change?), then product alignment (is it worth the investment now?). Starting with the PM assumes someone else will make the feasibility call — a Product Engineer owns that judgment.",
-        },
-        {
-          type: "multiple-choice",
-          question:
-            "The founder interview (stage 4) asks: 'What would you build first if you started next Monday?' What's the strongest framing?",
-          options: [
-            "Say you'd spend the first week learning the codebase before committing to any direction",
-            "Name a specific AI feature, explain why it's the highest-leverage first move based on user needs and Kestra's strategic position, and outline the implementation approach",
-            "Ask what the founders think is most important, then align your answer to their answer",
-            "Describe a general framework for prioritization rather than committing to a specific feature",
-          ],
-          correct: 1,
-          explanation:
-            "Founders hire Product Engineers for judgment and initiative. 'I'd spend the first week learning' signals execution-first thinking; founders want someone who comes with opinions. Aligning your answer to theirs is sycophancy, not strategy. A frameworks answer is generic — the right answer is specific, opinionated, and shows you've thought about their product deeply.",
+            "The sales-PM misalignment is the issue to fix, not the customer commitment to honor at any cost. Adjusting the roadmap to hit an uncommitted timeline creates false urgency that hurts other customers and the team. Telling the customer the timeline is wrong without coordinating with sales is bad process. The right move is to fix the root cause (uncoordinated customer commitments) and reset the customer expectation together with sales, with a clear explanation of the actual timeline and what the customer will get by when.",
         },
       ],
-      resources: [
-        {
-          title: "What Is a Product Engineer? (Posthog Blog)",
-          url: "https://posthog.com/blog/what-is-a-product-engineer",
-          description: "PostHog's definition of the product engineer role — highly applicable to Kestra's model.",
-        },
-        {
-          title: "Kestra GitHub Repository",
-          url: "https://github.com/kestra-io/kestra",
-          description: "Read the codebase. Issues and PRs show you what's being built and what's needed.",
-        },
-      ],
+      resources: [],
     },
     {
       id: "4-2",
       unitId: "unit4",
       companySlug: "kestra",
-      title: "Shipping AI Features: From Prototype to Production",
+      title: "The Async Technical Homework",
       tldr:
-        "The gap between a working prototype and a production AI feature is where most engineers fail. Reliability, observability, security, performance, and testability are what separate hobby projects from code Kestra can ship to enterprise customers.",
-      skills: ["Production engineering", "AI reliability", "Security basics"],
+        "Kestra's interview process includes an asynchronous homework assignment. For a PM role, this is almost certainly a product exercise — a case study, product analysis, or spec-writing task. Here's how to approach it.",
+      skills: ["Interview prep", "Product exercise", "Case study thinking"],
       xp: 30,
       content: [
         {
-          heading: "The production checklist for AI features",
-          body: `Before an AI feature is production-ready at Kestra, it should satisfy:\n\n**Reliability**\n- Retry logic for transient LLM API errors (429, 503, 500) with exponential backoff\n- Configurable timeout — no LLM call runs indefinitely\n- Circuit breaker — if the LLM API is consistently failing, fail fast instead of hammering it\n- Graceful degradation — if the AI feature fails, what does the user see? An error? A fallback response? The non-AI version of the same feature?\n\n**Observability**\n- Every LLM call logs: model, token count, latency, success/failure\n- Cost tracking per call and aggregated per namespace\n- Error rate and latency metrics exported to Kestra's metrics system\n- Execution-level traces: for debugging, you can see exactly what the LLM was sent and what it returned\n\n**Security**\n- API keys stored in Kestra's secret management, never in code or YAML\n- LLM responses validated before being used downstream — don't trust raw model output as safe input to other systems\n- Prompt injection protection — user-supplied inputs that reach LLM prompts should be escaped or sandboxed\n- PII handling — if user data flows through an LLM API, what are the privacy implications? Is this in the ToS?\n\n**Performance**\n- P50 and P95 latency targets defined and monitored\n- Caching for repeated identical requests (same flow + same input = same LLM call — cache the result)\n- Async where user-blocking latency is unacceptable\n\n**Testability**\n- Unit tests mock the LLM API — don't make real API calls in tests\n- Integration tests validate the full plugin against a real or stub LLM endpoint\n- An eval suite for prompt quality — regression testing that output quality doesn't degrade with changes`,
+          heading: "What the homework likely involves",
+          body: `The posting says stage 2 is an "asynchronous technical homework assignment." For a Product Manager, AI role, this is almost certainly one of:\n\n**Option A: Product analysis**\n"Here is a specific part of Kestra. Identify the biggest product gaps and how you'd prioritize addressing them. What would you build first and why?"\n\n**Option B: Customer scenario**\n"Here is a customer use case. Write a product spec for how Kestra should address it."\n\n**Option C: Market / competitive analysis**\n"How should Kestra position its AI strategy given the current competitive landscape? What should be on the AI roadmap and in what order?"\n\n**Option D: Specific AI product design**\n"Design a feature for Kestra that helps users build and maintain AI agent workflows. Define the requirements, UX, success metrics, and launch plan."\n\n**What they're evaluating in all cases:**\n- Product thinking quality: can you identify real problems vs. surface symptoms?\n- Decisiveness: can you make and defend a clear call about what to build first?\n- Technical fluency: do you understand the AI and orchestration concepts well enough to propose something implementable?\n- Communication: is the document clear, concise, and organized?\n- Judgment: do you know what not to include?`,
           goAnalogy: {
-            term: "Shikatanai",
-            reading: "しかたない",
+            term: "Shicho",
+            reading: "しちょう",
             meaning:
-              "It cannot be helped — accepting an unavoidable loss to fight better elsewhere. Some production complexity is shikatanai: retry logic, timeout handling, and security checks are non-negotiable costs of shipping AI features reliably.",
+              "A sequence of moves where the outcome is determined by distant board conditions you can't see in the immediate position. The homework assignment is shicho: your answer's quality is determined by the context you've built across all your preparation, not just your response to the prompt.",
           },
         },
         {
-          heading: "Writing testable Java AI plugins",
-          body: `Testing AI plugins in Java requires a specific approach because you can't (and shouldn't) make real LLM API calls in unit tests.\n\n**The dependency injection pattern:** design your plugin's LLM client as an injected dependency, not a static instance. In production, inject the real client. In tests, inject a mock.\n\n\`\`\`java\npublic class LlmChat extends Task implements RunnableTask<Output> {\n    // ...\n    \n    // Package-private for test injection\n    LlmClient client;\n    \n    @Override\n    public Output run(RunContext runContext) throws Exception {\n        if (client == null) {\n            client = LlmClient.fromSecret(\n                runContext.render(this.apiKeySecret));\n        }\n        // Use client...\n    }\n}\n\`\`\`\n\n**Mocking strategy:** use Mockito to mock the LlmClient. Define expected inputs, set up mock responses for the happy path and error paths, and verify behavior without network calls.\n\n**Testing failure modes:** write explicit tests for:\n- 429 rate limit response → expect retry with backoff\n- 503 server error → expect retry up to maxRetries, then throw\n- Empty response body → expect fallback behavior or error\n- Response exceeds maxTokens → expect truncation handling\n- Malformed JSON in structured output → expect validation error\n\n**Integration tests:** run against a stub server (WireMock is excellent for this) that simulates the LLM API. Test the full HTTP interaction without real API costs. Include tests that simulate slow responses (to validate timeout behavior) and intermittent failures (to validate retry behavior).`,
+          heading: "How to structure a strong product exercise response",
+          body: `Regardless of the specific prompt, this structure works:\n\n**1. Restate the problem (1 paragraph)**\nShow you understood what was asked. Briefly note any assumptions you're making.\n\n**2. Frame your analysis (1 paragraph)**\nWhat lens are you using? (Customer pain? Market opportunity? Platform strategy?) Why is that the right frame?\n\n**3. The analysis (the main body)**\nFor product analysis: identify 3-5 gaps, explain why they matter, briefly dismiss the ones you're not prioritizing\nFor customer scenario: define the problem clearly, describe the solution, explain the design decisions\nFor market analysis: describe the landscape, identify Kestra's position, propose the strategic direction\n\n**4. The recommendation (clear and direct)**\nWhat's the one thing you'd build first? Why? Be decisive. "I would prioritize X because Y, which I expect to result in Z" is better than "there are several options, each with merits..."\n\n**5. What you'd need to validate (1-2 bullets)**\nShow that you know your recommendation is a hypothesis, not a certainty. What would you need to learn to confirm it?\n\n**6. What you explicitly chose NOT to do and why**\nThis demonstrates the "decisive calls about what not to build" judgment the posting calls out.\n\n**Format guidelines:**\n- Shorter is better. 2-4 pages well-organized beats 10 pages comprehensive\n- Use headers so the reviewer can skim\n- Be specific about Kestra — show you've done your homework on the actual product\n- No generic AI PM frameworks without Kestra-specific application`,
         },
         {
-          heading: "Security: what Kestra enterprise customers require",
-          body: `Kestra sells to enterprise customers. Enterprise AI security requirements are specific and non-negotiable:\n\n**Secret management:** LLM API keys must be stored in Kestra's secret management system (which integrates with AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault). A plugin that accepts an API key as a plaintext field in YAML will fail a security review. The correct pattern: accept a \`secretKey\` field that names a secret, resolve the actual key value at runtime via \`runContext.decryptSecret()\`.\n\n**Data residency:** enterprise customers may require that no data leaves their region. Kestra's AI features should support routing LLM calls through enterprise-contracted endpoints (AWS Bedrock, Azure OpenAI Service) rather than only supporting public API endpoints. The plugin should accept an endpoint URL as a configuration option.\n\n**Prompt injection:** if user-controlled data (a file name, a database value, a user message) is inserted into an LLM prompt, a malicious input could change the prompt's instructions. Mitigations: treat user data as data (not instructions), use structured input formats, and validate that outputs match expected schemas before using them downstream.\n\n**PII and data privacy:** if a Kestra flow passes customer data through an LLM API, does the API provider's ToS allow this? Is this data used for training? For enterprise customers with GDPR obligations, using a public LLM API for customer data may be a legal issue. The feature design should expose data privacy controls and support private deployment options.\n\n**Audit logging:** enterprise customers need to know what data was sent to which LLM, when, from which execution. Kestra's execution history provides this if LLM call metadata (model, token count, timestamp) is included in the task output — design for this from day one.`,
+          heading: "Common homework mistakes to avoid",
+          body: `**1. Listing features instead of making a call**\n"Kestra could build LLM task types, eval frameworks, agent loop support, AI debugging, flow generation, anomaly detection..." This is not a product analysis — it's a feature list. The evaluator wants to know which one you'd build first and why, not all the things you could imagine.\n\n**2. Generic AI PM language without Kestra specifics**\n"AI features should have clear success metrics, handle failure gracefully, and be evaluated against an eval set." True, but not insightful. Apply this to a specific Kestra feature with specific metrics and specific failure modes.\n\n**3. Hedging the recommendation**\n"It depends on business priorities and customer feedback before committing." This signals you can't make a call under ambiguity. Make the call, state your assumptions, show you know it's a hypothesis.\n\n**4. Ignoring the competitive context**\nA Kestra AI roadmap recommendation that doesn't account for what Airflow, Prefect, and Temporal are doing misses a key dimension. Show you understand the landscape.\n\n**5. Over-engineering the format**\nA beautifully formatted 15-page document with charts and tables is a signal of over-investment in form. A clear 3-page document with sharp thinking is more impressive. Kestra is a startup — they want to see signal-to-noise, not comprehensive coverage.`,
         },
       ],
       exercises: [
         {
-          type: "multiple-choice",
-          question:
-            "A Kestra AI plugin makes an LLM API call that returns a 429 (rate limit) error. What is the correct production behavior?",
-          options: [
-            "Immediately fail the task with a FAILED status and notify the user",
-            "Retry with exponential backoff (wait 1s, then 2s, then 4s), up to a configurable max retry count, then fail if all retries are exhausted",
-            "Retry immediately in a tight loop until the rate limit clears",
-            "Switch to a different LLM provider automatically",
+          type: "scenario",
+          prompt:
+            "The homework prompt is: 'Kestra is investing in AI. What should the first AI feature be, and why? Write a brief recommendation.' Write the core of your answer.",
+          sampleAnswer:
+            "**Recommendation: First-party LLM task type with production defaults.**\n\n**Why:** Every other AI feature Kestra will build depends on having a reliable, observable, cost-tracked way to call an LLM. The first AI feature should be the foundation, not a use-case-specific feature on top of nothing.\n\n**What it includes:** Native task types for the top 3 LLM providers (Anthropic, OpenAI, AWS Bedrock). Each task type ships with: configurable retry with exponential backoff, token + cost logging to execution metadata, structured output parsing with validation, timeout and rate limit handling, and secret management for API keys. Template blueprints for the 3 most common use cases: text classification, document summarization, and data extraction.\n\n**Why these defaults matter:** Customers who build AI workflows on top of a basic HTTP task type (which Kestra already has) will implement their own retry, their own cost logging, their own output parsing — inconsistently. First-party task types with production defaults eliminate this fragmentation and make Kestra's AI story coherent: 'Kestra handles the hard parts, you focus on the business logic.'\n\n**Success metric:** 3 months post-launch, >20% of active Kestra organizations have at least 1 flow using a first-party LLM task type. Average time from account creation to first LLM task execution <4 hours (documentation quality proxy).\n\n**What I'm not recommending first:** AI flow generation (impressive demo, unclear production value), AI debugging assistant (high complexity, unclear quality threshold), or agent loop support (important, but better as the second feature once the base LLM task types are proven).",
+          keyPoints: [
+            "Lead with the recommendation, then the reasoning — don't bury the conclusion",
+            "Be specific about what the feature includes, not just what it is",
+            "Include a concrete success metric that's measurable at the 3-month mark",
+            "Explicitly say what you're not recommending and why — this is part of the evaluation",
           ],
-          correct: 1,
-          explanation:
-            "429s are transient — the API is asking you to slow down, not stop. Exponential backoff gives the rate limit window time to clear while not hammering the API. Tight loops make rate limits worse. Failing immediately on first 429 is too aggressive for transient errors. Configurable max retries lets users tune the behavior per task.",
         },
         {
           type: "multiple-choice",
           question:
-            "An enterprise customer says their GDPR policy prohibits sending any customer data to third-party LLM APIs. What plugin design feature addresses this requirement?",
+            "The homework prompt asks: 'How should Kestra compete with Airflow for AI workflow customers?' What's the weakest response to this prompt?",
           options: [
-            "Add a 'gdpr_mode: true' flag that strips all data from the LLM call",
-            "Support configurable endpoint URLs — the customer can point the plugin at Azure OpenAI Service or AWS Bedrock (their own contracted, region-locked deployment) instead of the public API",
-            "Encrypt the data before sending it to the LLM API",
-            "Add a PII detection step that redacts sensitive fields before the LLM call",
+            "'Kestra's YAML model is more accessible to non-Python engineers, which is an advantage for AI workflows that span multiple teams'",
+            "'Kestra should build better observability for AI runs, including per-step cost tracking and LLM-specific metrics, which Airflow's plugin ecosystem can't provide as a cohesive experience'",
+            "'Kestra should undercut Airflow on pricing to attract users who are price-sensitive'",
+            "'Kestra should focus on the agent workflow use case where Airflow's Python-centric model is a genuine disadvantage — agent loops are easier to express in YAML task sequences than in Python DAGs'",
           ],
-          correct: 1,
+          correct: 2,
           explanation:
-            "Configurable endpoints let enterprise customers route LLM calls through their own contracted deployments (Azure OpenAI, AWS Bedrock) where data stays in their cloud tenant under their data processing agreements. Encryption doesn't solve the 'data leaves our control' concern; PII redaction is a partial measure that may not satisfy legal requirements.",
-        },
-        {
-          type: "multiple-choice",
-          question:
-            "You're testing a new Kestra LLM task plugin. Why should unit tests NOT make real API calls to OpenAI or Anthropic?",
-          options: [
-            "Real API calls are too slow for unit tests and create non-deterministic results that make tests flaky — use mocks that return controlled responses to test behavior reliably",
-            "LLM API providers prohibit API usage in automated test environments",
-            "Java test frameworks can't handle async HTTP responses from LLM APIs",
-            "API calls in tests would consume the team's production API quota",
-          ],
-          correct: 0,
-          explanation:
-            "Real API calls in unit tests create two problems: (1) they're non-deterministic — the model's response changes between runs, making test assertions unreliable; (2) they're slow and flaky due to network latency and potential API outages. Mock the LLM client, define exact mock responses for each test case, and test behavior against those deterministic inputs.",
+            "Pricing competition is the weakest strategic response — it's purely reactive, doesn't create defensible differentiation, and doesn't address why Kestra wins on product merits. The stronger answers all identify specific product advantages (YAML accessibility, coherent observability, agent workflow fit) that are hard for Airflow to copy quickly because they're architectural. A PM who recommends price competition as the primary competitive strategy is not thinking at the right level of abstraction.",
         },
       ],
-      resources: [
-        {
-          title: "WireMock: API Stubbing for Java Tests",
-          url: "https://wiremock.org/docs/getting-started/",
-          description: "The standard tool for stubbing HTTP APIs in Java integration tests — essential for LLM plugin testing.",
-        },
-        {
-          title: "OWASP LLM Top 10",
-          url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
-          description: "Security risks specific to LLM applications — prompt injection, data leakage, and more.",
-        },
-      ],
+      resources: [],
     },
     {
       id: "4-3",
       unitId: "unit4",
       companySlug: "kestra",
-      title: "Full-Stack Feature Development: End-to-End",
+      title: "Demonstrating Shipped AI Products",
       tldr:
-        "Walking through a complete AI feature from backend plugin to frontend UI to documentation — the full cycle of what a Kestra Product Engineer ships in a single sprint.",
-      skills: ["End-to-end feature development", "API design", "Documentation"],
-      xp: 25,
+        "How to present your AI product experience in a way that passes Kestra's explicit bar: real shipped products with real trade-offs, not demos and prototypes. The framing, the specifics, and the stories.",
+      skills: ["Self-positioning", "STAR stories", "AI product portfolio"],
+      xp: 20,
       content: [
         {
-          heading: "A complete feature: the LLM Summarize task",
-          body: `Let's walk through building a real feature: a \`LlmSummarize\` task that takes a long text input and returns a structured summary with key points and a word count. This demonstrates the full Product Engineer workflow.\n\n**Step 1: Spec the feature**\n- User need: Kestra flows that process long documents (PDFs, web pages, logs) need a way to summarize them before downstream tasks. Today users write custom Python scripts; we want a first-class plugin.\n- Input: text (dynamic, from previous task output), maxWords (int, default 200), outputLanguage (string, default "en")\n- Output: summary (string), keyPoints (string[]), wordCount (int), inputTokens (int), outputTokens (int)\n- Failure modes: text too long for context window → truncate with warning; LLM API failure → retry 3× then fail\n- Security: API key via secret reference, never plaintext\n\n**Step 2: Java backend — the plugin**\n- Create a new Java class in the \`plugin-ai\` module extending \`Task\`\n- Annotate fields with \`@Schema\` and \`@PluginProperty\`\n- Implement \`run(RunContext)\`: render dynamic properties, build the LLM client, make the API call with a structured output schema, parse the JSON response, return the Output object\n- Write unit tests: happy path, context overflow, API failure, structured output parsing\n- Write integration test against WireMock stub\n\n**Step 3: API exposure (if needed)**\nFor this feature, no new API endpoint is needed — the plugin is invoked by the task execution engine. If you were building a flow generation feature, you'd add a new REST endpoint here.\n\n**Step 4: Frontend — Vue.js UI**\nFor a task plugin, the frontend work is in the flow editor's auto-complete and the execution detail view. The plugin's \`@Schema\` annotations are consumed by Kestra's UI to generate form inputs in the flow editor. No manual Vue work needed for basic plugin UI — Kestra generates it. Custom UI work is needed for features like a dedicated summarization panel or a streaming output viewer.`,
+          heading: "The Kestra credibility bar",
+          body: `Kestra's posting is unusually specific: they've seen candidates with only demo/prototype experience and they're explicitly filtering them out. This means they're going to probe your AI experience until they find the edges.\n\n**What probe questions sound like:**\n- "You mentioned shipping an AI feature. How did you measure whether it was working?"\n- "What happened when you changed the prompt or model? How did you know it was still safe to ship?"\n- "Tell me about a time the AI feature behaved unexpectedly in production. What did you do?"\n- "How did you decide the accuracy was good enough to ship without a human review gate?"\n- "What did it cost to run at scale? How did you model that before launch?"\n\n**The pattern:** every probe is asking for specifics that only a PM with real production experience would know. If you can answer all of these with concrete details — actual numbers, actual incidents, actual decisions — you pass. If you generalize ("we had monitoring in place, we measured accuracy regularly"), you signal demo-level experience.\n\n**Preparation strategy:** for each AI product you've worked on, write down the answers to all six probe questions above. These become your stories. If you can't answer some of them, that product may not be a strong example to lead with.`,
           goAnalogy: {
             term: "Yose",
             reading: "よせ",
             meaning:
-              "Endgame — where accumulated advantage converts to concrete points. Shipping a complete feature is yose: every prior step (design, backend, frontend, tests, docs) converts to user value.",
+              "Endgame — converting accumulated board position into concrete points. The interview is yose: converting your real production experience (the accumulated position) into concrete, specific answers that score points.",
           },
         },
         {
-          heading: "Writing documentation that converts",
-          body: `The job posting says "create product interfaces and documentation making AI workflows accessible." Documentation is not an afterthought at Kestra — it's part of the product.\n\nKestra's users include:\n- Experienced engineers who want reference docs (parameter names, types, defaults)\n- New users who need tutorials (step-by-step examples with real YAML)\n- Decision-makers evaluating Kestra who read blog posts (use case narratives)\n\n**For a new AI plugin, documentation includes:**\n\n**Reference docs** — every parameter, its type, whether it's required, its default, and a one-line description. Generated from \`@Schema\` annotations but needs a human editing pass for clarity.\n\n**Example flows** — 2–3 complete YAML flow examples showing the plugin in realistic contexts:\n- "Summarize a web page" — fetch URL → extract text → summarize → store result\n- "Summarize all new documents in S3" — S3 event trigger → for each file: read → summarize → store\n- "Summarize with custom prompt" — using systemPrompt override for domain-specific summarization\n\n**Quickstart guide** — a tutorial that takes a new user from zero to a working summarization flow in under 10 minutes. Clear prerequisites (what secrets you need, what namespace to create), exact YAML to copy-paste, how to run it, how to read the output.\n\n**Blog post** — for new AI capabilities, a blog post that explains the use case, shows the YAML, and demonstrates the output. Drives SEO and community adoption.\n\nAs a Product Engineer, you write all of this. Documentation is part of the definition of done.`,
+          heading: "Structuring your AI product stories",
+          body: `For each significant AI product you've worked on, prepare a story with these components:\n\n**The context (30 seconds):**\n"At [company], I owned [product/feature]. The business problem it solved was [X]. The users were [Y].\"\n\n**The AI approach (1 minute):**\n"We used [model/approach] to [task]. The input was [X], the output was [Y]. We chose this approach because [specific reason: cost, latency, accuracy, existing infrastructure]."\n\n**The production challenge (1-2 minutes — this is the important part):**\nPick ONE real challenge from: quality issues, cost surprises, model API changes, distribution shift, user trust building, edge cases, accuracy degradation, or rollback decisions. Describe:\n- What happened specifically\n- How you detected it\n- What decision you made and why\n- What the outcome was\n\n**The metrics (30 seconds):**\n"We measured success by [metric]. At launch we were at [X]. After [N] months/iterations we achieved [Y]."\n\n**What you'd do differently (30 seconds):**\nThis shows self-awareness and continued learning. "Looking back, I'd have [built the eval framework earlier / chosen a different model for the scale we reached / set a stricter accuracy bar before removing the human review gate]."\n\n**The key:** the production challenge section is what distinguishes real experience from demos. Demos don't have production challenges. Production AI does.`,
         },
         {
-          heading: "The prototype-to-production timeline",
-          body: `The job posting says "prototype agent use cases quickly." Understanding the timeline from quick prototype to shippable production feature is important for planning:\n\n**Day 1–2: Prototype**\nA Python script (or rough Java main method) that calls the LLM API and returns the result. Good enough to demo to the team and validate the concept. No error handling, no tests, no documentation. Goal: does the AI approach work at all?\n\n**Day 3–5: Plugin implementation**\nConvert the prototype into a proper Kestra plugin: annotations, proper input/output classes, secret management, basic error handling. Write happy-path unit tests. Internally reviewable.\n\n**Day 5–7: Production hardening**\nAdd retry logic, timeout, context overflow handling, cost tracking outputs. Write failure-case unit tests. Write integration test against WireMock stub. Code review with a backend engineer. Address review feedback.\n\n**Day 7–9: Documentation**\nWrite reference docs (mostly from annotations), 2 example flows, quickstart guide. Have a colleague follow the quickstart cold to verify it works.\n\n**Day 9–10: Ship**\nMerge, deploy, announce in changelog/Discord/blog. Monitor error rate and latency for the first 48 hours. Fix any production issues immediately.\n\n**Total: ~2 weeks for a solid new AI task plugin.** The prototype takes 2 days; production-readiness takes the remaining 8. This is the ratio to internalize: prototyping is fast, production is the real work.`,
+          heading: "If your AI experience is limited: what to do",
+          body: `If you're honest with yourself and your AI product experience is closer to the prototype end of the spectrum — there are still ways to prepare and present authentically:\n\n**Build something before the interview**\nIn 2–4 weeks, you can build a real (small-scale) AI workflow using Kestra, deploy it, run it for a few weeks, and measure it. It doesn't need to be impressive in scope — a workflow that classifies 50 GitHub issues per day using an LLM and tracks accuracy weekly is more credible than a theoretical description of what you'd build. This gives you production experience to speak from, even if limited.\n\n**Go deep on orchestration and AI architecture**\nThe posting allows for "technical fluency without coding." You can demonstrate genuine depth on: how LLM APIs work in production (rate limits, token costs, structured output), what makes an eval framework valid, why agent workflows fail at scale, and what production AI observability requires. This depth signals you understand the space even if your personal portfolio is limited.\n\n**Be honest about depth, confident about direction**\n"I've worked with AI at the workflow level but haven't owned the eval infrastructure myself — here's how I think about it and what I'd build" is stronger than overstating experience that gets probed away in the next question. Kestra is looking for intellectual honesty and good judgment, not a fabricated resume.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "Kestra's LlmSummarize plugin needs to handle text inputs up to 100,000 tokens, but the chosen model has a 200K context window including the system prompt (2,000 tokens) and output (1,000 tokens). What's the effective maximum input text length?",
+            "You're asked: 'Tell me about a time an AI feature you worked on failed or underperformed.' You have a story about a feature where accuracy was 78% at launch when the target was 85%. How do you present this?",
           options: [
-            "100,000 tokens — the full model context window",
-            "197,000 tokens — the context window minus system prompt and output",
-            "Approximately 197,000 tokens, but the plugin should warn users when input text is over 150,000 tokens to leave comfortable headroom for prompt + output",
-            "The plugin should reject any input over 50,000 tokens to guarantee quality",
-          ],
-          correct: 2,
-          explanation:
-            "Effective input limit = context window - system prompt - expected output - safety margin. At 200K total, system prompt 2K, output 1K, leaving ~197K for input text. But recommending a ~150K practical limit with a warning for longer inputs gives a safety margin for variable output length and prompt overhead. Hard rejecting at 50K is too conservative and frustrates users.",
-        },
-        {
-          type: "multiple-choice",
-          question:
-            "Why is the prototype phase (Day 1–2) intentionally rough and without error handling?",
-          options: [
-            "Error handling is the backend engineer's responsibility, not the Product Engineer's",
-            "The prototype's goal is to validate whether the AI approach works — adding production concerns before validating the concept wastes time if the concept doesn't work",
-            "Kestra's CI/CD pipeline adds error handling automatically during deployment",
-            "Prototypes run in a sandbox environment where errors are handled by the platform",
+            "Minimize it — 'we had some early accuracy issues but resolved them quickly'",
+            "Describe the full story: what the target was, what you shipped at, how you detected the gap (and be specific about the detection mechanism), what you did (fallback? human review? retrain?), and what you learned — treating it as a learning story, not a failure story",
+            "Avoid the topic and redirect to a stronger example",
+            "Explain that 78% was actually acceptable given the use case constraints",
           ],
           correct: 1,
           explanation:
-            "Prototype = concept validation, not production code. If the LLM approach doesn't produce useful summaries, all the error handling you wrote is waste. Validate first, harden second. The 2-day prototype gets you an answer; the remaining 8 days make it shippable.",
+            "Specificity about failure is exactly the credibility signal Kestra is looking for. A PM who can say 'we launched at 78%, detected the gap because our weekly eval run showed accuracy dropping from the beta baseline, implemented a confidence threshold gate at 0.7 that routed low-confidence predictions to human review, and improved to 88% after 6 weeks of prompt iterations' has demonstrated: measurement rigor, decision-making under uncertainty, and iteration discipline. This is more impressive than a feature that shipped perfectly — because it shows how you handle the reality of production AI.",
         },
         {
           type: "scenario",
           prompt:
-            "The Kestra team asks you to prototype a 'flow explainer' feature: given a Kestra flow YAML, the AI explains what it does in plain English. You have 2 days. What do you build and how?",
+            "A Kestra interviewer asks: 'What's the most important thing you learned from shipping an AI feature to production?' Give your answer.",
           sampleAnswer:
-            "Day 1: I'd write a simple Python script (or Java main) that reads a YAML string, constructs a prompt ('Here is a Kestra flow definition. Explain what this flow does in plain English, including: when it runs, what each task does, what data it reads and writes, and what happens if a task fails. Flow: [YAML]'), calls the Anthropic or OpenAI API, and prints the response. I'd test it against 5–10 real Kestra flows from the public examples repo to see if the explanations are accurate and readable. If they are, the concept is validated. Day 2: I'd test edge cases — a very complex multi-task flow, a flow with custom plugins the model doesn't know about, a flow with many dynamic template references. I'd note the failure modes: the model sometimes hallucinates plugin behavior it doesn't know about; dynamic templates like {{ inputs.x }} confuse it if not explained. I'd document these failure modes in a brief internal writeup: 'The concept works for standard flows. Known gaps: custom/uncommon plugins produce generic explanations; recommend including plugin documentation in the prompt context via RAG in the production version.' Ship the prototype finding, not the prototype code.",
+            "The most important thing I learned is that quality confidence doesn't transfer from your eval set to production — you have to earn it separately. When we launched our document classification feature, we had 91% accuracy on our 500-example eval set. I felt good about it. Three weeks after launch, a customer reported that their contracts were being systematically misclassified in one category. We dug into it: that category had almost no examples in our eval set because it was rare in our historical data, but it was common in that customer's document corpus. Our eval set didn't reflect their distribution. We added a production accuracy monitor that sampled 2% of outputs for human review, caught another distribution mismatch two months later before any customer noticed, and changed our eval strategy to include minimum coverage requirements per category. The lesson: an eval set is a hypothesis about what your production distribution looks like. Your monitoring strategy is how you validate or disprove that hypothesis after launch. Every AI feature needs both.",
           keyPoints: [
-            "2 days = validation, not implementation. Build the minimum that proves the concept works.",
-            "Test against real examples from the existing repo — don't use toy examples",
-            "Document failure modes explicitly — they define what production work is needed",
-            "The deliverable is the finding, not the code: 'does this approach work and what are the limits?'",
+            "Lead with the concrete learning, not the process",
+            "Describe a specific failure mode (category coverage gap in eval set) rather than a generic lesson",
+            "Show the causal chain: failure → root cause analysis → system change",
+            "End with the generalizable principle, not just 'I learned to test more'",
           ],
         },
       ],
-      resources: [
-        {
-          title: "Kestra Plugin Examples (GitHub)",
-          url: "https://github.com/kestra-io/plugin-ai",
-          description: "Real Kestra plugin code — study the patterns before building your own.",
-        },
-        {
-          title: "Kestra Documentation Style Guide",
-          url: "https://kestra.io/docs/contributing",
-          description: "How Kestra writes docs — follow this style for any documentation you write.",
-        },
-      ],
+      resources: [],
     },
   ],
   quiz: [
     {
       type: "multiple-choice",
-      question: "What distinguishes a Product Engineer from a traditional SWE at a startup like Kestra?",
+      question: "For a Kestra AI roadmap, why should platform investments (eval framework, observability, human-in-the-loop) come before or alongside feature investments?",
       options: [
-        "Product Engineers earn more equity and have more say in company strategy",
-        "Product Engineers own the full cycle — from identifying the problem to designing the solution to implementing it to shipping — without requiring a separate PM to write requirements",
-        "Product Engineers only work on user-facing features; SWEs work on infrastructure",
-        "Product Engineers manage other engineers; SWEs are individual contributors",
+        "Platform investments impress investors more than feature investments",
+        "Without platform investments, every AI feature ship is a quality gamble — you have no infrastructure to measure accuracy, detect degradation, or handle failures consistently. Features built on a weak platform compound technical debt instead of compounding value",
+        "Platform investments are faster to build than features",
+        "Kestra's existing users expect infrastructure improvements, not AI features",
       ],
       correct: 1,
       explanation:
-        "The defining characteristic is ownership scope. A SWE implements what's specified; a Product Engineer specs, implements, and ships autonomously. This is efficient at Kestra's stage because it eliminates handoff overhead and puts product judgment in the same person as implementation judgment.",
+        "The compounding argument is key: a platform investment (eval framework) improves the quality of every subsequent AI feature. Without it, each feature is independently unmeasured, and you have no systematic way to know if the portfolio is improving or degrading over time. Features built without eval infrastructure are exactly the 'demo and prototype' work Kestra is trying to avoid. Platform work is what makes AI features production-grade.",
     },
     {
       type: "multiple-choice",
-      question: "Kestra's job posting says 'production-level experience, not prototype portfolios.' What are they screening against?",
+      question: "Which best describes what Kestra is evaluating in the async homework assignment?",
       options: [
-        "Candidates who have only done academic projects, not commercial work",
-        "Candidates who can build impressive demos but whose code breaks under real load, edge cases, or operational conditions — missing retry logic, observability, security, and tests",
-        "Candidates who have built AI prototypes but haven't used Kestra specifically",
-        "Candidates from startups rather than established companies",
+        "Technical knowledge of AI and orchestration systems",
+        "Ability to write comprehensive, detailed product documentation",
+        "Product judgment: can you identify the right problem, make a decisive recommendation, explain your reasoning, and explicitly scope out what not to build?",
+        "Familiarity with Kestra's existing product features and API",
       ],
-      correct: 1,
+      correct: 2,
       explanation:
-        "Prototype code looks good in demos but fails in production: no retry logic, no timeout handling, no tests, no observability, hardcoded credentials, no edge case handling. Kestra's enterprise customers can't use prototype-quality plugins. The screening is for candidates who've shipped code that ran at scale and dealt with real failures.",
-    },
-    {
-      type: "multiple-choice",
-      question: "The prototype-to-production timeline is approximately 2 days (prototype) + 8 days (hardening). What's the most important thing to validate in the 2-day prototype phase?",
-      options: [
-        "That the Java plugin compiles correctly in Kestra's build system",
-        "That the AI approach produces useful, accurate output for the target use case — before investing in production hardening",
-        "That the feature can be implemented within the sprint timeline",
-        "That the feature design has been approved by the product function",
-      ],
-      correct: 1,
-      explanation:
-        "The prototype validates the concept. If the AI approach doesn't produce good results (bad summaries, wrong flow explanations, unreliable classifications), the 8-day hardening is wasted. Validate first: does the LLM approach work at all? Only then invest in making it production-ready.",
+        "The homework is a product judgment test, not a knowledge test. Kestra can teach you more about their product; they can't easily teach you to have good judgment about what to build. The evaluation is on the quality of your thinking: did you identify a real problem, make a clear call, explain the reasoning, and demonstrate the 'what not to build' discipline the posting explicitly calls out?",
     },
   ],
   quizXp: 30,

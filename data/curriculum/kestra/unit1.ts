@@ -2,99 +2,80 @@ import type { Unit } from "@/data/types";
 
 export const kestraUnit1: Unit = {
   id: "unit1",
-  title: "Kestra & The Orchestration Market",
+  title: "The Kestra Product Context",
   description:
-    "What workflow orchestration actually is, why it matters, where Kestra fits, and how the competitive landscape breaks down — the domain context every Kestra interview candidate needs.",
+    "What Kestra actually is, who uses it, why the $25M Series A happened now, and what the AI workflow opportunity looks like from a PM lens — not an architecture lens.",
   companySlug: "kestra",
   goTerm: "Fuseki",
   goReading: "ふせき",
   goMeaning:
-    "Opening strategy that shapes the entire game. Understanding the orchestration market is your fuseki — every technical decision at Kestra flows from this market position.",
+    "Opening strategy — the early moves that shape the entire game. Understanding Kestra's product context is fuseki: the territory you claim here determines what you can build later.",
   color: "neon",
   lessons: [
     {
       id: "1-1",
       unitId: "unit1",
       companySlug: "kestra",
-      title: "What Is Workflow Orchestration?",
+      title: "What Kestra Is (From a PM Lens)",
       tldr:
-        "Orchestration is the coordination layer that makes complex, multi-step processes reliable at scale. Without it, pipelines break silently, retries are manual, and debugging is guesswork. Kestra is the infrastructure that makes workflows observable, recoverable, and manageable.",
-      skills: ["Orchestration fundamentals", "Pipeline thinking", "Domain framing"],
+        "Kestra is a universal workflow orchestration platform. Not a data pipeline tool, not an MLOps tool — universal. Understanding what 'universal' means and why it's a strategic bet is the first thing a PM needs to internalize.",
+      skills: ["Product context", "Market positioning", "Orchestration fundamentals"],
       xp: 20,
       content: [
         {
-          heading: "The problem orchestration solves",
-          body: `Every non-trivial software system eventually needs to coordinate work across multiple steps, services, and time windows. Some examples:\n\n- An analytics pipeline: extract data from 5 sources → transform and validate → load to a warehouse → trigger a downstream report\n- An ML training job: pull new training data → preprocess → train → evaluate → if accuracy threshold met, deploy\n- A business process: customer submits order → validate payment → reserve inventory → notify warehouse → send confirmation email\n\nEach step can fail. Steps can be slow. Steps can depend on each other. Steps may need to run on schedules, in response to events, or in parallel. Without an orchestration layer, teams handle this with:\n\n- **Cron jobs** — fragile, no dependency management, no observability, silent failures\n- **Shell scripts glued together** — impossible to retry individual steps, no audit trail\n- **Custom application logic** — orchestration code mixed with business logic, hard to maintain\n- **Message queues alone** — handles async decoupling but not dependency graphs, scheduling, or failure recovery\n\nOrchestration platforms replace all of this with a dedicated layer that: defines workflow logic declaratively, handles scheduling and triggering, manages retries and error handling, provides observability into every run, and stores execution history.`,
+          heading: "The one-sentence pitch",
+          body: `Kestra lets you build, schedule, and run any automated workflow — data pipelines, IT automation, business processes, AI agents — using a declarative YAML format with a plugin system that connects to anything.\n\nThat's the pitch. But for a PM, the more important question is: **what problem does that actually solve?**\n\n**The problem:** Every organization has workflows that span multiple systems. Data flows from Salesforce to Snowflake. Nightly jobs process transactions. Support tickets route to the right team. Models retrain on new data. These workflows live in different tools, break in different ways, and have no common observability. Kestra provides a single orchestration layer.\n\n**Why YAML?** Other orchestration tools (Prefect, Dagster, Airflow) define workflows in Python. Kestra's bet is that YAML is more accessible — non-engineers can read it, version it, and modify it. Workflows become artifacts, not code that only the ML team can touch.\n\n**Why "universal"?** Competitors specialize: Airflow owns data engineering, Temporal owns application workflows, Argo Workflows owns Kubernetes MLOps. Kestra's product bet is that customers don't want four orchestration tools — they want one. That's both the opportunity and the risk.`,
           goAnalogy: {
-            term: "Shicho",
-            reading: "しちょう",
+            term: "Influence",
+            reading: "えいきょう",
             meaning:
-              "A ladder — a sequence of forced moves where each step leads inevitably to the next. Orchestration makes pipelines shicho: each step follows from the previous in a controlled, recoverable sequence.",
+              "Board positions that don't directly own territory but constrain future play. The 'universal' positioning is influence — it doesn't own a specific market yet, but it shapes how Kestra can expand.",
           },
         },
         {
-          heading: "Key orchestration concepts",
-          body: `To speak fluently in a Kestra interview, you need these terms cold:\n\n**Flow** — Kestra's term for a workflow definition. A flow describes the steps to execute, when to trigger them, and how they connect. Flows are defined in YAML.\n\n**Task** — a single unit of work within a flow. Tasks are the leaves of the execution graph: run a script, make an API call, query a database, send a notification.\n\n**Trigger** — what starts a flow. Can be a schedule (cron), an event (a file arrives in S3, a Kafka message appears), a webhook, or another flow completing.\n\n**Execution** — a single run of a flow. Kestra tracks every execution with its state, logs, inputs, outputs, and timing.\n\n**DAG (Directed Acyclic Graph)** — the dependency structure of tasks within a flow. Task B only starts after Task A completes; Task C and D can run in parallel after B. The graph must be acyclic — no circular dependencies.\n\n**Namespace** — Kestra's organizational unit. Flows, secrets, and variables can be scoped to a namespace. Supports multi-tenant and multi-team configurations.\n\n**Plugin** — Kestra's extensibility mechanism. Every integration (S3, Kafka, dbt, Spark, HTTP) is a plugin. This is architecturally important: Kestra is a platform, and its plugin ecosystem is a major competitive differentiator.\n\n**Subflow** — a flow that calls another flow. Enables modular, reusable workflow components — the equivalent of function calls in code.`,
+          heading: "Who actually uses Kestra",
+          body: `**The user base is more diverse than you'd expect for a developer tool:**\n\n**Data engineers** — run ETL/ELT pipelines, replace Airflow DAGs, schedule dbt models. This is the core early adopter segment.\n\n**DevOps / platform teams** — automate infrastructure provisioning, deployment pipelines, incident response workflows. Kestra's YAML model appeals here because it's closer to how they already work (Terraform, Ansible).\n\n**Data science / ML teams** — orchestrate model training, evaluation, and deployment. Less common, but growing.\n\n**Business operations teams** — at larger enterprises, business workflows (contract approval, expense routing, compliance checks) get orchestrated in Kestra. The YAML accessibility matters here.\n\n**The 10,000 organizations stat includes all of these.** JPMorgan Chase and Bloomberg are enterprise data pipeline users. The long tail is smaller teams doing DevOps automation.\n\n**Why this matters for a PM:** The AI PM role sits in the overlap between what these users already do and what they're starting to ask for: agentic workflows, LLM task types, AI-assisted flow generation. Your roadmap has to serve a heterogeneous user base, not just the ML team.`,
         },
         {
-          heading: "Why orchestration is hot right now",
-          body: `Three trends are driving orchestration market growth:\n\n**Data stack explosion** — the modern data stack has fragmented into 10–15 specialized tools (dbt, Snowflake, Fivetran, Hightouch, etc.). Each handoff between tools is an orchestration problem. Someone has to coordinate them.\n\n**AI/ML workflows** — AI pipelines are complex orchestration problems: data ingestion → training → evaluation → deployment → monitoring → retraining. As AI adoption accelerates, orchestration demand accelerates with it. This is core to Kestra's AI product roadmap.\n\n**Platform engineering** — engineering teams are building internal developer platforms (IDPs). Orchestration is often the core capability of an IDP — it's how platform teams offer "run any workload reliably" to their internal customers.\n\nKestra's $25M Series A (March 2026, led by RTP Global with Datadog/dbt Labs/Hugging Face founders backing) reflects this momentum. The backers aren't random — Datadog means observability DNA, dbt Labs means data pipeline DNA, Hugging Face means AI-native workflows. That's the Venn diagram Kestra is positioning inside.`,
+          heading: "The $25M Series A and what it means",
+          body: `Kestra closed a $25M Series A in March 2026 — roughly 2 years after their seed round. The timing matters:\n\n**What the timing signals:**\n- The open-source traction (nearly 30,000 GitHub stars, 10,000+ organizations) validated the product before the raise\n- The enterprise motion is starting to work — you don't raise Series A on open-source stars alone\n- AI is the explicit growth vector — the timing aligns with enterprise demand for AI workflow infrastructure\n\n**What Series A money buys:**\n- Sales and customer success (the enterprise motion needs people)\n- Product investment in AI features (you, specifically)\n- More engineering bandwidth\n\n**What this means for the PM role:**\nYou're joining at the inflection point — after product-market fit in the open-source community, before enterprise-scale product-market fit. The AI PM role exists because Kestra's leadership believes AI workflow orchestration is the next expansion vector. Your job is to find the real AI use cases, not the demos.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "A data team's pipeline fails silently every Friday night because a cron job times out before the downstream job starts. Which orchestration concept, if implemented, would have prevented this?",
+            "Kestra's 'universal orchestration' positioning is a strategic bet. What is the main risk of this positioning compared to a specialist tool like Airflow (data engineering) or Temporal (application workflows)?",
           options: [
-            "Namespaces — scoping the job to the data team's namespace",
-            "Dependency management (DAG execution) + failure handling — the downstream job would only start after the upstream confirms success, with explicit failure state and alerting",
-            "Subflows — breaking the pipeline into reusable components",
-            "Triggers — adding a webhook trigger to the downstream job",
+            "Universal tools are harder to build technically",
+            "Specialist tools have stronger word-of-mouth in their specific communities, and 'we do everything' is a harder message to land than 'we're the best for X'",
+            "Universal tools require more plugins and integrations to be useful",
+            "Enterprise buyers prefer specialized tools because they're easier to evaluate",
           ],
           correct: 1,
           explanation:
-            "Cron jobs have no dependency awareness — they fire at a time regardless of whether upstream work is done. Orchestration enforces the dependency: downstream tasks wait for upstream success, and failures are tracked, alerted, and recoverable rather than silent.",
+            "The positioning risk is marketing and word-of-mouth: specialist tools become the default recommendation in their community ('just use Airflow for data pipelines'). Universal tools have to fight for attention in every category without owning any. This shapes Kestra's go-to-market: they need strong community champions in each segment, and the AI story is a chance to own a new category before a specialist does.",
         },
         {
           type: "multiple-choice",
           question:
-            "Kestra received backing from founders at Datadog, dbt Labs, and Hugging Face. What does this tell you about Kestra's strategic positioning?",
+            "A data engineering team at a mid-sized company is evaluating Kestra vs. Prefect for their ML pipeline orchestration. What is Kestra's strongest differentiator for this specific buyer?",
           options: [
-            "Kestra is targeting observability, data pipelines, and AI workflows — the three fastest-growing orchestration use cases",
-            "Kestra plans to compete directly with Datadog, dbt, and Hugging Face",
-            "These investors provide capital but have no strategic relevance to Kestra's roadmap",
-            "Kestra is primarily an enterprise monitoring tool with workflow features",
+            "YAML-based workflow definition, which makes workflows readable by non-Python engineers and compatible with GitOps practices",
+            "Better performance on large DAGs with many parallel tasks",
+            "A larger plugin ecosystem for connecting to ML tools",
+            "More active open-source community",
           ],
           correct: 0,
           explanation:
-            "Investor composition is strategic signal. Datadog = observability expertise (Kestra's execution tracking). dbt Labs = data pipeline expertise (Kestra's analytics orchestration use case). Hugging Face = AI/ML workflows (Kestra's AI product direction). The backing tells you exactly where Kestra is betting.",
-        },
-        {
-          type: "multiple-choice",
-          question:
-            "What makes Kestra's plugin architecture a competitive differentiator?",
-          options: [
-            "Plugins allow Kestra to run faster than competitors that don't use plugins",
-            "Plugins let users extend Kestra with any integration without modifying the core platform — making it an ecosystem play, not just a point solution",
-            "Plugins reduce Kestra's infrastructure costs by offloading compute to plugin providers",
-            "Plugins enable multi-cloud deployment across GCP, AWS, and Azure simultaneously",
-          ],
-          correct: 1,
-          explanation:
-            "Every tool a customer uses (dbt, Spark, Kafka, S3, Slack) can be a Kestra plugin. This turns Kestra into a platform that grows with the ecosystem — the more integrations exist, the more workflows it can replace. An orchestrator with 200 plugins has network effects that a point solution can't match.",
+            "For data engineering teams, Kestra's strongest differentiator is the YAML model. Prefect workflows are Python code — they live in the ML team's Python codebase and require Python to read and modify. Kestra YAML workflows are language-agnostic, readable by DevOps and platform engineers without Python knowledge, and fit naturally into GitOps workflows. This is the wedge argument that resonates with this buyer.",
         },
       ],
       resources: [
         {
-          title: "Kestra Documentation: Core Concepts",
-          url: "https://kestra.io/docs/concepts",
-          description: "Official Kestra docs — flows, tasks, triggers, executions, namespaces.",
-        },
-        {
-          title: "Kestra $25M Series A Announcement",
-          url: "https://kestra.io/blogs/2024-09-19-series-a",
-          description: "Kestra's funding announcement — strategic framing and product vision.",
+          title: "Kestra Documentation",
+          url: "https://kestra.io/docs",
+          description: "Read the core concepts section — flows, tasks, triggers, executions — from a user perspective, not a developer perspective.",
         },
       ],
     },
@@ -102,85 +83,65 @@ export const kestraUnit1: Unit = {
       id: "1-2",
       unitId: "unit1",
       companySlug: "kestra",
-      title: "Kestra's Architecture: How It Actually Works",
+      title: "The AI Workflow Opportunity",
       tldr:
-        "Kestra's architecture is built for scale and extensibility: a Java/Micronaut backend, Kafka for execution queuing, Elasticsearch for search and history, and a YAML-first workflow definition model. Understanding this stack is the foundation of the technical interview.",
-      skills: ["System architecture", "Kestra internals", "Java ecosystem"],
+        "What customers are actually trying to do with AI in their workflows today — and the gap that an orchestration platform is uniquely positioned to fill. This is the market thesis you need to be able to articulate.",
+      skills: ["Market analysis", "AI workflow patterns", "Product opportunity framing"],
       xp: 25,
       content: [
         {
-          heading: "The architecture overview",
-          body: `Kestra's backend is built in **Java** with the **Micronaut** framework — a modern, cloud-native JVM framework designed for low startup time and low memory footprint (unlike Spring Boot's heavy runtime).\n\nThe key architectural components:\n\n**Kestra Server** — the core API and scheduler process. Manages flow definitions, trigger evaluation, execution scheduling, and the REST API that the UI and CLI consume.\n\n**Kestra Worker** — the execution engine. Workers pick tasks off a queue and execute them. Workers are horizontally scalable — add more workers to process more tasks in parallel. Workers are stateless; all state is in external storage.\n\n**Kafka** — the internal message bus. Execution events, task state changes, and worker communications flow through Kafka. This is what makes Kestra resilient: if a worker crashes mid-execution, the task can be retried from a different worker because the state is in Kafka, not in memory.\n\n**Elasticsearch** — stores execution history, logs, and provides full-text search across executions. When you search "show me all failed executions last week that touched the customer table," that's Elasticsearch.\n\n**Object Storage (GCS/S3/Azure Blob)** — stores execution artifacts: task inputs, outputs, and intermediate files that flow between tasks.\n\n**PostgreSQL / MySQL** — stores configuration: flow definitions, namespace settings, secrets references. The source of truth for "what should run" as opposed to "what has run" (Elasticsearch).`,
+          heading: "What customers are actually asking for",
+          body: `Kestra's customer base is asking for AI in three distinct ways. Understanding the difference is important because they're very different product problems:\n\n**1. AI features within workflows**\nCustomers want to use LLMs as steps in existing workflows: "summarize this document," "classify this ticket," "extract these fields," "generate this email." These are task-level integrations — the orchestration layer provides scheduling, retry, observability, and chaining. The AI is a plugin, not the workflow itself.\n\n**2. AI agent workflows**\nCustomers want to run AI agents as first-class workflows: a loop that perceives inputs, calls tools, makes decisions, and acts — with Kestra providing the infrastructure. This is a bigger bet: it requires new task types (LLM call, tool invocation, human gate, loop control) and new observability primitives (per-step agent traces, decision logging).\n\n**3. AI that helps build workflows**\nCustomers want AI to make Kestra easier to use: generate flows from natural language, debug failing executions, suggest optimizations. This is AI as the product surface, not AI as the workflow content.\n\nAll three are real opportunities. A PM's job is to decide which to prioritize and why.`,
           goAnalogy: {
-            term: "Aji",
-            reading: "アジ",
+            term: "Sente",
+            reading: "せんて",
             meaning:
-              "Latent potential — stones that aren't immediately useful but hold future value. Kestra's plugin system and Kafka backbone are aji: they enable capabilities that aren't fully exercised today but compound over time as workflows grow.",
+              "Having the initiative — forcing the opponent to respond. Choosing which AI opportunity to pursue is sente: own one direction decisively and competitors must respond to you, rather than you responding to them.",
           },
         },
         {
-          heading: "YAML-first workflow definition",
-          body: `Kestra flows are defined in YAML, not code. This is a deliberate product choice that separates Kestra from code-first orchestrators like Prefect, Dagster, or Temporal.\n\nA simple Kestra flow looks like:\n\n\`\`\`yaml\nid: my-first-flow\nnamespace: company.data\n\ntriggers:\n  - id: schedule\n    type: io.kestra.plugin.core.trigger.Schedule\n    cron: "0 9 * * 1-5"\n\ntasks:\n  - id: extract\n    type: io.kestra.plugin.scripts.python.Script\n    script: |\n      import pandas as pd\n      df = pd.read_csv("{{ inputs.source_url }}")\n      return df.to_json()\n\n  - id: transform\n    type: io.kestra.plugin.scripts.python.Script\n    dependsOn:\n      - extract\n    script: |\n      data = json.loads("{{ outputs.extract.value }}")\n      # transform logic\n\`\`\`\n\n**Why YAML matters:** it makes workflows readable by non-engineers (data analysts, DevOps, ML engineers) without requiring them to write Python or Java code. This broadens Kestra's ICP beyond pure engineering teams — a data analyst can understand and modify a YAML flow without touching the codebase.\n\n**The tradeoff:** YAML has limits for complex logic. Kestra addresses this with scripting tasks (run arbitrary Python, JavaScript, Bash, or Java inline) and by allowing full programming language scripts to be embedded. The orchestration logic stays in YAML; the business logic runs in whatever language is appropriate.\n\n**For the interview:** understand the YAML-first philosophy and be ready to articulate why it matters for product adoption — not just as an implementation detail, but as a product and GTM decision.`,
+          heading: "Why orchestration is the right layer for AI agents",
+          body: `There's a real product thesis here that a Kestra PM needs to be able to articulate:\n\n**The problem with agent frameworks alone (LangGraph, CrewAI, etc.):**\n- They're Python libraries — they live in a developer's local environment or a container with no native scheduling, observability, or retry infrastructure\n- When an agent run fails at step 7 after 40 minutes, you start over from step 1\n- There's no native concept of "pause and wait for a human to approve this" that survives process restarts\n- Audit logs are whatever you print to stdout\n- Parallel agent runs with shared state require custom synchronization\n\n**What orchestration provides natively:**\n- Durable execution: a workflow interrupted at step 7 resumes at step 7\n- Native scheduling: run this agent every hour, or trigger it on this webhook\n- Human-in-the-loop: a pause/resume task type that blocks until approval\n- Observability: every step is a tracked execution with inputs, outputs, and timing\n- Parallelism: fan-out to N parallel agent workers, fan-in when they complete\n- Retry with backoff: built into every task type\n\n**The PM thesis:** Agent framework users who try to run agents in production eventually reinvent all of this. Kestra provides it natively. The opportunity is to make Kestra the obvious platform for production AI agent workflows.`,
         },
         {
-          heading: "The execution model",
-          body: `Understanding exactly how Kestra runs a flow is important for the technical interview — especially if you're asked to design features or debug issues.\n\n**Execution lifecycle:**\n1. A trigger fires (schedule, event, webhook, manual)\n2. Kestra Server creates an Execution record with state RUNNING\n3. Tasks in the flow's DAG that have no dependencies are queued to Kafka immediately\n4. Workers consume tasks from Kafka and execute them\n5. As each task completes, its output is stored and its state (SUCCESS or FAILED) is published back to Kafka\n6. Kestra Server listens to task completion events and enqueues newly unblocked tasks\n7. When all tasks are terminal (succeeded or failed), the Execution state is set to SUCCESS or FAILED\n\n**Parallelism:** Tasks with no dependency relationship between them run in parallel automatically — different workers pick them up simultaneously.\n\n**Retry logic:** Each task can define retry behavior (max attempts, backoff strategy). On failure, the task re-enters the Kafka queue for retry without restarting the entire flow.\n\n**Failure handling:** Kestra supports error tasks — tasks that run only when another task fails. This is where you send alerts, clean up resources, or trigger compensating actions.\n\nFor a Product Engineer, understanding this model deeply lets you reason about: how new AI agent task types would integrate, what new trigger types need to do, how long-running tasks (like an agent loop) affect worker resource management, and where latency or memory pressure would appear at scale.`,
+          heading: "What serious AI workflow use cases look like",
+          body: `Kestra's job posting explicitly says: "We have seen too many AI candidates whose entire experience is one demo or one prototype." This is a hint about what they're looking for.\n\n**Demo/prototype AI use case signals:**\n- No error handling — assumes the LLM always returns valid output\n- No scale — works for 10 records, untested at 10,000\n- No monitoring — you don't know when it fails\n- No cost tracking — you don't know what it costs to run\n- One-shot — runs once manually, not reliably on a schedule\n\n**Serious AI workflow use case signals:**\n- Runs on a schedule or trigger, not manually\n- Has retry logic for LLM API failures (rate limits, timeouts)\n- Validates and handles malformed LLM output\n- Has observability: you can see what ran, when, what it returned\n- Has a cost you can predict and explain\n- Has a metric you track to know it's working\n\n**Examples of serious use cases in an orchestration context:**\n- Nightly customer churn risk scoring across 50,000 accounts (LLM-powered, with fallback to rule-based when API times out)\n- Real-time support ticket classification and routing, running at 1,000 tickets/hour, with accuracy tracked against human labels\n- Automated contract review workflow: extract fields, flag anomalies, route for human review — with the human-in-the-loop gate pausing the workflow until approval\n- Document ingestion pipeline that extracts, chunks, embeds, and indexes 10,000 documents per day for a RAG system`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "A Kestra worker crashes in the middle of executing a 20-step flow. Why doesn't this cause the execution to be permanently lost?",
+            "A potential enterprise customer says: 'We want to use AI to summarize customer support tickets before they reach agents.' Is this a serious AI workflow use case or a demo? What's the key question to ask?",
           options: [
-            "Kestra checkpoints execution state to PostgreSQL at every task boundary",
-            "Task state and events flow through Kafka — the crashed worker's in-progress task is re-queued and picked up by another worker",
-            "Kestra workers run in stateful Kubernetes pods with persistent volumes",
-            "The Kestra Server keeps an in-memory copy of all active executions",
+            "It's a serious use case if the customer has more than 1,000 tickets per day",
+            "It's a demo until they've defined: what happens when the LLM summarizes incorrectly, how they'll track summary quality over time, and what the fallback is when the API is unavailable",
+            "It's a serious use case because it has a clear business value (time saved per agent)",
+            "It's a demo until they've tested it with their actual ticket data",
           ],
           correct: 1,
           explanation:
-            "Kafka is the state backbone — task state transitions are events in Kafka, not in-memory on the worker. When a worker crashes, the task it was running is either re-queued (if the crash happened before completion) or the completion event is missing (and Kestra handles it as a failure for retry). Workers are stateless by design.",
+            "Volume is not the signal — a demo can process 10,000 tickets as long as nothing fails. The serious use case signal is: what happens when it goes wrong? Failure handling (what if the summary is wrong?), quality tracking (how do you know it's working?), and availability planning (what if the API is down?) are the questions that distinguish a production feature from a prototype.",
         },
         {
-          type: "multiple-choice",
-          question:
-            "Why does Kestra use YAML for flow definitions rather than a Python DSL like Prefect or Dagster?",
-          options: [
-            "YAML is faster to parse than Python at runtime, reducing execution latency",
-            "YAML definitions are readable and modifiable by non-engineers (data analysts, DevOps, ML engineers), broadening the ICP beyond pure developer teams",
-            "Python DSLs require more memory, which conflicts with Micronaut's low-memory design goals",
-            "YAML enables Kestra to run on the JVM without requiring Python to be installed on worker nodes",
+          type: "scenario",
+          prompt:
+            "A customer asks for 'AI-powered workflow generation — type a description and Kestra generates the YAML.' Should this be on your roadmap? Walk through your analysis.",
+          sampleAnswer:
+            "This is a real opportunity but a product complexity trap if you're not careful. The analysis: (1) **Demand signal** — this is the most commonly requested AI feature in developer tools right now. It's real demand. (2) **Value delivered** — for simple flows, LLM-generated YAML works well today (Kestra already has enough examples in its training data). For complex flows with custom plugins, it breaks down quickly. (3) **The actual bottleneck** — for most Kestra users, YAML authoring is not the main pain. Debugging, monitoring, and connecting the right plugins are. Generating incorrect YAML that silently fails is worse than writing your own. (4) **What to build instead** — 'generate a starting flow' is much safer than 'generate a production flow.' The right scope: an AI assistant that generates a template based on a description, which the user then customizes. Not a one-click 'generate and deploy.' (5) **Decision** — I'd put a scoped version (template generation) in the roadmap as a near-term win, and hold 'generate complex production flows' until the underlying model quality and evaluation infrastructure is ready.",
+          keyPoints: [
+            "High demand doesn't mean high priority — analyze what problem it actually solves and for whom",
+            "The scope of 'template generation' vs 'full production flow generation' is a critical PM call",
+            "Silent failures (wrong YAML that parses but does the wrong thing) are worse than obvious failures",
+            "What's the fallback when the generated flow is wrong? That answer determines the product design",
           ],
-          correct: 1,
-          explanation:
-            "The YAML-first choice is a product and GTM decision, not just a technical one. It makes workflows accessible to the full data and engineering team — not just developers who know Python. This is a key competitive positioning choice that the Product Engineer role should be able to articulate.",
-        },
-        {
-          type: "multiple-choice",
-          question:
-            "A new task type is being designed that calls an external AI API and can take up to 10 minutes to complete. What architectural concern should a Kestra Product Engineer flag?",
-          options: [
-            "Elasticsearch may not store 10-minute execution logs efficiently",
-            "Long-running tasks hold a worker thread for the full 10 minutes, reducing worker throughput — async execution or a polling pattern should be considered",
-            "YAML cannot express 10-minute timeouts — a code-based flow would be required",
-            "Kafka has a message size limit that long AI API responses might exceed",
-          ],
-          correct: 1,
-          explanation:
-            "Kestra workers are threaded — a long-running synchronous task blocks that thread for its duration. For tasks with external waits (API calls that take minutes), the correct pattern is async: fire the request, release the worker thread, and use a callback or polling trigger to resume the execution when the result is ready.",
         },
       ],
       resources: [
         {
-          title: "Kestra Architecture Docs",
-          url: "https://kestra.io/docs/architecture",
-          description: "Official architecture documentation — server, worker, Kafka, storage.",
-        },
-        {
-          title: "Micronaut Framework",
-          url: "https://micronaut.io/",
-          description: "The Java framework powering Kestra's backend — cloud-native, low startup time.",
+          title: "Kestra Blog",
+          url: "https://kestra.io/blogs",
+          description: "Read recent posts on AI workflows and agent use cases — these reflect what Kestra's product team is thinking about.",
         },
       ],
     },
@@ -188,84 +149,66 @@ export const kestraUnit1: Unit = {
       id: "1-3",
       unitId: "unit1",
       companySlug: "kestra",
-      title: "The Orchestration Competitive Landscape",
+      title: "The Competitive Landscape (PM View)",
       tldr:
-        "Kestra competes with Airflow, Prefect, Dagster, Temporal, and Argo Workflows — each with a different philosophy, ICP, and technical approach. Knowing how Kestra differentiates will sharpen every answer you give about product decisions.",
-      skills: ["Competitive analysis", "Positioning", "ICP comparison"],
+        "How Kestra's competitors are approaching AI, where the gaps are, and how to position Kestra's AI PM roadmap against the market. Not a deep tech comparison — a strategic framing.",
+      skills: ["Competitive analysis", "Market positioning", "Strategic framing"],
       xp: 25,
       content: [
         {
-          heading: "Apache Airflow: the incumbent",
-          body: `Airflow is the 800-lb gorilla of data orchestration — built at Airbnb, open-sourced in 2015, now managed by Apache. It's the default choice for data engineering teams building ETL/ELT pipelines.\n\n**Strengths:** massive community, enormous plugin ecosystem, deeply familiar to data engineers, strong Managed Airflow offerings (AWS MWAA, Google Cloud Composer, Astronomer).\n\n**Weaknesses:** Python-only DAG definitions (you write Python classes to define workflows — not ideal for non-engineers), complex local setup, poor support for event-driven triggers, scheduler is a single point of failure in self-hosted deployments, UI is notoriously bad, upgrading is painful.\n\n**Kestra's wedge against Airflow:**\n- YAML-first (vs. Python-only) — accessible to more personas\n- Event-driven triggers natively (vs. polling-based Airflow sensors)\n- Better UI and developer experience\n- Micronaut + Kafka architecture scales more cleanly than Airflow's Celery/KubernetesExecutor setup\n- Open-source with an enterprise tier, vs. Airflow's dependence on managed service vendors\n\n**Who uses Airflow:** data engineering teams doing batch ETL. Heavy Python shops. Teams already invested in the ecosystem.\n\n**Who chooses Kestra instead:** teams that want modern DX, YAML-first accessibility, real-time triggers, or a platform that spans data + engineering workflows.`,
+          heading: "The main competitors and their AI moves",
+          body: `**Apache Airflow**\nThe incumbent. Massive community, most integrations. AI strategy: Airflow has LLM operator plugins (community-contributed) but no coherent AI story. Their strength is the existing user base and integrations; their weakness is the Python-only model and complex setup. AI-native teams often find Airflow heavyweight for agent workflows.\n\n**Prefect**\nPython-native, cleaner developer experience than Airflow. Has added AI-specific features (LLM task decorators). Strong in ML teams that already use Python. Weakness: Python-only limits reach outside ML/data teams.\n\n**Dagster**\nAsset-centric orchestration — workflows produce named assets (tables, models, features). Strong in data engineering teams with complex dependency graphs. AI strategy: the asset model works well for ML pipelines but less naturally for event-driven agent loops.\n\n**Temporal**\nDurable execution for application workflows. Strong for long-running, stateful processes (think: order fulfillment, multi-step approval workflows). AI strategy: increasingly used for agent durability, but requires writing workflow logic in an SDK (Go, Java, TypeScript) — higher barrier than YAML. The enterprise durability model is a direct overlap with Kestra's human-in-the-loop use case.\n\n**LangChain / LangGraph**\nNot orchestration platforms — agent frameworks. But they've become the default choice for teams building agents in Python. They solve the agent logic problem, not the infrastructure problem. Their users eventually need what Kestra provides (scheduling, observability, durability). This is a potential integration partner and a potential acquisition target for someone.`,
           goAnalogy: {
-            term: "Sabaki",
-            reading: "さばき",
+            term: "Shicho",
+            reading: "しちょう",
             meaning:
-              "Nimble, light play that avoids direct confrontation with a stronger group. Kestra practices sabaki against Airflow — not attacking head-on, but moving to terrain where Airflow is weak: developer experience, event-driven use cases, non-engineer accessibility.",
+              "A ladder sequence — a chain of forced moves where the outcome is determined by distant board conditions. The competitive landscape is a shicho: Kestra's AI moves are partially determined by what Airflow and Temporal do in corners of the board that seem unrelated right now.",
           },
         },
         {
-          heading: "Prefect, Dagster, Temporal: the modern challengers",
-          body: `**Prefect** — Python-native orchestration with a strong developer experience focus. Flows are Python functions decorated with \`@flow\` and \`@task\`. Prefect Cloud handles scheduling, monitoring, and runs. Strong for Python-heavy ML/data teams. Weakness: Python-only, less accessible to non-engineers, opinionated about how code is structured.\n\n**Dagster** — asset-centric orchestration. Instead of thinking about tasks and DAGs, you define "data assets" (tables, ML models, files) and Dagster figures out the dependencies between them. Excellent for data teams that think in terms of datasets rather than pipelines. Weakness: steeper learning curve, very opinionated model, less general-purpose.\n\n**Temporal** — workflow orchestration for microservices and application workflows (not just data pipelines). Supports Java, Go, Python, TypeScript. Used for long-running business processes: order fulfillment, user onboarding, payment flows. Very different use case from Airflow/Kestra — Temporal is application infrastructure, not data infrastructure. Strength: durability guarantees, strongly typed SDK. Weakness: more complex, requires writing code in their SDK model.\n\n**Where Kestra differentiates from all three:**\n- Multi-language (Python, Java, Bash, JS, Go — via scripting tasks) vs. single-language DSLs\n- YAML-first makes it accessible to infra/DevOps/platform teams, not just data engineers\n- General-purpose: data pipelines AND application workflows AND infrastructure automation in one platform\n- Stronger on event-driven triggers than Prefect/Dagster\n- Native UI designed for non-engineering stakeholders`,
+          heading: "Kestra's AI PM positioning opportunity",
+          body: `The competitive map reveals a genuine gap:\n\n**No orchestration platform has a coherent AI product story yet.** Airflow has community plugins. Prefect has Python decorators. Dagster has asset definitions. None of them have:\n- A clear first-party LLM task library (opinionated, documented, production-ready)\n- Native agent loop support (perceive → reason → act → observe, with durability)\n- AI-assisted workflow building that's actually integrated into the product (not a hackathon demo)\n- Observability designed for AI: cost per run, token usage, model accuracy over time\n\n**Kestra's PM opportunity:** Define what "AI-native orchestration" means before Airflow or Prefect does. The company that ships a coherent, production-grade AI story in the next 12 months wins the mindshare in a market that doesn't have a clear winner yet.\n\n**What that means for the roadmap:**\n- Build opinionated, first-party AI task types (not community plugins)\n- Instrument AI-specific metrics natively (cost, token usage, model latency per workflow run)\n- Make human-in-the-loop a first-class citizen (the pause/resume pattern that AI agent workflows need)\n- Build the eval and quality story — customers need to know when their AI workflow degrades`,
         },
         {
-          heading: "Argo Workflows and the Kubernetes-native angle",
-          body: `**Argo Workflows** is Kubernetes-native workflow orchestration — every task runs in a Kubernetes pod. Extremely popular in MLOps (Kubeflow pipelines use Argo under the hood) and with platform engineering teams that are already all-in on Kubernetes.\n\n**Strengths:** native Kubernetes resource model, excellent for containerized workloads, massive CNCF ecosystem, GPU scheduling for ML training.\n\n**Weaknesses:** requires deep Kubernetes expertise to operate, YAML-heavy in a way that's painful for non-Kubernetes users, poor developer experience for data engineers, no managed cloud offering.\n\n**Kestra vs. Argo:** Kestra runs on Kubernetes (and other environments), but doesn't require Kubernetes knowledge to use it. Kestra abstracts the infrastructure; Argo exposes it. For platform engineering teams, this is a significant DX win.\n\n**The strategic picture:** Kestra's positioning is "general-purpose orchestration with excellent DX" — it can do what Airflow does (data pipelines), what Temporal does (application workflows), and what Argo does (infrastructure automation), from a single YAML-first platform. The bet: teams don't want three orchestrators; they want one that works everywhere.\n\n**For the interview:** know that Kestra's answer to "why not just use Airflow?" is DX, YAML accessibility, and event-driven triggers — not a fundamental architectural objection. And its answer to "why not use Temporal?" is that Kestra is designed for the full data + engineering stack, not just application workflows.`,
+          heading: "Who you're competing for (the buyer profile)",
+          body: `The AI PM role is targeting a specific buyer expansion:\n\n**Current Kestra buyers:** data engineers, platform/DevOps teams, some ML engineers. They evaluate tools based on: plugin ecosystem, scalability, observability, cost.\n\n**Target expansion buyers:** AI-forward engineering teams, ML platform teams, and — critically — the new "AI engineer" persona that doesn't have a clean legacy category. These buyers evaluate tools based on: how well it handles agent patterns, how observable AI runs are, whether they can ship agents without custom infrastructure.\n\n**The PM challenge:** The roadmap has to serve existing buyers (don't break what they have) while acquiring new AI buyers (build for patterns they need). This tension is the central product challenge of the role.\n\n**What it means in practice:** Don't build a separate "AI orchestration" product. Build AI features into the core Kestra experience, so existing users get them for free and new AI users discover Kestra through them.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "A prospect's team includes 3 data engineers (Python-fluent), 2 DevOps engineers (YAML/Terraform), and 1 ML engineer. They're evaluating Kestra vs. Prefect. What's Kestra's strongest argument?",
+            "An enterprise customer currently uses Airflow for data pipelines and is now evaluating tools for running AI agent workflows. They've already invested heavily in Airflow's plugin ecosystem. What is Kestra's strongest argument to this buyer?",
           options: [
-            "Kestra has more data plugins than Prefect",
-            "Kestra's YAML-first model means the DevOps and ML engineers can contribute to workflow definitions without writing Python — Prefect would require everyone to work in Python",
-            "Kestra runs on Micronaut which is faster than Prefect's Python runtime",
-            "Kestra has better Kubernetes support than Prefect",
+            "Kestra is easier to deploy and maintain than Airflow",
+            "Kestra's YAML model and native AI task types let them run agent workflows without writing Python application code, and they can migrate incrementally — running both systems in parallel",
+            "Kestra has better performance on large parallel workloads",
+            "Kestra has a larger ecosystem of AI-specific integrations than Airflow",
           ],
           correct: 1,
           explanation:
-            "Prefect is Python-only — non-Python engineers are second-class citizens in the workflow. Kestra's YAML-first model means the DevOps and ML engineers on this team can read, modify, and own workflow definitions. That's a team collaboration advantage, not just a DX preference.",
+            "The strongest argument addresses the actual objection ('we've already invested in Airflow') and reframes the choice: Airflow is strong for data pipelines; Kestra is the right tool for agent workflows that don't fit the Airflow Python model. Incremental migration (run Kestra for new AI workflows, keep Airflow for existing pipelines) removes the switching cost objection. This is a land-and-expand motion, not a rip-and-replace pitch.",
         },
         {
           type: "multiple-choice",
           question:
-            "A company running Airflow says their biggest pain point is that when a task fails at 3am, nobody knows until a stakeholder notices missing data the next morning. Which Kestra capability directly addresses this?",
+            "Temporal is increasingly used for AI agent durability. If Temporal adds YAML-based workflow definition, how does this change Kestra's competitive position?",
           options: [
-            "Kestra's YAML syntax is easier to read so bugs are spotted earlier",
-            "Kestra's event-driven execution model runs faster so failures happen earlier in the day",
-            "Kestra's execution model tracks all task states and supports failure notification tasks — Slack/email alerts fire immediately on task failure, not after a human notices the downstream impact",
-            "Kestra's Elasticsearch integration makes it easier to search for failures after the fact",
+            "It significantly weakens Kestra because Temporal's durability model is stronger",
+            "It's not a major threat because Temporal's SDK model is deeply embedded and they're unlikely to pivot to YAML",
+            "Kestra should immediately add SDK-based workflow definition to compete with Temporal's model",
+            "This would force Kestra to specialize only in data engineering workflows",
           ],
-          correct: 2,
+          correct: 1,
           explanation:
-            "Airflow has alerting but it's historically been clunky to configure. Kestra's error tasks and trigger-based notifications are first-class — you define what happens on failure as part of the flow definition. Immediate alerting is table-stakes for operational workflows, and it's a concrete pain point Kestra solves better.",
-        },
-        {
-          type: "scenario",
-          prompt:
-            "A Kestra interviewer asks: 'Why would someone choose Kestra over Temporal?' Walk through your answer — be specific, not generic.",
-          sampleAnswer:
-            "Temporal and Kestra are solving adjacent but different problems. Temporal is purpose-built for application workflow durability — long-running business processes like order fulfillment or user onboarding that live inside your microservices architecture. Its SDK model is code-first and opinionated. Kestra is general-purpose orchestration for the data and platform engineering layer — data pipelines, ML workflows, infrastructure automation, and increasingly AI agent workflows. If I'm a backend team building a payment processing service with complex saga patterns, Temporal. If I'm a data or platform team orchestrating work across dbt, Spark, Python scripts, and AI APIs from a YAML-first interface that non-engineers can read and modify, Kestra. The other dimension: Temporal requires writing workflows in their SDK (Java, Go, Python, TypeScript) — everything has to follow their workflow + activity model. Kestra uses YAML with embedded scripts — you don't rewrite your logic in a new framework, you call your existing scripts from a flow definition. For teams with existing code that they want to orchestrate without refactoring, Kestra has a lower adoption cost.",
-          keyPoints: [
-            "Temporal is application workflow infrastructure; Kestra is data + platform orchestration",
-            "Temporal requires SDK adoption; Kestra orchestrates existing scripts and tools",
-            "Kestra's YAML-first model has lower adoption cost for teams with existing code",
-            "Not a head-to-head competition — different primary buyers and use cases",
-          ],
+            "Temporal's architecture is built around SDK-based, code-first workflow definitions. YAML is not a cosmetic layer — it requires fundamental changes to how workflows are defined and executed. A Temporal pivot to YAML is technically possible but strategically unlikely given their existing developer community and product identity. The more realistic threat from Temporal is in the durability/human-gate use case, which Kestra should prioritize with its own native implementation rather than waiting for Temporal to move.",
         },
       ],
       resources: [
         {
           title: "Kestra vs. Airflow (Kestra Blog)",
           url: "https://kestra.io/blogs/2023-07-05-kestra-vs-airflow",
-          description: "Kestra's own comparison — useful for understanding their positioning narrative.",
-        },
-        {
-          title: "Temporal vs. Other Orchestration Tools",
-          url: "https://temporal.io/vs",
-          description: "Temporal's comparison page — useful for understanding where Kestra and Temporal diverge.",
+          description: "Read Kestra's own competitive framing — useful context for how the company positions itself.",
         },
       ],
     },
@@ -273,42 +216,42 @@ export const kestraUnit1: Unit = {
   quiz: [
     {
       type: "multiple-choice",
-      question: "What is the difference between a Flow, a Task, and an Execution in Kestra?",
+      question: "What does Kestra's 'universal orchestration' positioning mean for the AI PM role specifically?",
       options: [
-        "Flow = the YAML definition; Task = a step within the flow; Execution = a single run of a flow with all its state and outputs",
-        "Flow = a running instance; Task = the YAML definition; Execution = the final result",
-        "Flow = the trigger; Task = the scheduled job; Execution = the output artifact",
-        "These are synonymous terms for the same concept in different Kestra versions",
-      ],
-      correct: 0,
-      explanation:
-        "Flow is the definition (what should happen), Task is a unit of work within the definition, Execution is a live run of that definition — with state, logs, timing, inputs, and outputs captured per run.",
-    },
-    {
-      type: "multiple-choice",
-      question: "Why does Kestra use Kafka as its internal message bus rather than a simpler queue (like RabbitMQ or Redis)?",
-      options: [
-        "Kafka is required by the Micronaut framework",
-        "Kafka's durability guarantees, partitioning, and consumer group semantics enable horizontally scalable workers, exactly-once task processing, and resilience to worker crashes",
-        "Kafka is cheaper to run than alternatives at Kestra's scale",
-        "Kafka provides the real-time streaming capabilities needed for Kestra's event-driven triggers",
+        "The AI PM should build AI features that appeal to all possible user types simultaneously",
+        "The AI PM's roadmap must serve a heterogeneous user base (data engineers, DevOps, ML teams, business ops) — AI features need to be generic enough to be useful across verticals, not optimized only for one persona",
+        "The AI PM should focus exclusively on enterprise use cases since universal tools need enterprise anchor customers",
+        "The AI PM should prioritize integrations over features since universal tools win on connectivity",
       ],
       correct: 1,
       explanation:
-        "Kafka's durability (messages persist until consumed) means a worker crash doesn't lose task state. Its partitioning allows parallel workers to consume different task queues. Consumer group semantics ensure each task is processed exactly once. These are orchestration-critical properties that lightweight queues don't guarantee.",
+        "Universal positioning creates a PM challenge: you can't build narrowly for one persona without risking relevance for others. The AI PM role at Kestra requires thinking about AI features that are valuable for data engineers AND DevOps teams AND ML practitioners — not building an ML-only or data-only AI story.",
     },
     {
       type: "multiple-choice",
-      question: "Which orchestration tool would you recommend to a team building long-running business process workflows inside their Java microservices — and why is it not Kestra?",
+      question: "Kestra closed a $25M Series A in March 2026. What does this timing suggest about the primary expectation for the AI PM hire?",
       options: [
-        "Airflow — it has the largest plugin ecosystem for business process integration",
-        "Temporal — its durable execution SDK is purpose-built for long-running application workflows within microservices, with Java support and saga pattern primitives",
-        "Argo Workflows — Kubernetes-native execution is best for microservice environments",
-        "Dagster — asset-centric orchestration models business entities naturally",
+        "Build and ship quickly to show investors the AI roadmap is moving",
+        "Find real, validated AI workflow use cases before committing engineering resources — the Series A funds growth, but the AI PM needs to find the right growth vector, not just any growth vector",
+        "Focus on enterprise sales support — Series A companies need PM help with pre-sales technical work",
+        "Expand the open-source community by building AI features that attract new developer users",
       ],
       correct: 1,
       explanation:
-        "Temporal's SDK model (workflows as durable code, activities as individual steps) is specifically designed for long-running business processes with complex failure handling — order sagas, multi-step approval flows, delayed actions. Kestra is better for data/platform orchestration across external tools. Recommending the right tool for the use case (including competitors) builds credibility in the interview.",
+        "Series A companies can afford to move fast but can't afford to move in the wrong direction. The AI PM hire is explicitly about avoiding the 'demo and prototype' trap — finding AI use cases with real enterprise value. The $25M gives runway to be deliberate; the PM's job is to use that deliberation well.",
+    },
+    {
+      type: "multiple-choice",
+      question: "A PM candidate asks: 'Should Kestra build a standalone AI agent product, separate from the core orchestration platform?' What's the strongest argument against this approach?",
+      options: [
+        "A standalone product would require too much engineering investment",
+        "Kestra's existing users would not use a separate product — AI features must be in the core platform to get organic adoption from the established user base and to avoid fragmenting the product",
+        "Standalone AI products have worse market fit than integrated features",
+        "Competitors don't have standalone AI products, so Kestra shouldn't either",
+      ],
+      correct: 1,
+      explanation:
+        "The strongest argument against a standalone product is the existing user base. Kestra's 10,000+ organizations are already in the core product — AI features accessible from there get immediate distribution. A separate product requires a separate go-to-market, separate onboarding, separate positioning. The 'universal' strategy only works if AI is integrated, not siloed.",
     },
   ],
   quizXp: 30,

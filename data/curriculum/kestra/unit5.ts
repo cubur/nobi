@@ -2,99 +2,98 @@ import type { Unit } from "@/data/types";
 
 export const kestraUnit5: Unit = {
   id: "unit5",
-  title: "The Kestra Interview",
+  title: "The Kestra PM Interview",
   description:
-    "The 4-stage process decoded — what each round tests, how to position your AI and Java experience, what to build for the technical test, and how to close the founder conversation.",
+    "The 4-stage process decoded — what each stage tests, how to pass the async homework, what the team discussion looks for, and how to make the co-founder conversation memorable.",
   companySlug: "kestra",
   goTerm: "Yose",
   goReading: "よせ",
   goMeaning:
-    "Endgame — converting your board position into a decisive result. The interview is yose: all the knowledge you've built across this course converts into a result here.",
+    "Endgame — converting board position into decisive results. The interview is yose: every piece of knowledge you've built across this course converts into a specific answer. Precision matters now more than creativity.",
   color: "snow",
   lessons: [
     {
       id: "5-1",
       unitId: "unit5",
       companySlug: "kestra",
-      title: "The 4-Stage Process Decoded",
+      title: "The 4-Stage Process, Stage by Stage",
       tldr:
-        "Kestra's interview process: intro call → technical test → team chat → founder discussion. Each stage has a distinct purpose and distinct failure modes. Know what they're looking for at each step.",
+        "Kestra's 4-stage process takes 2–3 weeks. Each stage has a different purpose and is run by different people. Know what they're evaluating at each step and what makes you fail before you get to the next stage.",
       skills: ["Interview process", "Stage-by-stage prep", "Failure mode awareness"],
       xp: 20,
       content: [
         {
-          heading: "Stage 1: Intro call",
-          body: `**What it is:** a 30–45 minute screening call, likely with a recruiter or product/engineering lead.\n\n**What they're testing:**\n- Do you understand what Kestra does? (Surprising how many candidates don't)\n- Is your background actually relevant? (Java + AI experience, not just Python AI)\n- Do you communicate clearly? (Product Engineers talk to users and write docs)\n- Are you genuinely interested in the problem space? (Orchestration + AI, not just "I want a startup job")\n\n**What to prepare:**\n- A 90-second answer to "tell me about yourself" that immediately highlights: Java experience, AI/LLM production work, and full-stack shipping ability\n- A clear answer to "what do you know about Kestra?" — mention the orchestration platform, YAML-first model, the $25M Series A, the AI direction, and why the intersection of orchestration + AI interests you specifically\n- 2–3 specific examples of AI features you've shipped to production (not demos, not prototypes — things that ran with real users)\n\n**The failure mode:** being a great engineer but sounding like you don't know Kestra, don't care about orchestration, or have only prototype AI experience. Screeners filter on surface signals — you need the right words in the first 5 minutes.`,
+          heading: "Stage 1: 30-minute intro call with hiring manager",
+          body: `**Purpose:** Mutual screening. They're checking if you're worth the next 3 stages. You're checking if the role is what the posting described.\n\n**What they're evaluating:**\n- Do you understand what Kestra does and why the AI PM role exists?\n- Is your background actually relevant? (Shipped AI products, not demos)\n- Do you communicate clearly? (PMs who can't explain themselves can't write good specs)\n- Are you genuinely excited about orchestration + AI, not just "startup PM"?\n\n**Your 90-second opener when asked "tell me about yourself":**\n"I've been a PM focused on AI products for [X] years, most recently at [company] where I owned [specific AI feature or product]. I'm interested in Kestra specifically because [concrete reason: YAML-first orchestration for agents, the gap in production AI infrastructure, the intersection of developer tools and AI workflows — pick the one that's genuinely true]. I've been following the space since [event/release] and I think the orchestration layer is the underappreciated foundation of production AI."\n\n**The failure mode:** being vague about Kestra ("I think it's an interesting company in an interesting space") or vague about your AI experience ("I've worked on several AI initiatives"). Specificity is credibility in stage 1.\n\n**Your questions for them:**\n- "What's the most common AI use case Kestra customers are asking for today that you don't yet have a good answer for?"\n- "Where does the AI PM sit in the org — is this primarily an external-facing product role, an internal roadmap role, or both?"\n- "What would make someone succeed or fail in the first 90 days?"`,
           goAnalogy: {
             term: "Komi",
             reading: "こみ",
             meaning:
-              "The points given to compensate for going second. The intro call is your komi negotiation: establish enough credibility early that you enter the technical stage with a positive point balance.",
+              "Compensation points given to the second player. Stage 1 is your komi negotiation: establish enough credibility early that you enter stage 2 with a positive position to defend.",
           },
         },
         {
-          heading: "Stage 2: Technical test",
-          body: `**What it is:** a take-home or timed technical assessment. Given Kestra's stack (Java + Vue.js) and role (Product Engineer, AI), the test likely involves:\n\n**Option A: Build a Kestra plugin**\n- Given a spec: implement a Java plugin for a new AI task type (call a specific API, handle errors, produce structured output)\n- Evaluated on: code quality, error handling, test coverage, adherence to Kestra's plugin patterns, production-readiness\n\n**Option B: Build an AI feature full-stack**\n- Given a Kestra local instance: add a backend endpoint + a Vue.js UI component for a new AI-assisted workflow feature\n- Evaluated on: same as above, plus Vue.js component quality and API design\n\n**Option C: Prototype a specific agent use case**\n- Design and prototype an AI workflow using Kestra: pick a use case (document processing, data enrichment, automated QA), build a working Kestra flow that demonstrates it\n- Evaluated on: use case insight, flow design quality, and how you handle the agent's failure modes\n\n**What to do regardless of the format:**\n- Read Kestra's existing plugin code before the test (the \`plugin-ai\` repo is open source)\n- Write tests — this is the single biggest signal of production-level experience\n- Handle errors explicitly — retry logic, timeout, null checks\n- Use proper secret management — no API keys in code or hardcoded strings\n- Include a brief README that explains your design decisions, not just instructions to run it`,
+          heading: "Stage 2: Asynchronous homework",
+          body: `**Purpose:** Assess your product thinking quality without the social dynamics of a live interview.\n\n**Likely format:** A product analysis or product design exercise. "Here is a specific customer use case / part of the Kestra product / market situation. What would you build and why?"\n\n**Time:** Likely 2–4 hours. Some companies say "take as long as you need" as a test of how much time you think is appropriate. 4–6 hours of focused work producing a tight 3-page document is better than 12 hours producing a 15-page one.\n\n**What they're evaluating:**\n- Quality of problem identification (did you find the real problem?)\n- Decisiveness of the recommendation (did you make a clear call?)\n- Technical fluency (did you propose something implementable, not just exciting?)\n- Scope discipline (did you explicitly say what you're not building?)\n- Communication quality (is the document clear and organized?)\n\n**The single most common failure:** writing a list of possible features instead of a recommendation. Every homework evaluator skims for "what would you build first and why?" — if they can't find a clear answer, you've failed regardless of the quality of everything else.\n\n**Before submitting:**\n- Read it as if you're the evaluator. Can you identify the recommendation in 30 seconds?\n- Cut anything that doesn't serve the recommendation\n- Add one sentence at the end: "I'd validate this by [X]" — shows you know it's a hypothesis`,
         },
         {
-          heading: "Stage 3: Team chat & Stage 4: Founder discussion",
-          body: `**Stage 3: Team chat**\n- Who: 1–2 engineers or PMs from the AI team\n- What they test: technical depth (can you go deep on your past AI work?), collaboration style (how do you work with engineers?), product thinking (do you have opinions about what to build and why?)\n- What to prepare: deep technical walk-throughs of your best AI project — model selection decisions, eval frameworks, production failures and how you handled them, architecture choices\n- Failure mode: surface-level answers. "I worked on an LLM feature" is not enough. "I built a RAG pipeline that retrieved from a Postgres store with pgvector, processed 5,000 docs/day, and had a P95 retrieval latency of 180ms — here's how I measured that" is what they want\n\n**Stage 4: Founder discussion**\n- Who: Kestra's founders\n- What they test: strategic thinking, cultural fit, and whether you'd make a strong early-team member for an AI-forward orchestration company\n- What to prepare:\n  - A clear point of view on Kestra's AI strategy: "I think the biggest opportunity is [X] because [Y]. Here's what I'd build first and why."\n  - A story about working autonomously under ambiguity\n  - Genuine enthusiasm for the intersection of orchestration and AI — founders can tell the difference between performed interest and real curiosity\n- Failure mode: being generic. "I'm excited about AI and orchestration" is not memorable. "I think the agent loop observability problem is the most important thing to solve right now because enterprise customers will churn the first time an agent run is undiagnosable" is memorable.`,
+          heading: "Stage 3: 30-minute team discussion & Stage 4: Co-founder conversation",
+          body: `**Stage 3: Team discussion with two colleagues**\n- Who: likely 1 engineer + 1 PM or product lead from the AI team\n- What they test: depth of your AI product knowledge, how you work cross-functionally, whether your product opinions are grounded in customer understanding\n- Expect: deep technical follow-up on your homework response + "tell me about a time you [made a hard prioritization call / pushed back on a feature request / shipped something you had doubts about]"\n- Failure mode: surface-level answers. "I prioritize by impact and effort" is not an answer — "I prioritized the eval framework over 3 customer feature requests because without measurement infrastructure, every feature ship was a quality gamble I couldn't defend to stakeholders" is an answer\n\n**Stage 4: 30-minute co-founder conversation**\n- Who: a Kestra co-founder\n- What they test: strategic alignment, genuine curiosity about the problem, whether you'd be a strong early-team addition at a Series A company\n- What founders are actually asking:\n  - Would I trust this person to make product calls autonomously?\n  - Do they have the taste to know what matters vs. what's noise?\n  - Are they genuinely interested in the problem, not just the job?\n- What you should bring: a specific point of view on Kestra's AI strategy. Not "I'd need to learn more before having an opinion" — a hypothesis you're willing to defend and update.\n- Failure mode: vague enthusiasm. "I'm excited about AI and orchestration" is forgettable. "I think the agent execution observability gap is the most important thing to solve right now because enterprise customers will churn the first time an agent run fails and they can't explain why" is memorable.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "In the Stage 2 technical test, what single element most clearly signals 'production-level experience' to Kestra's engineering team?",
+            "In Stage 1, the hiring manager asks: 'What do you know about Kestra?' What's the strongest answer?",
           options: [
-            "A working demo that runs end-to-end with no errors",
-            "A complete test suite covering happy path, error cases (429, 503, timeout), and edge cases — with mocked LLM calls and WireMock stubs",
-            "A detailed README with setup instructions and screenshots",
-            "Using the latest Java 21 features and Micronaut version",
+            "'I know it's a workflow orchestration platform with a strong open-source community and a recent Series A.'",
+            "'It's a universal orchestration platform — YAML-based, works for data pipelines, IT automation, and AI agent workflows. Almost 30,000 GitHub stars, 10,000+ organizations, $25M Series A in March 2026. What I find most interesting is the bet on YAML as the workflow definition language — it means non-Python engineers can read and maintain workflows, which matters a lot for the DevOps and platform teams that are now inheriting AI workflow ownership.'",
+            "'I've been exploring your docs and the product looks impressive. I'd love to learn more about the AI direction.'",
+            "'I know you're competing with Airflow and Prefect in the data orchestration space.'",
           ],
           correct: 1,
           explanation:
-            "Tests are the clearest signal of production experience because prototype engineers don't write them. A test suite that covers retry behavior on 429, timeout handling, null response handling, and structured output parsing proves you've shipped code that had to handle real failures — not just happy-path demos.",
+            "Option B demonstrates depth (specific numbers, specific architectural choice), understanding (why YAML matters for the non-Python audience), and genuine curiosity (a specific product bet you find interesting). Option A is accurate but shallow. Option C signals you didn't do research. Option D reduces Kestra to a narrow competitive framing that misses the universal positioning.",
         },
         {
           type: "multiple-choice",
           question:
-            "For the Stage 4 founder discussion, you're asked: 'What's the most important thing Kestra should build for AI in the next 6 months?' What makes the strongest answer?",
+            "The co-founder asks: 'What's the most important AI feature Kestra doesn't have yet?' You have 2 minutes. What structure works best?",
           options: [
-            "'Agent execution observability — per-step visibility into what an agent did, why, and what it decided' — with a specific rationale tied to enterprise customer needs and competitive differentiation",
-            "'Flow generation from natural language' — it's the most commonly requested feature in the community",
-            "'Better model selection UI' — it's a quick win that improves the existing AI task experience",
-            "'I'd want to learn more about current user needs before committing to a specific direction'",
+            "List 3 candidate features and explain the trade-offs of each",
+            "'It depends on which customer segment you're prioritizing' — then ask a clarifying question",
+            "Lead with your recommendation: '[Feature] because [reason tied to customer pain]. Here's what I'd measure to know it's working: [metric].' Then invite pushback: 'My assumption is [X] — is that consistent with what you're hearing?'",
+            "Reference what competitors have shipped and propose Kestra match it",
           ],
-          correct: 0,
+          correct: 2,
           explanation:
-            "Founders want conviction backed by reasoning, not hedging. Option A is strongest because it's specific, tied to a real customer pain (production agents are black boxes today), and defensible with competitive analysis (no orchestration platform does this well yet). Option D is the worst — founders at this stage don't hire people who need to 'learn more' before having an opinion.",
+            "Co-founders want conviction backed by reasoning, not hedging. Option A (listing trade-offs) delays the recommendation until it's too late. Option B (asking for clarification) signals inability to operate under ambiguity — founders live in ambiguity. Option D (competitive parity) is reactive. Option C is decisive, specific, and ends with an invitation for dialogue that shows intellectual humility without sacrificing conviction.",
         },
         {
-          type: "multiple-choice",
-          question:
-            "The Stage 3 team chat asks: 'Tell me about a time an AI feature you shipped failed in production.' What's the right approach?",
-          options: [
-            "Say you've been careful and haven't had major production failures",
-            "Pick a real failure, explain what broke (model, prompt, infrastructure, or data), what the user impact was, how you diagnosed it, what you changed, and how you prevented recurrence",
-            "Describe a failure from a project you observed but didn't directly own",
-            "Keep it vague — specific failures might make you look incompetent",
+          type: "scenario",
+          prompt:
+            "Stage 3: An engineer on the Kestra team asks, 'How do you decide when an AI feature is ready to ship without a human review gate?' Walk through your answer.",
+          sampleAnswer:
+            "The decision hinges on three things: accuracy threshold, failure cost, and detection speed. First, accuracy threshold: before removing a human gate, I need the AI's accuracy on a representative eval set to be above a threshold the stakeholder team has pre-agreed to accept. For high-stakes decisions (routing to a premium support queue, escalating a potential churn signal), I'd require higher accuracy and might never fully remove the gate. For lower-stakes decisions (pre-filling a form field, categorizing a low-priority ticket), I'd accept a lower bar and faster graduation. Second, failure cost: what happens if the AI is wrong and there's no human to catch it? Is the failure recoverable (wrong category that gets fixed next review cycle) or unrecoverable (wrong action taken on a customer's account)? The higher the failure cost, the longer the human gate stays. Third, detection speed: even after removing the human gate, I need a monitoring system that catches accuracy degradation before customers notice. 'Removing the gate' doesn't mean 'stopping measurement' — it means switching from human-in-the-loop review to automated quality monitoring. If those three conditions are met — agreed accuracy threshold crossed, acceptable failure cost, monitoring in place — I'd propose removing the gate and revisit if the production accuracy deviates from the eval set baseline.",
+          keyPoints: [
+            "Three clear criteria: accuracy threshold, failure cost, detection speed",
+            "Stakeholder alignment on the threshold before launch, not after",
+            "Removing the gate ≠ stopping measurement — monitoring replaces the human review",
+            "Failure cost asymmetry: high-stakes decisions keep gates longer",
           ],
-          correct: 1,
-          explanation:
-            "Production failures are proof of production experience. Every engineer who ships AI features has had things break. The absence of a good failure story suggests you haven't shipped anything meaningful to production. Specificity (what broke, what you did, what you changed) shows operational maturity — which is exactly what 'production-level experience' means.",
         },
       ],
       resources: [
         {
-          title: "Kestra Discord / Community",
-          url: "https://kestra.io/slack",
-          description: "Join the Kestra community — understanding the user conversations here is useful preparation for the founder discussion.",
-        },
-        {
           title: "Kestra GitHub Issues",
           url: "https://github.com/kestra-io/kestra/issues",
-          description: "Real feature requests and bugs — what users actually want. Read 20 issues before the interview.",
+          description: "Read 20–30 recent issues before Stage 3 — understanding what users are asking for shows you've done real research beyond the docs.",
+        },
+        {
+          title: "Kestra Discord / Community Slack",
+          url: "https://kestra.io/slack",
+          description: "Join the Kestra community and read the AI-related conversations — the co-founder likely participates here.",
         },
       ],
     },
@@ -102,168 +101,125 @@ export const kestraUnit5: Unit = {
       id: "5-2",
       unitId: "unit5",
       companySlug: "kestra",
-      title: "Technical Test Preparation",
+      title: "Your AI Strategy Pitch for Kestra",
       tldr:
-        "Concrete preparation for Kestra's technical test: how to set up the environment, what to build, how to structure the code, and what the evaluator is looking at.",
-      skills: ["Technical test prep", "Java plugin patterns", "Code quality"],
-      xp: 30,
+        "The co-founder will ask you what you'd build. This is not a trap — it's an invitation to show strategic thinking. Here's how to construct a defensible, specific AI strategy pitch for Kestra.",
+      skills: ["Strategic thinking", "Pitch construction", "Co-founder conversation"],
+      xp: 25,
       content: [
         {
-          heading: "Setting up your environment",
-          body: `Before the technical test starts, have these ready:\n\n**Local Kestra instance:**\n- Clone the \`kestra-io/kestra\` repo and follow the local development setup\n- Alternatively, use Kestra's Docker Compose quickstart — this is faster and sufficient for plugin development\n- Verify you can run a simple YAML flow successfully before the test\n\n**Plugin development setup:**\n- Clone \`kestra-io/plugin-ai\` — this is the template for AI plugin development\n- Read at least 2 existing plugin implementations end-to-end: understand the \`@Schema\`, \`@PluginProperty\`, \`@Plugin\` annotation patterns, the \`RunContext\` API, and the \`Output\` inner class pattern\n- Run the existing plugin tests to verify your setup\n\n**API access:**\n- Have an Anthropic API key and an OpenAI API key ready — the test may require calling either\n- Store them as environment variables, not hardcoded strings\n- Test a basic API call in isolation before the test\n\n**Java tooling:**\n- Maven or Gradle (check which Kestra uses — it's Maven)\n- Java 21 (Kestra targets modern Java)\n- IntelliJ IDEA with the Micronaut plugin — not required but helpful for annotation processing\n\n**Vue.js tooling (if the test has frontend):**\n- Node.js 18+, npm/yarn\n- Understand how to run the Kestra UI locally from the \`kestra-io/ui\` repo\n- Have Vue DevTools browser extension installed`,
+          heading: "The structure of a good AI strategy pitch",
+          body: `A 3-minute response to "what would you build for Kestra's AI strategy?"\n\n**1. The most important problem (1 sentence)**\n"The biggest gap in Kestra's AI story right now is [X]."\n\n**2. Why it's the right priority (2–3 sentences)**\n- What customer pain does it address?\n- Why is now the right time (market timing, competitive window)?\n- What does solving it unlock?\n\n**3. What you'd build (2–3 sentences)**\n- Specific feature or capability\n- How it's different from what already exists\n- Why Kestra is the right place to build it (vs. a standalone tool)\n\n**4. How you'd measure success (1 sentence)**\n"Success looks like: [specific metric] within [timeframe]."\n\n**5. The assumption (1 sentence)**\n"My assumption is [X] — which I'd validate by [Y]."\n\nThis structure is decisive without being arrogant. The assumption line is important: it shows intellectual humility and invites the founder into a real conversation.`,
+        },
+        {
+          heading: "Three defensible AI strategy pitches for Kestra",
+          body: `**Pitch 1: Agent execution observability**\n"The biggest gap is that AI agent workflows running in Kestra look like black boxes — you see the start and end of the execution but not what the agent did at each step, what it decided, or why it chose a particular tool. Enterprise customers won't trust production agents they can't inspect. I'd build per-step agent traces: every LLM call, tool invocation, and decision logged as a sub-execution in the DAG. This gives Kestra something no other orchestration platform does well for agents — full auditability with no additional instrumentation. Success metric: 60% of active agent flow users enable the trace view within 60 days of launch."\n\n**Pitch 2: First-party AI task library with production defaults**\n"Most Kestra users building AI workflows today use a generic HTTP task to call LLM APIs — they're implementing their own retry logic, cost logging, and output parsing, inconsistently. I'd build a first-party AI task library for the top 3 providers (Anthropic, OpenAI, Bedrock) that ships with production-grade defaults: structured retry, cost logging to execution metadata, output schema validation. This isn't glamorous, but it's the foundation every future AI feature depends on, and it closes the gap that currently makes Kestra feel like a generic orchestration tool rather than an AI-native platform. Success metric: 30% adoption among existing users within 90 days."\n\n**Pitch 3: Human-in-the-loop as a first-class citizen**\n"The agent use case that's ready to buy right now isn't fully autonomous agents — it's agents with human checkpoints. Contract review, content approval, compliance flagging, fraud investigation. These workflows need a durable pause-and-wait primitive that survives process restarts, sends the right notification, and has configurable timeout and escalation. Kestra already has task dependencies and triggers, but there's no native 'wait for human approval' task type that enterprise teams would trust in a high-stakes workflow. This is achievable in one quarter and it directly addresses the use case that large-format enterprise customers are buying for today. Success metric: 5 design partner customers running a production human-in-the-loop workflow within 60 days of beta."\n\n**All three are defensible.** Pick the one you believe in most based on your research into Kestra's current product and community discussions.`,
           goAnalogy: {
-            term: "Nigiri",
-            reading: "にぎり",
+            term: "Kikashi",
+            reading: "きかし",
             meaning:
-              "The handicap stones placed before a game — the preparation that sets your starting position. Environment setup is nigiri: done before the game starts, it determines whether you're playing from strength or scrambling.",
+              "A forcing move that demands a response. A specific, confident AI strategy pitch is kikashi: it forces the co-founder to engage with your reasoning, not just evaluate your enthusiasm.",
           },
         },
         {
-          heading: "If the test is: build a Kestra AI plugin",
-          body: `This is the most likely test format. Here's the exact structure to follow:\n\n**Plugin class structure:**\n\`\`\`java\n@Plugin(\n    examples = {\n        @Example(\n            title = "Summarize a document",\n            code = { "model: claude-sonnet-4-5", "text: \\"{{ outputs.readFile.content }}\\"" }\n        )\n    }\n)\n@Schema(title = "Summarize text using an LLM")\npublic class LlmSummarize extends Task\n    implements RunnableTask<LlmSummarize.Output> {\n\n    @NotNull\n    @Schema(title = "Text to summarize")\n    @PluginProperty(dynamic = true)\n    private String text;\n\n    @Schema(title = "Max words in summary", defaultValue = "200")\n    @PluginProperty\n    private Integer maxWords = 200;\n\n    @NotNull\n    @Schema(title = "Secret key name for LLM API key")\n    @PluginProperty(dynamic = true)\n    private String apiKeySecret;\n\n    @Schema(title = "Model ID", defaultValue = "claude-haiku-4-5-20251001")\n    @PluginProperty\n    private String model = "claude-haiku-4-5-20251001";\n\n    @Override\n    public Output run(RunContext runContext) throws Exception {\n        String apiKey = runContext.decryptSecret(\n            runContext.render(apiKeySecret));\n        String renderedText = runContext.render(text);\n        // Call LLM, parse response, return output\n    }\n\n    @Builder @Getter\n    public static class Output implements io.kestra.core.models.tasks.Output {\n        private String summary;\n        private List<String> keyPoints;\n        private int wordCount;\n        private int inputTokens;\n        private int outputTokens;\n    }\n}\n\`\`\`\n\n**Test structure:**\n\`\`\`java\nclass LlmSummarizeTest {\n    @Test void happyPath() { /* mock LLM → verify output fields */ }\n    @Test void rateLimitRetriesWithBackoff() { /* 429 → verify retry */ }\n    @Test void timeoutThrowsException() { /* hang → verify timeout */ }\n    @Test void apiKeyFromSecretNotPlaintext() { /* verify decryptSecret called */ }\n    @Test void emptyTextThrowsValidationError() { /* null/empty → verify */ }\n}\n\`\`\``,
-        },
-        {
-          heading: "What the evaluator is looking for",
-          body: `Kestra's engineering team will evaluate your technical test on these dimensions:\n\n**1. Does it work? (Necessary but not sufficient)**\nA working solution that fails all other criteria is not a passing score. But a failing solution that shows great patterns won't pass either. It must work.\n\n**2. Error handling (High weight)**\n- Is every LLM API error handled explicitly?\n- Is there retry logic for transient failures?\n- Is there a configurable timeout?\n- What happens when the API returns an unexpected response shape?\n\n**3. Test coverage (High weight)**\n- Do the tests cover failure paths, not just the happy path?\n- Are LLM calls mocked so tests are deterministic and don't require API access?\n- Are the tests actually testing behavior, not just asserting the code ran?\n\n**4. Security (Medium weight)**\n- API key via secret, not hardcoded\n- No credential logging\n- Input validation on user-supplied fields\n\n**5. Code quality (Medium weight)**\n- Follows Kestra's existing patterns (read the existing plugins)\n- Meaningful variable names, no unnecessary complexity\n- Appropriate use of Java idioms (not Java-as-Python)\n\n**6. README / documentation (Lower weight, but differentiating)**\n- Does the README explain design decisions, not just run instructions?\n- "I chose to accumulate the stream rather than stream incrementally because [reason]" shows product engineering thinking\n\n**The differentiator:** most candidates nail #1 and fail #2 and #3. If your test has thorough error handling and real test coverage, you're in the top quartile automatically.`,
+          heading: "Handling pushback in the co-founder conversation",
+          body: `After you give your pitch, the co-founder will likely push back. This is the real evaluation — how you respond to disagreement under pressure.\n\n**Types of pushback and how to handle them:**\n\n**"We've already tried that and it didn't work."**\nResponse: "That's really useful to know. What was the blocker — customer adoption, technical complexity, or something else? That context would change my thinking about whether to revisit it or deprioritize it."\nSignal: curiosity, not defensiveness. You want to understand, not argue.\n\n**"That's not our biggest customer ask right now."**\nResponse: "What is the biggest ask? I made my recommendation based on [specific signals: GitHub issues, community threads, competitive gap] — I might have the wrong signal. What are you hearing?"\nSignal: you have a basis for your view, and you're willing to update it with better information.\n\n**"That's what [Competitor X] is building too."**\nResponse: "Exactly — which means there's validated demand. The question is whether Kestra can do it better by [specific differentiation: YAML integration, cross-flow observability, enterprise security model]. Do you think that differentiation is defensible?"\nSignal: competitive awareness + product conviction.\n\n**"It's more complex than you think."**\nResponse: "Walk me through the complexity — is this an architectural constraint, a user education problem, or something else? I'd rather understand the constraint before doubling down on the recommendation."\nSignal: genuine curiosity, not covering your bases.`,
         },
       ],
       exercises: [
         {
-          type: "multiple-choice",
-          question:
-            "You're given 4 hours for Kestra's technical test. How should you allocate the time?",
-          options: [
-            "1h setup, 2h implementation, 1h polish",
-            "30min reading existing Kestra plugins to match patterns, 90min implementing the plugin with error handling, 60min writing tests, 30min README and cleanup",
-            "3h implementation, 1h tests",
-            "2h implementation, 1h frontend UI, 1h tests",
-          ],
-          correct: 1,
-          explanation:
-            "Pattern-matching from existing code (30min) prevents the most common mistake: implementing in a style that differs from Kestra's conventions. Tests (60min) are the highest-weight evaluation signal and the most commonly skipped. README (30min) differentiates you. Over-indexing on implementation without tests is the most common failure pattern.",
-        },
-        {
-          type: "multiple-choice",
-          question:
-            "Your technical test submission has a complete, working plugin but no tests. A competing candidate has a plugin with one minor bug but comprehensive test coverage. Who is more likely to advance?",
-          options: [
-            "You — a working solution is the primary requirement",
-            "The competing candidate — tests are the clearest signal of production-level experience, and a minor bug in a well-tested codebase is easy to fix",
-            "Neither — both need to pass a minimum bar on both dimensions",
-            "It depends entirely on whether the minor bug affects core functionality",
-          ],
-          correct: 1,
-          explanation:
-            "Kestra explicitly screens for 'production-level experience, not prototype portfolios.' Tests are the single clearest signal of that. A well-tested codebase with a minor bug shows an engineer who understands production requirements and can fix bugs. A working-but-untested submission shows a prototype mindset.",
-        },
-        {
           type: "scenario",
           prompt:
-            "The technical test asks you to build a Kestra plugin that calls an LLM to classify customer feedback into categories. Halfway through, you realize you won't have time to implement streaming support AND comprehensive tests. Which do you cut and why?",
+            "Construct your personal AI strategy pitch for Kestra. Pick one of the three pitches above (or a different one if you have a stronger view), and adapt it with specific language that reflects your actual perspective. Write the 5-component version.",
           sampleAnswer:
-            "Cut streaming, keep the tests. Here's my reasoning: streaming is a UX enhancement — the feature works without it, just without progressive rendering. Tests are a correctness guarantee — without them, the evaluator can't trust that the code behaves correctly in failure scenarios. The test instructions say 'production-level experience' — that maps directly to test coverage, not to every possible feature. I'd note in the README: 'Streaming output not implemented in this version — I prioritized full error handling and test coverage. Streaming would be added as a follow-up: accumulate partial chunks as they arrive and write to Kestra's internal storage progressively.' That explanation shows I understand the tradeoff and made a deliberate call, not that I ran out of time and gave up on features.",
+            "**The biggest gap:** Kestra doesn't have a production-ready way to run AI agents as first-class workflows — the platform can orchestrate them, but the agent loop pattern (perceive → reason → act → observe → repeat) isn't a native abstraction. Teams building agents in Kestra today assemble the loop manually from generic task types. **Why it's the right priority:** Agent adoption is accelerating in enterprise, but production failures are common and invisible. Kestra's competitive advantage is observability and durability — exactly what agent loops need and what standalone frameworks like LangGraph don't provide. There's a 6–12 month window before Temporal or a specialized agent platform adds YAML-based workflow support. **What I'd build:** An AgentLoop task type: configure the LLM, the tool set, the termination conditions, and the max iterations. Each iteration is a sub-execution — observable, logged, resumable. Failed iterations surface as failed tasks with the agent's reasoning visible. Human gates are native: an approval task type that pauses the loop. **Success metric:** 3 enterprise customers running production agent workflows with >1,000 executions/month within 90 days of GA. **My assumption:** the primary adoption blocker for enterprise agent workflows is observability, not capability — they can build the agents, they can't trust them in production. I'd validate this in 10 customer interviews before committing to the spec.",
           keyPoints: [
-            "Tests signal production experience; streaming is a feature enhancement",
-            "The README should explain the tradeoff explicitly — show you made a deliberate decision",
-            "Kestra's evaluation criteria map directly to production requirements: correctness first, features second",
-            "Communicating what you'd do next (streaming as follow-up) shows completeness of thinking",
+            "All 5 components are present: problem, priority rationale, specific build, success metric, assumption",
+            "The assumption shows intellectual humility without weakening the recommendation",
+            "The success metric is specific and measurable, not vague",
+            "The competitive window is specific (6–12 months) with named competitors",
           ],
         },
-      ],
-      resources: [
         {
-          title: "Kestra Plugin AI (GitHub)",
-          url: "https://github.com/kestra-io/plugin-ai",
-          description: "Read this before the test — the code patterns here are exactly what they expect.",
-        },
-        {
-          title: "WireMock Getting Started",
-          url: "https://wiremock.org/docs/getting-started/",
-          description: "How to mock HTTP APIs in Java integration tests — essential for LLM plugin testing.",
+          type: "multiple-choice",
+          question:
+            "The co-founder says: 'That feature you proposed — we started building it 6 months ago and deprioritized it because adoption was low in beta.' What's your best response?",
+          options: [
+            "'Oh, that changes things — maybe it's not the right priority after all.'",
+            "'Interesting — what was the beta population, and was the adoption metric you tracked the right one? Sometimes low beta adoption signals a UX or activation problem, not a value problem.'",
+            "'I still think it's the right priority — the market has changed significantly in the last 6 months.'",
+            "'What were the other factors that led to deprioritization?'",
+          ],
+          correct: 1,
+          explanation:
+            "Option B probes the claim with precision without being defensive or dismissive. 'Low adoption in beta' is ambiguous — it could mean users tried it and didn't find value (signal to deprioritize), or users never reached the feature because of onboarding gaps (signal to fix activation, not deprioritize). Asking about the beta population and the metric shows product sophistication. Option A capitulates without learning anything. Option C is defensively doubling down. Option D is too broad — get to the specific data first.",
         },
       ],
+      resources: [],
     },
     {
       id: "5-3",
       unitId: "unit5",
       companySlug: "kestra",
-      title: "Positioning & The Founder Conversation",
+      title: "Positioning Your Background for Kestra",
       tldr:
-        "How to frame your background for the Kestra role, which experiences to lead with, which to background, and how to make the founder discussion memorable rather than generic.",
-      skills: ["Self-positioning", "Founder conversation", "Strategic thinking"],
+        "How to frame your experience for this specific role — what to lead with, what to background, and how to present your AI product portfolio in a way that passes Kestra's explicit bar.",
+      skills: ["Self-positioning", "Interview storytelling", "Role alignment"],
       xp: 30,
       content: [
         {
-          heading: "How to frame your background",
-          body: `The Kestra Product Engineer role has a specific profile. Here's how to map your experience to it:\n\n**Lead with Java, even if you have other languages**\nIf you have Java experience (even if it's not your strongest language), lead with it. Java is the single non-negotiable in the JD. "I've been working primarily in Java for [X years], and I've recently been building AI integrations in that context" is the right framing if it's true.\n\n**AI experience: specificity is credibility**\nDon't say "I've worked with LLMs." Say "I built a [specific feature] using [Claude Sonnet / GPT-4o], with a RAG pipeline over [data source], running in production at [scale], measuring [metric]." The more specific, the more credible.\n\n**Production emphasis**\nEvery time you mention an AI project, add a production signal: "this ran with real users," "I monitored P95 latency," "I wrote the retry logic when the API went down," "I built the eval pipeline to measure regression when I changed the prompt."\n\n**Full-stack framing**\nIf you have Vue.js or any frontend experience, mention it. If not, mention the closest equivalent (React? Angular?) and position it as "I'm comfortable with modern JavaScript frameworks — Vue.js is one I'd get up to speed on quickly." Don't pretend expertise you don't have; do show you're not afraid of the frontend.\n\n**Orchestration context**\nIf you have any workflow/pipeline/automation experience, surface it: CI/CD pipelines, data pipelines, job schedulers, async workflows. Even non-Kestra orchestration experience shows you understand the domain.`,
+          heading: "What to lead with",
+          body: `The Kestra PM, AI role has a specific profile. Frame your background to match it:\n\n**Lead with shipped AI products**\nNot "I've worked with AI" — "I owned [specific feature] that used [LLM/agent approach] to [specific outcome], ran in production for [duration], serving [scale]." If you have two AI products to talk about, lead with the one with the stronger production story.\n\n**Technical fluency signal**\nMention something that shows you understand AI systems, not just AI demos. "I made the model selection decision — we started with GPT-4 but moved to Claude Sonnet for [cost/latency/accuracy reason]" is a technical fluency signal. "I worked closely with the AI team on the feature" is not.\n\n**Developer product experience**\nKestra's users are developers and engineers. If you've worked on developer tools or APIs, surface it. If not, frame your AI products in terms of technical users: "my primary users were data engineers who ran this workflow on their pipeline data."\n\n**Orchestration or workflow context**\nIf you have any background in data pipelines, automation workflows, DevOps tooling, or scheduled jobs, surface it. It doesn't need to be orchestration-specific — any experience in the "automate repeated processes" problem space is relevant context.\n\n**What to background:**\n- Consumer-facing AI features where the user never sees the orchestration (a chatbot on a website)\n- AI features you contributed to but didn't own the roadmap for\n- Prototype or internal tool AI projects without production metrics\n- General PM experience without AI-specific technical depth`,
           goAnalogy: {
-            term: "Kikashi",
-            reading: "きかし",
+            term: "Sente",
+            reading: "せんて",
             meaning:
-              "A forcing move that leaves no aji — a spent resource. Don't use a weak story where a strong one exists. Every answer should be kikashi: decisive, specific, no wasted moves.",
+              "Having the initiative. Frame your background proactively rather than waiting to respond to questions — take sente in the narrative rather than letting the interviewer construct their own story about you.",
           },
         },
         {
-          heading: "The founder conversation",
-          body: `Stage 4 is different from the other stages. You're not answering interview questions — you're having a strategic conversation with the people building the company.\n\n**What founders are really asking:**\n- Would I want this person deciding what to build next week?\n- Do they have the taste to know what matters?\n- Will they operate autonomously without a lot of oversight?\n- Are they genuinely excited about this problem, not just this job?\n\n**The format:** expect a mix of structured and unstructured conversation. There may be specific questions, but there will also be open-ended discussion. Lean into it — don't wait to be asked, contribute observations.\n\n**Strong founder conversation moves:**\n\n"I was using Kestra to prototype [X] before this interview and noticed [specific observation]. I'd think about solving that by [approach]." This shows you're already inside the product, not just reading about it.\n\n"I looked at your GitHub issues and noticed [specific pattern in user requests]. It seems like the biggest friction is [X]. Is that consistent with what you're hearing?" This shows you've done real research and have opinions.\n\n"I think the hardest product problem you have right now is [X]. Here's why it's hard and how I'd approach it." This shows strategic thinking and comfort with ambiguity.\n\n**What to avoid:** vague enthusiasm ("I'm really excited about orchestration!"), questions that show you haven't done research ("Can you tell me what Kestra does?"), and over-preparation that sounds rehearsed ("My greatest weakness is that I care too much...").`,
+          heading: "Common positioning mistakes",
+          body: `**Mistake 1: Over-crediting adjacent work**\n"I was the PM for a product that had an AI recommendation engine" — if the recommendation engine was built by a different team and you interfaced with it at the API level, that's not AI PM experience. Kestra will probe, and the story falls apart under scrutiny.\n\n**Mistake 2: Generalizing the wrong metric**\n"The feature was very successful" without a number. What was it? User adoption? Accuracy? Cost reduction? The absence of a number signals you didn't measure it.\n\n**Mistake 3: Prototype-to-PM framing**\n"I built a prototype of an AI feature and then handed it to engineering to productionize." This is valuable — but it's not PM experience. A PM's job is to own the feature through production, measure it, iterate on it, and make the hard calls post-launch.\n\n**Mistake 4: Avoiding the failure stories**\nCandidates often only share success stories. But Kestra is specifically looking for people who've navigated real AI production challenges. A story about a quality degradation you caught and fixed is more impressive than a story about a feature that shipped perfectly.\n\n**Mistake 5: Generic enthusiasm without specifics about Kestra**\n"I'm really excited about the orchestration + AI intersection" sounds the same coming from every candidate. "I think the pause/resume human-in-the-loop pattern is the most underbuilt primitive in the current orchestration stack, and I've seen enterprise customers work around it with clunky external approval systems three times in the last year" is specific, credible, and memorable.`,
         },
         {
-          heading: "Your AI strategy pitch for the founder conversation",
-          body: `Be ready to give a 3-minute answer to: "What would you build for Kestra's AI strategy if you started Monday?"\n\n**The structure:**\n1. The most important problem (1 sentence): "The biggest gap in Kestra's AI story right now is [X]."\n2. Why it's the right priority (2–3 sentences): user pain, market opportunity, what it unlocks\n3. What you'd build (2–3 sentences): specific feature, how it works, how it's different from what exists\n4. How you'd measure success (1 sentence): the metric that tells you it worked\n\n**Example answer:**\n\n"The most important gap is agent execution observability. Today, if you run an AI agent loop in Kestra, the execution looks like a single black box task — you can't see which tool the agent called at step 7, why it made that decision, or where it got stuck. Enterprise customers won't trust production agents they can't inspect. I'd build a per-step agent trace: every LLM call, every tool invocation, every reasoning step tracked as a sub-task in the execution DAG, visible in the existing UI without any new UI work. This gives Kestra something no other orchestration platform has for agents — full auditability. I'd measure success as: what % of agent execution failures can a Kestra operator diagnose within 5 minutes of the failure? If that number goes from ~20% today to >80% with the new observability, we've solved the right problem."\n\nThis answer is: specific, opinionated, grounded in user pain, describes a concrete solution, and has a measurable outcome. That's the founder conversation target.`,
+          heading: "Questions to ask across the 4 stages",
+          body: `Good questions signal genuine interest, demonstrate research, and give you information you actually need to make your own decision. Here's a question for each stage:\n\n**Stage 1 (Hiring manager):** "What does success look like for this PM in the first 90 days — and what would make someone fail in that same period?"\n\n**Stage 2:** No questions — it's asynchronous. But include a line at the end of your homework: "I'd want to validate [X] before committing to this recommendation — who would be the right person to talk to about [specific question]?" This shows you're thinking about the next steps.\n\n**Stage 3 (Team discussion):** "When you've disagreed with a PM recommendation on an AI feature — what was the disagreement and how did you resolve it?"\n\n**Stage 4 (Co-founder):** "What's the AI use case you're most uncertain about — the one where you're not sure if customers actually need it yet?"\n\n**Why these questions:** each one is non-obvious, requires actual knowledge to answer, and tells you something you genuinely care about. "What does your culture look like?" is a wasted question. "Where do you most commonly disagree with PM recommendations?" reveals how the team operates under real conditions.`,
         },
       ],
       exercises: [
         {
-          type: "scenario",
-          prompt:
-            "Kestra's founder asks: 'We've had candidates who look great on paper but struggle with the ambiguity of a fast-moving startup. How do you handle working without clear requirements?' Give your answer.",
-          sampleAnswer:
-            "I actually work best when I own the spec rather than receive it. My pattern when requirements are ambiguous: I talk to 2–3 users (or read the GitHub issues) to understand the actual pain, form a hypothesis about the right solution, write a one-page spec with the proposed behavior, key tradeoffs, and what I'm NOT building, get quick feedback from the team (a day, not a week), then build and ship the smallest version that validates the hypothesis. What I try to avoid is: waiting for clarity that isn't coming, or building for more than 2 weeks without user feedback. The biggest ambiguity risk in AI feature work is spending 3 weeks building something technically impressive that users don't actually want. I'd rather ship a rough version in week 1, see how users respond, and iterate than build the perfect version in week 4.",
-          keyPoints: [
-            "Own the spec — don't wait for requirements to be handed down",
-            "User research first (GitHub issues, user conversations) to reduce ambiguity before building",
-            "The one-page spec with clear tradeoffs and scope creates alignment fast",
-            "Ship the smallest version that validates the hypothesis — don't over-build before feedback",
-          ],
-        },
-        {
-          type: "scenario",
-          prompt:
-            "In the Stage 3 team chat, an engineer asks: 'Walk me through the most complex AI feature you've built.' You've built an LLM-powered document classification system. Walk through your answer.",
-          sampleAnswer:
-            "I built a document classification system that categorized customer support tickets into 47 categories for routing to the right team. The core challenge was: 47 categories is too many for zero-shot classification (the model would conflate similar categories), and too many to fit all in a prompt as examples. My solution: a two-stage approach. Stage 1: a fast, cheap embedding-based retrieval — find the 5 most similar past tickets for each new ticket using pgvector. Stage 2: pass the new ticket + its 5 similar examples to GPT-4o with a few-shot prompt asking for classification from the reduced candidate set. This brought accuracy from 71% (zero-shot) to 89% (two-stage). I measured this with an offline eval set of 500 labeled tickets, running it after every prompt or retrieval change to catch regressions. In production, I ran into a real failure: our retrieval was biased toward recent tickets, so new categories with few historical examples classified poorly. I fixed this by adding explicit 'novel query' detection — if the top-5 retrieved tickets all had similarity scores below 0.7, flag for human review rather than auto-classify. The system runs at 3,000 tickets/day with P95 latency of 1.4 seconds and classification accuracy of 87% on production (slightly lower than eval — distribution shift from new ticket types).",
-          keyPoints: [
-            "Specifics: 47 categories, two-stage approach, exact accuracy numbers (71% → 89%)",
-            "The offline eval set and regression testing demonstrate production-level rigor",
-            "A real failure described (retrieval bias) with a concrete fix shows operational experience",
-            "Production vs. eval accuracy difference shows you understand distribution shift",
-          ],
-        },
-        {
           type: "multiple-choice",
           question:
-            "The founder asks: 'What's Kestra's biggest competitive threat in the AI orchestration space?' What's the strongest answer?",
+            "You're asked: 'What's your biggest limitation for this role?' What's the strongest honest answer for a PM with strong AI product experience but limited orchestration background?",
           options: [
-            "'Apache Airflow — it has the largest community and most integrations'",
-            "'LangGraph and similar agent frameworks — if they add scheduling and observability, they could become a full orchestration layer that competes with Kestra for AI-native teams'",
-            "'Cloud providers — AWS Step Functions and GCP Workflows could add AI task types'",
-            "'I don't want to speculate without more data on the competitive landscape'",
+            "'My greatest weakness is that I'm too detail-oriented sometimes.'",
+            "'I don't have deep orchestration-specific PM experience — my AI work has been in [context]. I understand the concepts from a user and architect's perspective, and I've spent the last [period] going deep on Kestra's product and the orchestration competitive landscape, but the orchestration domain nuances I'll need to build in context. What I'm confident in is the AI product judgment and customer discovery, and I think that's the harder skill to teach.'",
+            "'I haven't used Kestra in production, though I've explored the docs and built a test flow.'",
+            "'I'd need to get up to speed on the technical details of Kestra's architecture before I could be effective.'",
           ],
           correct: 1,
           explanation:
-            "LangGraph (and similar agent-first frameworks) is the most asymmetric threat: they're already the framework of choice for AI teams building agents, and if they add production-grade scheduling, observability, and triggers, AI teams won't need a separate orchestration platform. Airflow is a legacy threat (not AI-native); cloud providers move slowly; Option D is a hedge that signals lack of conviction.",
+            "Option B is honest, specific, and well-framed. It acknowledges the gap, describes what you've done to close it, expresses confidence in the skills that ARE relevant, and implicitly makes the case that those skills are more important for this role. It's not defensive and it doesn't deflect. Options A and D are either generic (A) or undersell your preparation (D). Option C is too narrow — the limitation they care about is the PM experience dimension, not just product familiarity.",
+        },
+        {
+          type: "scenario",
+          prompt:
+            "You have 3 AI product experiences to choose from for the interview. Experience A: a fully autonomous AI feature with no human review, 3M users, 91% accuracy, that you shipped 2 years ago and no longer own. Experience B: a small-scale internal AI tool you built and maintained for 6 months, 200 users, 87% accuracy, that you still own and have iterated on 4 times. Experience C: a high-profile AI feature that launched at 78% accuracy, was rolled back, and relaunched at 89% 3 months later — 500K users, you own it. Which do you lead with in the Kestra interview and why?",
+          sampleAnswer:
+            "I lead with Experience C. Here's why: Kestra is explicitly looking for candidates who've navigated real AI production challenges, not candidates who've shipped flawless demos. Experience C is the richest story for this interview because it has: (1) a quality failure and recovery — demonstrates production judgment; (2) a rollback decision — demonstrates the courage to make the hard call; (3) a relaunch — demonstrates iteration discipline and a clear quality threshold; (4) meaningful scale (500K users). Experience A is valuable (scale, accuracy) but I no longer own it, which limits how deep I can go on the ongoing decisions. Experience B is honest but small-scale — 200 users and 87% accuracy is less compelling, though the ongoing ownership and 4 iterations is a quality signal. For the intro call, I'd open with C. For follow-up questions about ongoing ownership and iteration, I'd bring in B as a parallel example of a smaller-scale but more continuously maintained product. A becomes supporting evidence of scale.",
+          keyPoints: [
+            "Lead with the story that best matches what the interviewer is looking for, not the most impressive-sounding one",
+            "Rollback + relaunch stories are powerful signals of production experience — don't hide them",
+            "Ongoing ownership is a proxy for having faced the long-tail challenges that appear post-launch",
+            "It's fine to draw on multiple experiences across different interview moments",
+          ],
         },
       ],
       resources: [
         {
-          title: "Kestra Blog: AI Direction",
+          title: "Kestra Blog: AI Posts",
           url: "https://kestra.io/blogs",
-          description: "Read the last 6 months of Kestra posts — founders will reference their own recent thinking.",
-        },
-        {
-          title: "Lenny's Newsletter: Technical Founder Interviews",
-          url: "https://www.lennysnewsletter.com",
-          description: "Patterns from startup founder conversations — how technical founders think vs. PM/engineering interviewers.",
+          description: "Read the last 6 months of Kestra blog posts — the co-founder often references their own recent thinking in the final conversation.",
         },
       ],
     },
@@ -271,42 +227,42 @@ export const kestraUnit5: Unit = {
   quiz: [
     {
       type: "multiple-choice",
-      question: "What single preparation step would most improve your Stage 2 technical test performance?",
+      question: "What single element most differentiates a passing from a failing Stage 2 homework submission at Kestra?",
       options: [
-        "Reviewing Java syntax and common interview algorithms",
-        "Reading Kestra's existing plugin-ai code on GitHub and running its tests locally before the test begins",
-        "Building a full LLM application from scratch to demonstrate capability",
-        "Preparing a list of questions to ask the evaluator during the test",
+        "Comprehensive coverage of all possible AI features and their trade-offs",
+        "A clear, decisive recommendation for what to build first, with specific reasoning and explicit non-goals — rather than a list of options or hedged 'it depends' framing",
+        "Demonstrating familiarity with Kestra's existing features and documentation",
+        "A polished format with clear headers, visuals, and a professional design",
       ],
       correct: 1,
       explanation:
-        "The test evaluates fit with Kestra's specific patterns, not generic Java ability. Reading existing plugins tells you exactly what annotation patterns to use, how to structure Output classes, how RunContext works, and what test patterns they prefer. Deviating from these patterns signals you didn't do the research — matching them signals you did.",
+        "The posting explicitly calls out 'decisive calls about what not to build' as a key requirement. The homework is designed to evaluate exactly this. A comprehensive options list fails because it avoids the decision. An 'it depends' conclusion fails because it avoids conviction. A decisive recommendation with explicit non-goals demonstrates the product judgment Kestra is hiring for.",
     },
     {
       type: "multiple-choice",
-      question: "Why is 'I've worked on LLM projects' weaker than 'I built a RAG pipeline running at 5,000 queries/day with a P95 latency of 180ms' in the Kestra interview?",
+      question: "The co-founder pushes back on your AI strategy pitch. You're not sure they're right, but their point has some merit. What's the right response?",
       options: [
-        "Scale numbers are the only thing technical interviewers care about",
-        "Specificity is credibility — vague claims could apply to a weekend prototype; specific metrics and scale signal production experience",
-        "Kestra processes 5,000+ queries/day so matching that scale is important",
-        "Technical interviewers distrust candidates who don't cite specific numbers",
+        "Hold your position — conviction is a signal of strong product thinking",
+        "Immediately update your recommendation to align with their view",
+        "Acknowledge the merit, describe what would change your view ('if X is true, then I'd prioritize Y instead'), and ask the question that resolves the uncertainty",
+        "Ask them to elaborate so you can gather more data before responding",
       ],
-      correct: 1,
+      correct: 2,
       explanation:
-        "Specific details (query volume, latency, architecture choices) prove you shipped something real and measured it. Vague statements apply equally to a demo app and a production service — they provide no signal. Kestra is explicitly filtering for production experience; specific metrics are what prove you have it.",
+        "Option C is the PM skill: update conditionally, not reflexively. 'If X is true, then Y' shows you've integrated their point without abandoning your reasoning. Then asking the question that would resolve the uncertainty ('what's the actual data on customer adoption of Z?') keeps the conversation productive and shows you operate on evidence, not just conviction or deference.",
     },
     {
       type: "multiple-choice",
-      question: "The founder conversation is the final stage. What is the founders' primary question in this conversation?",
+      question: "You have 60 seconds to answer: 'Why do you want this specific role at Kestra vs. a PM role at a larger company with more AI investment?' What's the strongest answer?",
       options: [
-        "Do they have the technical skills to pass our senior engineering bar?",
-        "Would I want this person deciding what to build next week — do they have the judgment, initiative, and excitement to operate autonomously on Kestra's AI roadmap?",
-        "Are they a culture fit with the rest of the engineering team?",
-        "Can they pass a system design interview at the senior level?",
+        "'I prefer smaller companies where I can have more ownership and autonomy.'",
+        "'I think the orchestration + AI intersection is the most underbuilt infrastructure in the current stack, and I want to define what it looks like before it becomes obvious — which is only possible at Kestra right now because no one else is building this specifically.'",
+        "'I'm excited about the growth stage and the learning opportunity that comes with a Series A company.'",
+        "'The team here seems exceptional and I've been impressed by the product vision.'",
       ],
       correct: 1,
       explanation:
-        "Founders in stage 4 are past technical screening (that was stage 2–3). They're evaluating judgment and fit: Can this person identify what matters? Will they work autonomously without much oversight? Do they genuinely care about the problem? Would they make the product better if given authority? That's the founder conversation.",
+        "Option B is specific to Kestra (not a generic startup preference), makes a strategic claim (the space is underbuilt), and explains why timing matters (the window closes as the space matures). Options A, C, and D could apply to any Series A startup. A co-founder asking this question is looking for 'why us' specificity — the answer should only be true for Kestra, not for 20 other companies.",
     },
   ],
   quizXp: 40,
