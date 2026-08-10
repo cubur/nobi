@@ -2,224 +2,270 @@ import type { Unit } from "@/data/types";
 
 export const kestraUnit4: Unit = {
   id: "unit4",
-  title: "Building the AI Roadmap",
+  title: "Kestra's AI Strategy",
   description:
-    "How to structure Kestra's AI roadmap — the short-term wins vs. platform bets, how to communicate the roadmap to different audiences, and how to make the hard sequencing calls.",
+    "The four AI tools Kestra shipped in 1.0, how AI Agents work in depth, the vision from static workflows to agentic systems, multi-agent patterns, human-in-the-loop, and what's still missing — the product frontier.",
   companySlug: "kestra",
   goTerm: "Amashi",
   goReading: "あまし",
   goMeaning:
-    "Thickness — accumulated influence that doesn't score directly but constrains future possibilities. Platform AI investments are amashi: they don't ship features immediately, but they make every future AI feature easier to build and harder for competitors to match.",
+    "Thickness — influence that constrains future moves without directly scoring. Kestra's AI infrastructure is amashi: it doesn't win customers immediately, but it constrains competitors from entering the agentic orchestration space without replicating what Kestra has already built.",
   color: "crimson",
   lessons: [
     {
       id: "4-1",
       unitId: "unit4",
       companySlug: "kestra",
-      title: "The Kestra AI Roadmap Structure",
+      title: "The Four AI Tools: What Kestra Built",
       tldr:
-        "A coherent AI roadmap has three layers: quick wins (visible value now), platform investments (infrastructure that compounds), and strategic bets (where to own the market). Learn how to balance all three.",
-      skills: ["Roadmap planning", "Prioritization", "Platform thinking"],
-      xp: 25,
+        "Kestra 1.0 shipped four AI capabilities that operate at different layers: MCP Resources (connect AI tools to live Kestra docs), AI Copilot (YAML generation in the UI), AI Agents (autonomous orchestration at runtime), and Agent Skills (extend Kestra expertise into dev environments). Each solves a different problem.",
+      skills: ["AI product inventory", "Feature differentiation", "AI tooling landscape"],
+      xp: 20,
       content: [
         {
-          heading: "Three layers of an AI roadmap",
-          body: `**Layer 1: Quick wins (0–3 months)**\nFeatures that deliver visible customer value without deep platform investment. They validate that Kestra is serious about AI, generate early feedback, and give engineering a manageable scope to start.\n\nExamples for Kestra:\n- First-party LLM task types (Anthropic, OpenAI, Bedrock) with production-ready defaults: retry, timeout, structured output parsing\n- Per-run AI cost logging (token usage + cost added to execution metadata)\n- AI-assisted flow debugging: on task failure, call an LLM with the error and recent logs to suggest root cause\n\n**Layer 2: Platform investments (3–9 months)**\nInfrastructure that doesn't ship as a customer-visible feature immediately but makes the next 12 months of AI features much easier to build. Often the most important and most undervalued layer.\n\nExamples for Kestra:\n- Eval framework integration: native support for running eval datasets against a flow, tracking accuracy over time\n- Human-in-the-loop as a first-class task type: pause/resume workflow pending external approval, with timeout and escalation\n- AI-specific observability: per-step agent execution traces, cost and latency dashboards at the flow level\n\n**Layer 3: Strategic bets (9–18 months)**\nLarger investments where Kestra can potentially own a market position if they move early enough.\n\nExamples for Kestra:\n- Agent-as-workflow: a native agent loop task type that makes Kestra the default orchestration layer for production AI agents\n- AI workflow marketplace: community-contributed and Kestra-curated blueprints with quality signals and usage stats\n- AI governance layer: audit trail, prompt versioning, model version pinning for regulated industries`,
+          heading: "The four layers of Kestra's AI strategy",
+          body: `Kestra's AI capabilities operate at four distinct layers, solving different problems for different users:\n\n**Layer 1: MCP Resources — AI coding tools get live Kestra knowledge**\nKestra exposes its documentation and live instance state via the Model Context Protocol (MCP). AI coding assistants like Claude Code and Cursor connect to this MCP server and query live documentation at runtime rather than relying on training data that may be months out of date.\n\n*Who benefits:* developers writing Kestra flows inside AI-assisted coding environments\n*What it solves:* LLM hallucinations about Kestra's plugin API (outdated task parameters, deprecated options, wrong configuration syntax)\n*The product insight:* this is an infrastructure play, not a feature play. It makes all AI assistance for Kestra more accurate — a rising tide for every other AI tool.\n\n**Layer 2: AI Copilot — YAML from natural language in the UI**\nBuilt into the Kestra UI, Copilot generates and refines flow definitions from natural language prompts. Describe what the flow should do; Copilot generates the YAML. Then iterate: "now add a retry on the HTTP task" or "add a Slack notification on failure."\n\n*Who benefits:* new Kestra users who haven't memorized plugin syntax; experienced users who want to scaffold quickly\n*What it solves:* the blank canvas problem — starting a new flow from scratch is slow; Copilot gives a working starting point\n*The product insight:* YAML is dramatically easier to generate correctly than Python code. This is why Copilot is a stronger product bet for Kestra than for Airflow or Prefect.\n\n**Layer 3: AI Agents — autonomous orchestration at runtime**\nA first-party plugin (\`io.kestra.plugin.ai.agent.AIAgent\`) that runs an autonomous agent inside a Kestra flow. The agent has an LLM, a system message (its role and constraints), tools (web search, task execution, calling other flows), and optional memory. It runs in a loop, deciding which tool to call next, until the objective is met or a termination condition is reached.\n\n*Who benefits:* engineering teams building AI-powered automation that adapts based on what it finds\n*What it solves:* the gap between "static workflow" (predetermined steps) and "adaptive workflow" (agent decides what to do next based on context)\n\n**Layer 4: Agent Skills — Kestra expertise in dev environments**\nStructured knowledge files (similar in concept to CLAUDE.md) that teach external AI coding agents how to generate valid Kestra flows, use \`kestractl\`, and operate in Kestra environments. These are distributed to developer tools so any AI coding assistant can "know" Kestra even if it wasn't in the training data.`,
           goAnalogy: {
-            term: "Myōshu",
-            reading: "みょうしゅ",
+            term: "Tesuji",
+            reading: "てすじ",
             meaning:
-              "A brilliant or unexpected move that dramatically changes the position. Strategic bets are potential myōshu: if the timing is right and competitors haven't seen it coming, a well-executed platform bet can reframe the entire competitive landscape.",
+              "A clever tactical move that accomplishes more than it appears. The MCP Resources tool is tesuji: it seems like infrastructure work but it improves the quality of every other AI capability built on top of it.",
           },
         },
         {
-          heading: "How to sequence the roadmap",
-          body: `The hard part of roadmap planning isn't identifying the right things to build — it's sequencing them given limited engineering capacity and competing customer pressures.\n\n**Sequencing principles for AI features:**\n\n**1. Platform before features (usually)**\nBuilding AI features on top of weak platform foundations creates technical debt that's expensive to unwind. Shipping the first LLM task type with proper retry, cost logging, and structured output parsing upfront means every future AI feature inherits those properties. Skipping the platform work means every feature has its own bespoke retry logic.\n\n**2. Instrumentation before optimization**\nYou can't optimize what you can't measure. Build cost and latency instrumentation before optimizing cost and latency. Build eval infrastructure before tuning accuracy. Data comes before decisions.\n\n**3. Validated pain before innovative features**\nBuild for the pain you've validated in customer interviews before building for the pain you've hypothesized from market analysis. Your hypotheses might be right, but validated pain has lower risk.\n\n**4. Anchor customer before broad release**\nFor novel AI features, find one design partner customer who will use it seriously and give honest feedback before broad launch. Their usage patterns will teach you more than 3 more months of internal spec work.\n\n**5. Internal before external**\nSome AI features (AI-assisted flow generation, AI debugging assistant) can be tested internally on Kestra's own workflows before shipping to customers. Internal usage surfaces failure modes cheaply.`,
+          heading: "The AI Copilot in depth",
+          body: `**How Copilot actually works:**\nThe user types a natural language description in the Kestra UI editor: "Create a flow that reads a CSV from S3, processes each row, calls the OpenAI API to classify the content, and writes the results back to S3." Copilot calls an LLM with the description + Kestra's YAML schema + relevant plugin documentation, and returns a valid YAML flow.\n\n**Iterative refinement:**\nCopilot isn't just generation — it supports incremental editing. "Add exponential retry to the OpenAI task" or "add a Slack alert if any tasks fail" are follow-up prompts that modify the existing flow rather than regenerating from scratch. This is how the UX stays productive: generate a base, refine iteratively.\n\n**The quality constraint:**\nCopilot output requires review. For simple flows with well-documented plugins, output quality is high. For complex flows with less common plugins or nuanced configuration, the output may need correction. The Copilot is a scaffold, not a finished product.\n\n**What enables Copilot at Kestra that's harder elsewhere:**\n- YAML has a defined schema — Kestra validates Copilot output against the schema before presenting it\n- Plugin documentation is structured — each plugin has defined properties, types, and examples that can be included in the LLM context\n- The Kestra UI can validate YAML in real-time and show errors before the user runs the flow\n\n**What it doesn't do yet:**\nCopilot doesn't generate flows that require complex conditional logic, multi-namespace coordination, or custom plugin configurations. It's strongest for standard integration flows and weakest for novel orchestration patterns.`,
         },
         {
-          heading: "The roadmap communication problem",
-          body: `A Kestra AI roadmap will be read by four very different audiences. The same roadmap document doesn't work for all four:\n\n**Engineering:** wants specificity — what to build, what the success criteria are, how it fits with the existing codebase, what not to build\n\n**Sales:** wants stories — "what can I tell a customer this quarter?" and "what's coming that I can use in a Q4 deal?"\n\n**Investors:** wants the narrative — where is the market going, how does Kestra win, what does success look like in 18 months?\n\n**Customers (design partners):** want to know when their specific pain will be addressed — not the full roadmap, just their slice\n\n**The PM skill:** translate the same underlying decisions into language that works for each audience. An engineering spec becomes a sales one-pager becomes an investor slide becomes a customer commitment. The underlying decisions are the same; the framing is different.\n\n**The one thing to avoid:** making commitments to customers that aren't reflected in the engineering roadmap. Customer expectations set by sales conversations that aren't backed by committed engineering work create trust debt that's very expensive to repay.`,
+          heading: "The strategic coherence of the four tools",
+          body: `The four tools are not independent features — they're a deliberate stack:\n\n1. **MCP Resources** make the underlying knowledge accurate for all AI tools\n2. **Agent Skills** bring that accurate knowledge into developer environments (Claude Code, Cursor)\n3. **AI Copilot** uses that knowledge to generate flows in the UI\n4. **AI Agents** use the platform as runtime infrastructure for autonomous workflows\n\nThe insight: Kestra is not just adding AI features to an orchestration product. They're positioning the orchestration product as the platform for AI development — both as the tool developers use to build AI workflows (Copilot, Skills, MCP) and as the runtime infrastructure for AI agents (AI Agents task type).\n\n**The 1.0 announcement framing:**\nKestra described its strategic direction as moving on two axes:\n- *From manual YAML to natural language:* users describe what they want rather than writing every YAML property by hand (AI Copilot direction)\n- *From static to autonomous:* workflows evolve from predetermined task sequences to self-directing agents that determine their own execution paths (AI Agents direction)\n\nThis dual-axis framing is the product vision. The PM role is to advance both axes.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "You have 3 engineering sprints (6 weeks). Option A: ship 4 quick-win AI features (LLM task types for the top 4 providers). Option B: build the eval framework infrastructure that all future AI features will depend on. No additional engineering capacity is available. Which do you choose and why?",
+            "A developer is building Kestra flows inside VS Code using Claude Code. Why does the MCP Resource integration matter for their experience?",
           options: [
-            "Option A — 4 features shipped is visible progress; infrastructure is invisible to customers",
-            "Option B — if the eval framework doesn't exist, you have no way to know if Option A's features meet quality thresholds before or after shipping. Building features without eval infrastructure creates unmeasurable quality risk",
-            "Option A — quick wins generate customer feedback that informs what infrastructure to build",
-            "Split the time: 3 sprints on one provider's LLM task type, done properly with eval framework included",
+            "It lets Claude Code run Kestra flows directly from VS Code",
+            "Claude Code's training data about Kestra's plugin API may be 6+ months old — properties changed, new plugins added, some deprecated. The MCP resource lets Claude Code query the live Kestra documentation at the moment the developer asks a question, so the suggestion reflects the actual current plugin API rather than outdated training data",
+            "It allows Claude Code to see the developer's Kestra execution history",
+            "It gives Claude Code access to Kestra's plugin source code for better suggestions",
           ],
-          correct: 3,
+          correct: 1,
           explanation:
-            "Option D is the right answer: scope one feature and do it properly, rather than four features without the infrastructure to measure them. An LLM task type built with a basic eval framework (test against 50 canonical examples, track accuracy in CI) ships with a quality signal. Four LLM task types shipped without any eval infrastructure ship with unknown quality. The instinct that 'infrastructure is invisible' is wrong — the quality problems it prevents are very visible to customers.",
+            "Training data staleness is the root problem. Kestra ships new plugin versions frequently. A developer asking 'how do I configure the Anthropic Claude task?' will get wrong answers from an LLM working from 6-month-old training data. The MCP integration makes the answer current because the LLM fetches it from the live documentation rather than recalling it from training data.",
         },
         {
           type: "multiple-choice",
           question:
-            "A sales rep commits to a customer: 'Kestra will have AI flow generation by end of Q3.' You haven't committed to that timeline. What do you do?",
+            "The AI Copilot and Blueprints both help users create flows faster. What's the key functional difference between them?",
           options: [
-            "Adjust the roadmap to hit Q3 — sales commitments are revenue-critical",
-            "Tell the customer the timeline is wrong",
-            "Have a direct conversation with the sales rep: explain the actual timeline, understand what they told the customer, agree on how to reset the customer's expectations, and establish a process to prevent unilateral timeline commitments in the future",
-            "Put AI flow generation on the roadmap but deprioritize other items to make it fit",
+            "Copilot generates code; Blueprints are visual templates",
+            "Blueprints are curated, quality-controlled templates for specific named use cases. Copilot generates custom flows from natural language for any described use case. Blueprints are 'I know what I want, show me a proven example.' Copilot is 'let me describe it and generate something custom.'",
+            "Copilot is for enterprise users; Blueprints are for open-source users",
+            "Blueprints require programming knowledge; Copilot does not",
           ],
-          correct: 2,
+          correct: 1,
           explanation:
-            "The sales-PM misalignment is the issue to fix, not the customer commitment to honor at any cost. Adjusting the roadmap to hit an uncommitted timeline creates false urgency that hurts other customers and the team. Telling the customer the timeline is wrong without coordinating with sales is bad process. The right move is to fix the root cause (uncoordinated customer commitments) and reset the customer expectation together with sales, with a clear explanation of the actual timeline and what the customer will get by when.",
+            "The distinction is curation vs. generation. A Blueprint for 'S3 to Snowflake sync' is a tested, documented, error-handled template that Kestra's team has verified works correctly. Copilot generates a custom flow for your specific description — it may be correct, may need review. Both reduce time-to-value; they're complementary. A user who finds a Blueprint that matches their need should use the Blueprint (higher confidence). A user with a non-standard use case should use Copilot.",
         },
       ],
-      resources: [],
+      resources: [
+        {
+          title: "Kestra Docs: AI Tools Overview",
+          url: "https://kestra.io/docs/ai-tools",
+          description: "The authoritative overview of all four AI capabilities: MCP Resources, AI Copilot, AI Agents, Agent Skills.",
+        },
+      ],
     },
     {
       id: "4-2",
       unitId: "unit4",
       companySlug: "kestra",
-      title: "The Async Technical Homework",
+      title: "AI Agents in Depth",
       tldr:
-        "Kestra's interview process includes an asynchronous homework assignment. For a PM role, this is almost certainly a product exercise — a case study, product analysis, or spec-writing task. Here's how to approach it.",
-      skills: ["Interview prep", "Product exercise", "Case study thinking"],
+        "How Kestra's AIAgent task type works: system messages, prompts, tools, memory, and the agent loop. How to compose multi-agent systems in Kestra. How human-in-the-loop integrates with agent workflows. The production constraints and what's still hard.",
+      skills: ["AI agent architecture", "Agentic patterns", "Human-in-the-loop"],
       xp: 30,
       content: [
         {
-          heading: "What the homework likely involves",
-          body: `The posting says stage 2 is an "asynchronous technical homework assignment." For a Product Manager, AI role, this is almost certainly one of:\n\n**Option A: Product analysis**\n"Here is a specific part of Kestra. Identify the biggest product gaps and how you'd prioritize addressing them. What would you build first and why?"\n\n**Option B: Customer scenario**\n"Here is a customer use case. Write a product spec for how Kestra should address it."\n\n**Option C: Market / competitive analysis**\n"How should Kestra position its AI strategy given the current competitive landscape? What should be on the AI roadmap and in what order?"\n\n**Option D: Specific AI product design**\n"Design a feature for Kestra that helps users build and maintain AI agent workflows. Define the requirements, UX, success metrics, and launch plan."\n\n**What they're evaluating in all cases:**\n- Product thinking quality: can you identify real problems vs. surface symptoms?\n- Decisiveness: can you make and defend a clear call about what to build first?\n- Technical fluency: do you understand the AI and orchestration concepts well enough to propose something implementable?\n- Communication: is the document clear, concise, and organized?\n- Judgment: do you know what not to include?`,
+          heading: "The AIAgent task type",
+          body: `Kestra's AI Agent plugin (\`io.kestra.plugin.ai.agent.AIAgent\`) provides autonomous orchestration capabilities within a flow. The core configuration:\n\n\`\`\`yaml\ntasks:\n  - id: research_agent\n    type: io.kestra.plugin.ai.agent.AIAgent\n    systemMessage: |\n      You are a research assistant. Your job is to answer questions\n      about companies using publicly available information.\n      Always cite your sources. If you cannot find reliable information,\n      say so rather than speculating.\n    prompt: "{{ inputs.research_query }}"\n\`\`\`\n\n**System message:** defines the agent's role, behavioral constraints, and operating guidelines. This is the "character" of the agent — what it's supposed to do and what it must not do. Well-crafted system messages are the primary quality lever for agent behavior.\n\n**Prompt:** the specific input for this agent execution. Often dynamically rendered from Pebble expressions, allowing the same agent definition to serve different queries.\n\n**Provider configuration via Plugin Defaults:**\nTo avoid repeating LLM provider configuration in every agent task, Kestra recommends using plugin defaults at the namespace level:\n\n\`\`\`yaml\npluginDefaults:\n  - type: io.kestra.plugin.ai\n    values:\n      provider:\n        type: ANTHROPIC\n        apiKey: "{{ secret('ANTHROPIC_API_KEY') }}"\n        modelName: claude-sonnet-4-5\n\`\`\`\n\nThis sets the provider for all AI plugin tasks in the namespace — change the model once to affect all agents.`,
           goAnalogy: {
-            term: "Shicho",
-            reading: "しちょう",
+            term: "Jōseki",
+            reading: "じょうせき",
             meaning:
-              "A sequence of moves where the outcome is determined by distant board conditions you can't see in the immediate position. The homework assignment is shicho: your answer's quality is determined by the context you've built across all your preparation, not just your response to the prompt.",
+              "A studied pattern of play — a proven sequence for a local situation. A well-defined AIAgent system message is jōseki: a proven behavioral pattern that produces reliable results in the local context.",
           },
         },
         {
-          heading: "How to structure a strong product exercise response",
-          body: `Regardless of the specific prompt, this structure works:\n\n**1. Restate the problem (1 paragraph)**\nShow you understood what was asked. Briefly note any assumptions you're making.\n\n**2. Frame your analysis (1 paragraph)**\nWhat lens are you using? (Customer pain? Market opportunity? Platform strategy?) Why is that the right frame?\n\n**3. The analysis (the main body)**\nFor product analysis: identify 3-5 gaps, explain why they matter, briefly dismiss the ones you're not prioritizing\nFor customer scenario: define the problem clearly, describe the solution, explain the design decisions\nFor market analysis: describe the landscape, identify Kestra's position, propose the strategic direction\n\n**4. The recommendation (clear and direct)**\nWhat's the one thing you'd build first? Why? Be decisive. "I would prioritize X because Y, which I expect to result in Z" is better than "there are several options, each with merits..."\n\n**5. What you'd need to validate (1-2 bullets)**\nShow that you know your recommendation is a hypothesis, not a certainty. What would you need to learn to confirm it?\n\n**6. What you explicitly chose NOT to do and why**\nThis demonstrates the "decisive calls about what not to build" judgment the posting calls out.\n\n**Format guidelines:**\n- Shorter is better. 2-4 pages well-organized beats 10 pages comprehensive\n- Use headers so the reviewer can skim\n- Be specific about Kestra — show you've done your homework on the actual product\n- No generic AI PM frameworks without Kestra-specific application`,
+          heading: "Tools, memory, and the agent loop",
+          body: `**Tools the agent can use:**\nKestra's AI Agent has access to built-in tools that extend what the agent can do beyond reasoning:\n\n- **Web search:** the agent can query the web for current information\n- **Task execution:** the agent can trigger other Kestra tasks (run a Python script, call an API, query a database) as part of its decision-making\n- **Flow calling:** the agent can trigger other Kestra flows as subflows, enabling multi-agent systems where specialized agents are invoked on demand\n\n**The agent loop:**\nThe agent runs an iterative perceive → reason → act → observe cycle:\n1. Receive the prompt (perceive)\n2. Call the LLM to decide what to do next (reason)\n3. Execute a tool if the LLM decides to use one (act)\n4. Observe the tool's output\n5. Pass the output back to the LLM with updated context (perceive again)\n6. Repeat until the LLM produces a final answer or a termination condition is met\n\n**Memory:**\nKestra's AI Agent supports memory — context that persists across agent steps within a single execution. The memory allows the agent to build on earlier steps: "I found X in step 2, so in step 5 I should check Y." Without memory, each LLM call starts fresh and the agent can't reason across steps.\n\n**What controls the loop:**\n- **Max iterations:** prevent runaway agent loops that consume tokens indefinitely\n- **Termination conditions:** the agent signals completion by producing a final answer in a defined format\n- **Kestra's flow-level timeout:** the entire agent task is subject to Kestra's task timeout, providing a hard cost/time ceiling`,
         },
         {
-          heading: "Common homework mistakes to avoid",
-          body: `**1. Listing features instead of making a call**\n"Kestra could build LLM task types, eval frameworks, agent loop support, AI debugging, flow generation, anomaly detection..." This is not a product analysis — it's a feature list. The evaluator wants to know which one you'd build first and why, not all the things you could imagine.\n\n**2. Generic AI PM language without Kestra specifics**\n"AI features should have clear success metrics, handle failure gracefully, and be evaluated against an eval set." True, but not insightful. Apply this to a specific Kestra feature with specific metrics and specific failure modes.\n\n**3. Hedging the recommendation**\n"It depends on business priorities and customer feedback before committing." This signals you can't make a call under ambiguity. Make the call, state your assumptions, show you know it's a hypothesis.\n\n**4. Ignoring the competitive context**\nA Kestra AI roadmap recommendation that doesn't account for what Airflow, Prefect, and Temporal are doing misses a key dimension. Show you understand the landscape.\n\n**5. Over-engineering the format**\nA beautifully formatted 15-page document with charts and tables is a signal of over-investment in form. A clear 3-page document with sharp thinking is more impressive. Kestra is a startup — they want to see signal-to-noise, not comprehensive coverage.`,
+          heading: "Multi-agent systems and human-in-the-loop",
+          body: `**Multi-agent patterns in Kestra:**\nBecause an agent can trigger other flows as subflows, multi-agent systems emerge naturally:\n\n*Sequential:* Agent A runs a research task, its output flows into Agent B which runs an analysis task, Agent C writes the report. Each is a separate AIAgent task in the same flow.\n\n*Fan-out:* A coordinator agent receives a complex request, breaks it into subtasks, and uses EachParallel to run specialized agents in parallel — each one a separate AIAgent in a separate subflow. The coordinator waits for all to complete and aggregates results.\n\n*Router pattern:* a lightweight classification step (or a simple AIAgent) determines which specialized agent to invoke based on the nature of the request — a Switch flowable task routes to the appropriate agent.\n\n**Human-in-the-loop with AI agents:**\nKestra's Pause task integrates naturally with agent workflows:\n\n\`\`\`yaml\ntasks:\n  - id: agent_draft\n    type: io.kestra.plugin.ai.agent.AIAgent\n    prompt: "Draft a response to this customer complaint: {{ inputs.complaint }}"\n\n  - id: human_review\n    type: io.kestra.core.tasks.flows.Pause\n    timeout: PT24H\n    onTimeout: FAIL\n    inputs:\n      - id: approved\n        type: BOOLEAN\n      - id: edited_response\n        type: STRING\n        required: false\n\n  - id: send_response\n    type: io.kestra.plugin.smtp.Email\n    to: "{{ inputs.customer_email }}"\n    body: "{{ outputs.human_review.edited_response ?? outputs.agent_draft.output }}"\n\`\`\`\n\nThe Pause task blocks the flow execution, sends a notification (email, Slack), and waits up to 24 hours for a human to review the agent's draft and either approve it or submit an edited version. The flow then uses whichever response is available. If no human responds within 24 hours, the flow fails (or an alternative path can be defined).`,
         },
       ],
       exercises: [
         {
-          type: "scenario",
-          prompt:
-            "The homework prompt is: 'Kestra is investing in AI. What should the first AI feature be, and why? Write a brief recommendation.' Write the core of your answer.",
-          sampleAnswer:
-            "**Recommendation: First-party LLM task type with production defaults.**\n\n**Why:** Every other AI feature Kestra will build depends on having a reliable, observable, cost-tracked way to call an LLM. The first AI feature should be the foundation, not a use-case-specific feature on top of nothing.\n\n**What it includes:** Native task types for the top 3 LLM providers (Anthropic, OpenAI, AWS Bedrock). Each task type ships with: configurable retry with exponential backoff, token + cost logging to execution metadata, structured output parsing with validation, timeout and rate limit handling, and secret management for API keys. Template blueprints for the 3 most common use cases: text classification, document summarization, and data extraction.\n\n**Why these defaults matter:** Customers who build AI workflows on top of a basic HTTP task type (which Kestra already has) will implement their own retry, their own cost logging, their own output parsing — inconsistently. First-party task types with production defaults eliminate this fragmentation and make Kestra's AI story coherent: 'Kestra handles the hard parts, you focus on the business logic.'\n\n**Success metric:** 3 months post-launch, >20% of active Kestra organizations have at least 1 flow using a first-party LLM task type. Average time from account creation to first LLM task execution <4 hours (documentation quality proxy).\n\n**What I'm not recommending first:** AI flow generation (impressive demo, unclear production value), AI debugging assistant (high complexity, unclear quality threshold), or agent loop support (important, but better as the second feature once the base LLM task types are proven).",
-          keyPoints: [
-            "Lead with the recommendation, then the reasoning — don't bury the conclusion",
-            "Be specific about what the feature includes, not just what it is",
-            "Include a concrete success metric that's measurable at the 3-month mark",
-            "Explicitly say what you're not recommending and why — this is part of the evaluation",
+          type: "multiple-choice",
+          question:
+            "An agent runs a 30-step research loop and fails at step 28 because the web search tool returns an error. What happens in Kestra, and what would need to change to make this recoverable?",
+          options: [
+            "Kestra restarts the agent from step 1 automatically",
+            "The AIAgent task fails; the agent state and the 28 steps of work are lost. Recovery requires: either retry logic on the web search tool (not the whole agent), or breaking the agent into smaller subflows with checkpoints so that step 28's failure triggers a subflow retry from step 27's checkpoint — not from step 1",
+            "Kestra pauses the agent at step 28 and waits for the tool error to resolve",
+            "The agent saves its state automatically and resumes from step 28 on the next execution",
           ],
+          correct: 1,
+          explanation:
+            "This is a real production limitation of current AI agent orchestration. The agent's internal state (the 28 steps of reasoning) isn't automatically checkpointed in a way that enables resumption from an arbitrary step. Recovery strategies: retry at the tool level (for transient errors), or architect the agent as a series of smaller agents with Kestra subflows between them (each subflow is independently resumable). The checkpoint hybrid pattern — smaller agents with observable handoffs — is the production answer for long-running agentic workflows.",
         },
         {
           type: "multiple-choice",
           question:
-            "The homework prompt asks: 'How should Kestra compete with Airflow for AI workflow customers?' What's the weakest response to this prompt?",
+            "A team wants to build: 'An agent that researches a company, drafts an outreach email, pauses for a human to review and optionally edit it, then sends the approved version.' Which Kestra components are needed?",
           options: [
-            "'Kestra's YAML model is more accessible to non-Python engineers, which is an advantage for AI workflows that span multiple teams'",
-            "'Kestra should build better observability for AI runs, including per-step cost tracking and LLM-specific metrics, which Airflow's plugin ecosystem can't provide as a cohesive experience'",
-            "'Kestra should undercut Airflow on pricing to attract users who are price-sensitive'",
-            "'Kestra should focus on the agent workflow use case where Airflow's Python-centric model is a genuine disadvantage — agent loops are easier to express in YAML task sequences than in Python DAGs'",
+            "One AIAgent task with web search and email tools",
+            "Two AIAgent tasks (research, draft) + a Pause task (human review) + an email Runnable task — all connected in a sequential flow. The Pause task blocks between draft and send, collects the human's approval and optional edit, and the email task uses the final version",
+            "A single AIAgent task with memory and a built-in pause mechanism",
+            "An AIAgent task and a webhook trigger that resumes the flow after approval",
           ],
-          correct: 2,
+          correct: 1,
           explanation:
-            "Pricing competition is the weakest strategic response — it's purely reactive, doesn't create defensible differentiation, and doesn't address why Kestra wins on product merits. The stronger answers all identify specific product advantages (YAML accessibility, coherent observability, agent workflow fit) that are hard for Airflow to copy quickly because they're architectural. A PM who recommends price competition as the primary competitive strategy is not thinking at the right level of abstraction.",
+            "The correct architecture uses Kestra's composability: the research and drafting are AIAgent tasks, the human review is a first-class Pause task (not a feature of the AIAgent), and the email sending is a separate Runnable task. This separation means each component is independently observable, retryable, and testable. The Pause task is the right abstraction for human-in-the-loop — it's designed for exactly this pattern, with timeout handling and input collection built in.",
+        },
+        {
+          type: "scenario",
+          prompt:
+            "A customer wants to run 1,000 customer support tickets through an AI agent that classifies them, drafts responses, and for tickets classified as 'high-risk,' pauses for human review before sending. Design the Kestra flow architecture.",
+          sampleAnswer:
+            "The architecture has three stages: (1) Classification agent — an AIAgent task that classifies each ticket as 'standard' or 'high-risk.' Run this with EachParallel over all 1,000 tickets with a concurrency limit (e.g., 50 concurrent) to respect the LLM API rate limits. Each classification produces a typed output with the category and a confidence score. (2) Branching — a Switch flowable task routes each ticket: standard tickets go to an auto-response path (AIAgent drafts response → email task sends it); high-risk tickets go to a human-review path. (3) Human-review path — AIAgent drafts the response, then a Pause task blocks with a 48-hour timeout, notifying the responsible support agent via Slack or email. The support agent reviews the draft, optionally edits it, and approves. The email task then sends the final version. Key production considerations: the classification agent needs retry logic for API failures; the Pause task needs timeout handling (what happens if no human responds in 48 hours — fail, auto-escalate, or use the draft as-is?); cost tracking via execution metadata should be set up to monitor total token spend across all 1,000 tickets; and an execution-level failure handler should alert if more than 5% of tickets fail the classification step.",
+          keyPoints: [
+            "EachParallel with concurrency limits for the fan-out step — prevents API rate limit exhaustion",
+            "Switch flowable task for branching between standard and high-risk paths",
+            "Pause task is the right abstraction for human review — not an AI feature, a workflow feature",
+            "Production considerations: retry, timeout handling, cost tracking, failure alerting",
+          ],
         },
       ],
-      resources: [],
+      resources: [
+        {
+          title: "Kestra Docs: AI Agents",
+          url: "https://kestra.io/docs/ai-tools/ai-agents",
+          description: "Full documentation for the AIAgent task type: configuration, tools, memory, and examples.",
+        },
+      ],
     },
     {
       id: "4-3",
       unitId: "unit4",
       companySlug: "kestra",
-      title: "Demonstrating Shipped AI Products",
+      title: "From Static Workflows to Agentic — and What's Still Missing",
       tldr:
-        "How to present your AI product experience in a way that passes Kestra's explicit bar: real shipped products with real trade-offs, not demos and prototypes. The framing, the specifics, and the stories.",
-      skills: ["Self-positioning", "STAR stories", "AI product portfolio"],
-      xp: 20,
+        "The product vision Kestra articulated in 1.0: moving from 'manual YAML → natural language' and 'static → autonomous.' What's been built, what the frontier looks like, and what a PM would identify as the gaps between the current product and the full vision.",
+      skills: ["Product vision", "Gap analysis", "Roadmap thinking"],
+      xp: 25,
       content: [
         {
-          heading: "The Kestra credibility bar",
-          body: `Kestra's posting is unusually specific: they've seen candidates with only demo/prototype experience and they're explicitly filtering them out. This means they're going to probe your AI experience until they find the edges.\n\n**What probe questions sound like:**\n- "You mentioned shipping an AI feature. How did you measure whether it was working?"\n- "What happened when you changed the prompt or model? How did you know it was still safe to ship?"\n- "Tell me about a time the AI feature behaved unexpectedly in production. What did you do?"\n- "How did you decide the accuracy was good enough to ship without a human review gate?"\n- "What did it cost to run at scale? How did you model that before launch?"\n\n**The pattern:** every probe is asking for specifics that only a PM with real production experience would know. If you can answer all of these with concrete details — actual numbers, actual incidents, actual decisions — you pass. If you generalize ("we had monitoring in place, we measured accuracy regularly"), you signal demo-level experience.\n\n**Preparation strategy:** for each AI product you've worked on, write down the answers to all six probe questions above. These become your stories. If you can't answer some of them, that product may not be a strong example to lead with.`,
+          heading: "The 1.0 vision: two axes",
+          body: `Kestra explicitly described their strategic direction in the 1.0 release as movement on two axes:\n\n**Axis 1: From manual YAML → natural language**\nThe direction: users should be able to describe what they want in plain language rather than writing every YAML property manually. The progression:\n- Current: AI Copilot generates YAML from natural language descriptions in the UI\n- Near-term: iterative refinement becomes more capable, handling complex multi-task flows accurately\n- Long-term: users describe complete automation strategies in natural language and Kestra generates, validates, and deploys the flows\n\n**Axis 2: From static workflows → autonomous agents**\nThe direction: workflows evolve from predetermined task sequences (the flow always does A then B then C) to self-directing agents that determine their own execution paths based on what they find.\n- Current: AI Agent task type (single agent with tools and memory running within a flow)\n- Near-term: first-class multi-agent coordination patterns, better agent observability, production-grade agent error handling\n- Long-term: an "agentic orchestration" layer where agents dynamically compose flows based on objectives rather than following predefined workflows\n\n**The tension between axes:**\nAxis 1 (natural language to YAML) targets simplicity and accessibility. Axis 2 (agentic autonomy) targets power and adaptability. As agents become more autonomous, the YAML model becomes less relevant — a fully autonomous agent doesn't need a user to write its workflow. The PM question: how do these axes intersect? At what point does "an agent that orchestrates other agents" replace "a human who writes a flow that calls agents"?`,
           goAnalogy: {
-            term: "Yose",
-            reading: "よせ",
+            term: "Shicho",
+            reading: "しちょう",
             meaning:
-              "Endgame — converting accumulated board position into concrete points. The interview is yose: converting your real production experience (the accumulated position) into concrete, specific answers that score points.",
+              "A ladder sequence — the outcome is determined by distant board conditions. The two-axis strategy is shicho: the outcome of each direction is determined by how LLM capability evolves — conditions that Kestra doesn't control but must anticipate.",
           },
         },
         {
-          heading: "Structuring your AI product stories",
-          body: `For each significant AI product you've worked on, prepare a story with these components:\n\n**The context (30 seconds):**\n"At [company], I owned [product/feature]. The business problem it solved was [X]. The users were [Y].\"\n\n**The AI approach (1 minute):**\n"We used [model/approach] to [task]. The input was [X], the output was [Y]. We chose this approach because [specific reason: cost, latency, accuracy, existing infrastructure]."\n\n**The production challenge (1-2 minutes — this is the important part):**\nPick ONE real challenge from: quality issues, cost surprises, model API changes, distribution shift, user trust building, edge cases, accuracy degradation, or rollback decisions. Describe:\n- What happened specifically\n- How you detected it\n- What decision you made and why\n- What the outcome was\n\n**The metrics (30 seconds):**\n"We measured success by [metric]. At launch we were at [X]. After [N] months/iterations we achieved [Y]."\n\n**What you'd do differently (30 seconds):**\nThis shows self-awareness and continued learning. "Looking back, I'd have [built the eval framework earlier / chosen a different model for the scale we reached / set a stricter accuracy bar before removing the human review gate]."\n\n**The key:** the production challenge section is what distinguishes real experience from demos. Demos don't have production challenges. Production AI does.`,
+          heading: "What's been built vs. what the vision requires",
+          body: `**Built in 1.0 (the foundation):**\n- AIAgent task type with tools (web search, task execution, flow calling) and memory\n- AI Copilot for YAML generation in the UI\n- MCP Resources for live documentation access\n- Agent Skills for external coding assistant integration\n- Human-in-the-loop via Pause task (existing feature, but now central to AI workflow patterns)\n\n**The gap between current state and full vision:**\n\n**Observability for AI runs:**\nKestra's execution model tracks task-level state. But for an agent that makes 20 LLM calls across a 30-minute execution, the current observability shows: "the AIAgent task ran for 30 minutes and produced this output." What it doesn't show natively: each LLM call, which tool was called at which step, what the agent's reasoning was at each decision point, what each step cost in tokens. Per-step agent traces require deeper instrumentation than currently exists.\n\n**Cost tracking as a first-class metric:**\nAI runs have a direct financial cost that standard workflow executions don't. Token usage × price per token = execution cost. This should be a first-class metric in Kestra's execution UI — visible alongside duration and status. Currently, cost tracking requires custom logging within the flow.\n\n**Agent eval and quality gates:**\nKestra has unit tests for flows (introduced in 1.0). But testing AI agent behavior is fundamentally different from testing deterministic tasks — the same prompt can produce different outputs. An eval framework that tests agent behavior against a representative set of scenarios, with human-rated quality scores, doesn't exist in Kestra today.\n\n**Long-running agent durability:**\nFor agent loops that run for hours (research tasks, document processing at scale), the current architecture doesn't provide Temporal-grade durability. If the worker process restarts mid-agent-loop, the loop starts from the beginning.`,
         },
         {
-          heading: "If your AI experience is limited: what to do",
-          body: `If you're honest with yourself and your AI product experience is closer to the prototype end of the spectrum — there are still ways to prepare and present authentically:\n\n**Build something before the interview**\nIn 2–4 weeks, you can build a real (small-scale) AI workflow using Kestra, deploy it, run it for a few weeks, and measure it. It doesn't need to be impressive in scope — a workflow that classifies 50 GitHub issues per day using an LLM and tracks accuracy weekly is more credible than a theoretical description of what you'd build. This gives you production experience to speak from, even if limited.\n\n**Go deep on orchestration and AI architecture**\nThe posting allows for "technical fluency without coding." You can demonstrate genuine depth on: how LLM APIs work in production (rate limits, token costs, structured output), what makes an eval framework valid, why agent workflows fail at scale, and what production AI observability requires. This depth signals you understand the space even if your personal portfolio is limited.\n\n**Be honest about depth, confident about direction**\n"I've worked with AI at the workflow level but haven't owned the eval infrastructure myself — here's how I think about it and what I'd build" is stronger than overstating experience that gets probed away in the next question. Kestra is looking for intellectual honesty and good judgment, not a fabricated resume.`,
+          heading: "The PM's frontier: what to build next",
+          body: `Given the gap analysis, the most valuable next investments for the AI PM to evaluate:\n\n**High value, moderate effort:**\n1. **Per-step agent execution traces** — log each LLM call, tool invocation, and agent reasoning step as a sub-execution in Kestra's execution DAG. This gives operators visibility into what the agent did and makes debugging possible without custom logging.\n\n2. **Cost tracking as a native execution metric** — add token usage and estimated cost to the execution metadata for every AI Agent run. Display in the UI alongside duration. Alert when cost exceeds a threshold.\n\n3. **Confidence thresholds and escalation paths** — native configuration on AIAgent tasks to route to human review (Pause task) when the agent's confidence score falls below a threshold. This operationalizes the human-in-the-loop pattern without requiring users to implement it manually.\n\n**High value, high effort:**\n4. **Eval framework for AI workflows** — a native way to define test scenarios for agent tasks, run them, and track agent quality over time. This is the production AI quality story.\n\n5. **Agent checkpoint durability** — for long-running agents, periodic state checkpointing so that a worker failure mid-loop resumes from the last checkpoint rather than from the beginning.\n\n**The PM's decision:** which of these to sequence first depends on which customer pain is most acute — a choice that comes from customer discovery, not theory.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "You're asked: 'Tell me about a time an AI feature you worked on failed or underperformed.' You have a story about a feature where accuracy was 78% at launch when the target was 85%. How do you present this?",
+            "A customer runs AI agent workflows in Kestra and says: 'When an agent run fails, we can't tell what it was doing before it failed — it's a black box.' Which product gap does this describe, and what's the solution direction?",
           options: [
-            "Minimize it — 'we had some early accuracy issues but resolved them quickly'",
-            "Describe the full story: what the target was, what you shipped at, how you detected the gap (and be specific about the detection mechanism), what you did (fallback? human review? retrain?), and what you learned — treating it as a learning story, not a failure story",
-            "Avoid the topic and redirect to a stronger example",
-            "Explain that 78% was actually acceptable given the use case constraints",
+            "This is an agent quality problem — better system messages would prevent failures",
+            "This is an observability gap — per-step agent execution traces logged as sub-executions in the Kestra DAG would let operators see exactly which LLM call, tool invocation, or reasoning step preceded the failure",
+            "This is a logging problem — agents should write more verbose logs to their task output",
+            "This is a retry problem — better retry configuration would prevent the failure from mattering",
           ],
           correct: 1,
           explanation:
-            "Specificity about failure is exactly the credibility signal Kestra is looking for. A PM who can say 'we launched at 78%, detected the gap because our weekly eval run showed accuracy dropping from the beta baseline, implemented a confidence threshold gate at 0.7 that routed low-confidence predictions to human review, and improved to 88% after 6 weeks of prompt iterations' has demonstrated: measurement rigor, decision-making under uncertainty, and iteration discipline. This is more impressive than a feature that shipped perfectly — because it shows how you handle the reality of production AI.",
+            "The customer is describing the observability gap: the current AIAgent task is a black box from the execution perspective — Kestra sees it as a single task that either succeeds or fails. Per-step traces would expose the internal agent loop as observable sub-executions: step 1 was an LLM call with these inputs/outputs, step 2 was a web search that returned this, step 3 was another LLM call that failed. This makes post-failure debugging possible and changes the agent from 'opaque' to 'auditable.'",
         },
         {
-          type: "scenario",
-          prompt:
-            "A Kestra interviewer asks: 'What's the most important thing you learned from shipping an AI feature to production?' Give your answer.",
-          sampleAnswer:
-            "The most important thing I learned is that quality confidence doesn't transfer from your eval set to production — you have to earn it separately. When we launched our document classification feature, we had 91% accuracy on our 500-example eval set. I felt good about it. Three weeks after launch, a customer reported that their contracts were being systematically misclassified in one category. We dug into it: that category had almost no examples in our eval set because it was rare in our historical data, but it was common in that customer's document corpus. Our eval set didn't reflect their distribution. We added a production accuracy monitor that sampled 2% of outputs for human review, caught another distribution mismatch two months later before any customer noticed, and changed our eval strategy to include minimum coverage requirements per category. The lesson: an eval set is a hypothesis about what your production distribution looks like. Your monitoring strategy is how you validate or disprove that hypothesis after launch. Every AI feature needs both.",
-          keyPoints: [
-            "Lead with the concrete learning, not the process",
-            "Describe a specific failure mode (category coverage gap in eval set) rather than a generic lesson",
-            "Show the causal chain: failure → root cause analysis → system change",
-            "End with the generalizable principle, not just 'I learned to test more'",
+          type: "multiple-choice",
+          question:
+            "Kestra's Pause task enables human-in-the-loop for AI workflows. What's the most important configuration to get right for production use, and why?",
+          options: [
+            "The notification type (Slack vs. email) — humans need to see the review request",
+            "The timeout and onTimeout behavior — if no human responds, the flow must do something defined: fail, use the AI's draft, or escalate to a backup reviewer. An undefined timeout that hangs indefinitely is a production incident waiting to happen",
+            "The input validation — the human's response must be the right data type",
+            "The maximum number of concurrent Pause tasks — too many simultaneous reviews overwhelm the team",
           ],
+          correct: 1,
+          explanation:
+            "Timeout handling is the most critical production configuration because it's the failure mode that happens silently and at scale. A reviewer who's on vacation, sick, or simply missed the notification will leave flows paused indefinitely without a timeout. The onTimeout behavior should be a deliberate product decision for each use case: for a critical approval (a financial transaction), onTimeout should fail and alert. For a lower-stakes review (a marketing email draft), onTimeout might auto-approve the AI's draft. Both are valid; neither should be left undefined.",
         },
       ],
-      resources: [],
+      resources: [
+        {
+          title: "Kestra 1.0 Release Post",
+          url: "https://kestra.io/blogs/release-1-0",
+          description: "The strategic framing of the two-axis vision: manual-to-natural-language and static-to-autonomous.",
+        },
+      ],
     },
   ],
   quiz: [
     {
       type: "multiple-choice",
-      question: "For a Kestra AI roadmap, why should platform investments (eval framework, observability, human-in-the-loop) come before or alongside feature investments?",
+      question: "Why does Kestra use Plugin Defaults for LLM provider configuration rather than requiring it on each AIAgent task?",
       options: [
-        "Platform investments impress investors more than feature investments",
-        "Without platform investments, every AI feature ship is a quality gamble — you have no infrastructure to measure accuracy, detect degradation, or handle failures consistently. Features built on a weak platform compound technical debt instead of compounding value",
-        "Platform investments are faster to build than features",
-        "Kestra's existing users expect infrastructure improvements, not AI features",
+        "Security: API keys should never appear in task configurations",
+        "Consistency and change management: setting the model once at the namespace level means all agent tasks in that namespace use the same provider configuration, and changing the model (e.g., upgrading from claude-sonnet-4-5 to claude-opus-5) requires updating one place, not every individual task definition",
+        "Performance: plugin defaults are cached and reduce configuration overhead",
+        "Compliance: enterprise customers require centralized API key management",
       ],
       correct: 1,
       explanation:
-        "The compounding argument is key: a platform investment (eval framework) improves the quality of every subsequent AI feature. Without it, each feature is independently unmeasured, and you have no systematic way to know if the portfolio is improving or degrading over time. Features built without eval infrastructure are exactly the 'demo and prototype' work Kestra is trying to avoid. Platform work is what makes AI features production-grade.",
+        "Plugin Defaults are primarily a consistency and change management feature. When a namespace has 20 flows each with AIAgent tasks, hardcoding the model name in every task means a model upgrade requires 20 changes. Plugin Defaults make it one change. This also enables A/B testing: set the default to one model for the staging namespace and another for production, and flows inherit the right model without changes. Security (API keys via secrets) is handled separately.",
     },
     {
       type: "multiple-choice",
-      question: "Which best describes what Kestra is evaluating in the async homework assignment?",
+      question: "What is the most significant architectural limitation of Kestra's current AIAgent implementation for production AI workflows?",
       options: [
-        "Technical knowledge of AI and orchestration systems",
-        "Ability to write comprehensive, detailed product documentation",
-        "Product judgment: can you identify the right problem, make a decisive recommendation, explain your reasoning, and explicitly scope out what not to build?",
-        "Familiarity with Kestra's existing product features and API",
+        "It only supports a limited number of LLM providers",
+        "Agent state isn't checkpointed during execution — if the worker process fails mid-loop, the entire agent loop restarts from the beginning, making long-running agents unreliable for multi-hour tasks",
+        "The web search tool isn't available in all regions",
+        "Agents can only be used in sequential flows, not parallel ones",
       ],
-      correct: 2,
+      correct: 1,
       explanation:
-        "The homework is a product judgment test, not a knowledge test. Kestra can teach you more about their product; they can't easily teach you to have good judgment about what to build. The evaluation is on the quality of your thinking: did you identify a real problem, make a clear call, explain the reasoning, and demonstrate the 'what not to build' discipline the posting explicitly calls out?",
+        "State durability is the core production limitation for long-running agents. A 3-hour research agent that fails at hour 2.5 due to a worker restart restarts from hour 0 — all the work is lost. This is acceptable for short agent runs (under 30 minutes) where restarting is cheap, but unacceptable for long-running tasks where the agent's accumulated context (what it found, what it decided) is the primary value. This is where Temporal's durable execution model has a structural advantage for the most demanding agentic use cases.",
+    },
+    {
+      type: "multiple-choice",
+      question: "A customer asks: 'Can Kestra's AI Copilot generate an agent that monitors our Snowflake warehouse costs and automatically pauses expensive queries?' Is this in Copilot's current capability range?",
+      options: [
+        "Yes — Copilot can generate any flow that can be expressed in Kestra YAML",
+        "Partially — Copilot can generate the YAML structure of the monitoring flow (Snowflake query + alerting tasks + schedule trigger) but the autonomous decision-making (detect expensive query → decide whether to pause it → take action) requires an AIAgent task that Copilot can scaffold but not fully configure without user customization of the system message and tool definitions",
+        "No — Copilot doesn't support flows with AIAgent tasks",
+        "Yes — Copilot has pre-built templates for Snowflake cost monitoring",
+      ],
+      correct: 1,
+      explanation:
+        "Copilot's capability boundary is 'scaffold, not fully configure.' For a flow with standard Kestra tasks (Snowflake query, Slack alert, schedule trigger), Copilot can generate high-quality YAML that works with minimal editing. For an AIAgent task, Copilot can generate the task structure but the system message — which defines exactly how the agent should reason about query costs and what actions it should take — requires domain-specific configuration that Copilot can draft but the user must validate and refine. This is the right mental model: Copilot is a scaffold, not a one-click production generator.",
     },
   ],
   quizXp: 30,

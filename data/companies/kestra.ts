@@ -8,9 +8,9 @@ import { kestraUnit5 } from "@/data/curriculum/kestra/unit5";
 export const kestra: CompanyModule = {
   slug: "kestra",
   name: "Kestra",
-  tagline: "Workflow Orchestration for the AI Era",
+  tagline: "Universal Orchestration for Data, AI, and Infrastructure",
   industry: "Developer Infrastructure / Workflow Orchestration",
-  techStack: ["AI Workflows", "Orchestration", "LLM Agents", "YAML-first", "Open Source"],
-  why: "Kestra is hiring a Product Manager, AI to define the roadmap for AI workflow features on their universal orchestration platform. This course covers the product context, AI product judgment, customer discovery, roadmap planning, and exactly how to ace their 4-stage interview — including the async homework exercise.",
+  techStack: ["YAML-first Workflows", "AI Agents", "LLM Orchestration", "Event-Driven", "Open Source"],
+  why: "Kestra is hiring a Product Manager, AI to define the roadmap for AI workflow features on their universal orchestration platform. This course goes deep on the orchestration problem space, Kestra's architecture and core concepts, the competitive landscape (Airflow, Prefect, Dagster, Temporal), Kestra's AI strategy (AI Agents, Copilot, MCP Resources), and how to position for the 4-stage interview.",
   units: [kestraUnit1, kestraUnit2, kestraUnit3, kestraUnit4, kestraUnit5],
 };

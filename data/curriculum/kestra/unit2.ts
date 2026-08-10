@@ -2,239 +2,275 @@ import type { Unit } from "@/data/types";
 
 export const kestraUnit2: Unit = {
   id: "unit2",
-  title: "AI Product Judgment",
+  title: "Kestra's Architecture & Core Concepts",
   description:
-    "How to distinguish serious AI use cases from flashy demos, what makes an AI feature worth building, and how to think about the quality/cost/reliability tradeoffs that separate production AI from prototypes.",
+    "How Kestra actually works: flows, tasks, triggers, executions, namespaces, the plugin system, data flow between tasks, and the execution lifecycle. The internal model you need to understand before making product decisions.",
   companySlug: "kestra",
   goTerm: "Katachi",
   goReading: "かたち",
   goMeaning:
-    "Shape — the efficiency and soundness of a position's form. Good katachi is strong in all directions. An AI feature with good katachi handles failure, scales, and proves its value with a metric.",
+    "Shape — the efficiency of a position's form. Kestra's architecture has good katachi: each component has a clear role, and the relationships between them are clean. Understanding the shape lets you recognize where it can be extended.",
   color: "golden",
   lessons: [
     {
       id: "2-1",
       unitId: "unit2",
       companySlug: "kestra",
-      title: "Serious Use Cases vs. Flashy Demos",
+      title: "Flows, Tasks, and the Execution Model",
       tldr:
-        "Kestra's job posting explicitly warns about candidates with only demo experience. Learn the exact signals that separate a production AI feature from a prototype — and how to evaluate incoming customer requests against this bar.",
-      skills: ["Product judgment", "Use case evaluation", "AI product thinking"],
+        "A flow is Kestra's core abstraction: a YAML document that defines what to run, in what order, with what inputs. Tasks are the steps inside a flow. Executions are the runtime instances. Namespaces organize everything. These four concepts are the vocabulary for every product conversation.",
+      skills: ["Core concepts", "YAML model", "Execution lifecycle"],
       xp: 25,
       content: [
         {
-          heading: "Why Kestra made this explicit in the job posting",
-          body: `The line in the posting — "We have seen too many AI candidates whose entire experience is one demo or one prototype" — is unusually specific for a job description. It means they've interviewed candidates who:\n\n- Built an impressive Streamlit app or Jupyter notebook with GPT-4, and called it "an AI product"\n- Contributed to a hackathon project that "used LLMs for X"\n- Added a ChatGPT integration to an existing product as a one-week sprint, with no ongoing ownership\n- Worked adjacent to an AI team without making the hard product decisions themselves\n\n**What they're actually looking for:** a PM who has made real bets — prioritized one AI feature over another, decided when an AI approach wasn't good enough and rolled it back, shipped something that users relied on and then had to maintain as the model provider's API changed.\n\n**The interview implication:** Every AI experience you describe needs to go deep enough that a skeptical interviewer can't dismiss it as demo-level. Specifics are the signal: what was the eval framework? What happened when it failed? How did you know it was working?`,
+          heading: "Flows: the fundamental unit",
+          body: `A **flow** in Kestra is a YAML document that defines:\n- What namespace it belongs to (organization and access control)\n- What triggers it (schedule, webhook, event, or manual)\n- What inputs it accepts (typed parameters validated at runtime)\n- What tasks it runs (in what order and with what dependencies)\n- What outputs it produces\n\nA minimal flow looks like this:\n\n\`\`\`yaml\nid: hello-world\nnamespace: my.team\n\ntasks:\n  - id: greet\n    type: io.kestra.plugin.core.log.Log\n    message: Hello, {{ inputs.name }}!\n\ninputs:\n  - id: name\n    type: STRING\n\ntriggers:\n  - id: daily\n    type: io.kestra.plugin.core.trigger.Schedule\n    cron: "0 9 * * *"\n\`\`\`\n\n**What this expresses declaratively:** every morning at 9am, run the \`greet\` task with the \`name\` input. No Python environment, no import statements, no dependency management — just the definition.\n\n**Flows are versioned.** Every time you save a flow, Kestra keeps the history. You can compare revisions, roll back to a previous version, and see exactly what changed. This is a first-class feature, not an afterthought — it enables GitOps workflows where flows are committed to a repository and synced into Kestra via the Git Sync plugin.`,
           goAnalogy: {
-            term: "Aji",
-            reading: "あじ",
+            term: "Goban",
+            reading: "ごばん",
             meaning:
-              "Latent potential in a position — stones that look dead but have future possibilities. Demo experience has aji: it shows possibility but not strength. Interviewers look for realized strength, not latent potential.",
+              "The board itself — the space where play happens. A flow is the goban: it defines the space where tasks execute, with its own rules (inputs, triggers, namespace) that govern the game played within it.",
           },
         },
         {
-          heading: "The five questions that separate production from prototype",
-          body: `Apply these to any AI use case — including ones customers bring you:\n\n**1. What happens when the AI is wrong?**\nPrototype: "It doesn't work perfectly yet but it's pretty good."\nProduction: "Wrong outputs trigger a fallback rule / human review queue / confidence threshold gate. We track error rate weekly."\n\n**2. How do you know it's working?**\nPrototype: "We tested it with 50 examples and it looked good."\nProduction: "We have an eval set of 500 labeled examples, run it after every model or prompt change, and track accuracy in our dashboard. We set a 90% accuracy threshold before any prompt change ships."\n\n**3. What does it cost to run?**\nPrototype: "We haven't measured that yet."\nProduction: "It costs $0.003 per run at current volume (2,000 runs/day = $180/month). We have a cost alert if that spikes more than 20%."\n\n**4. What happens when the API is unavailable?**\nPrototype: "We'd just re-run it manually."\nProduction: "The workflow retries up to 3 times with exponential backoff. After 3 failures it routes to a fallback path (rule-based classifier) and pages the on-call team."\n\n**5. Who owns it when it degrades?**\nPrototype: "The team that built it would fix it."\nProduction: "There's a runbook. When accuracy drops below 85% for 3 consecutive days, the ML team reviews recent failures and the PM decides whether to retrain, adjust the prompt, or escalate."`,
+          heading: "Tasks: runnable vs. flowable",
+          body: `Tasks come in two fundamental types:\n\n**Runnable tasks** perform actual work: call an API, run a SQL query, execute a Python script, send a Slack message, transfer a file. They have inputs, they do something, they produce outputs. Most of the 1300+ Kestra plugins are runnable tasks.\n\n**Flowable tasks** orchestrate other tasks — they define control flow logic rather than doing work themselves:\n- **Sequential** (default): run tasks one after another\n- **Parallel**: run multiple tasks concurrently, wait for all to complete\n- **Switch**: branch to different task sequences based on a value\n- **ForEachItem**: iterate over a list and run a task (or subflow) for each item\n- **If**: conditional execution based on an expression\n- **Pause**: stop and wait for human approval or a timeout\n- **EachParallel**: iterate in parallel\n\nThe distinction matters for product thinking: when users ask for "more control flow options," they're asking for new flowable task types. When they ask for "more integrations," they're asking for new runnable task types (plugins). These are very different engineering investments.\n\n**Task outputs and inputs are strongly typed.** A task that fetches data from an API produces a typed output object. The next task references that output with Pebble expression syntax: \`{{ outputs.previousTask.someField }}\`. This creates a data contract between tasks that Kestra validates at flow definition time, not just at runtime.`,
         },
         {
-          heading: "Evaluating customer AI requests against this bar",
-          body: `When a customer asks for an AI feature, your job as PM is to understand where they actually are on the serious/demo spectrum — because it affects what you build.\n\n**A customer who is at prototype level needs:**\n- Guardrails and confidence thresholds (don't let the AI act without a human checkpoint)\n- Easy fallback mechanisms\n- Visibility into what the AI is doing (per-step observability)\n- A clear path from prototype to production\n\n**A customer who has production AI workflows needs:**\n- Cost controls and monitoring\n- Eval integration (run their test suite against every workflow version)\n- Audit logs for compliance\n- Reliability guarantees (SLA, retry behavior, alerting)\n\n**Why this matters for the Kestra roadmap:**\nDifferent customers are at different points on this spectrum. A feature that serves prototype-level customers (easy confidence thresholds) is different from a feature that serves production customers (eval pipeline integration, cost dashboards). You need both — but they're different engineering bets, and you need to prioritize knowing which segment to serve first.`,
+          heading: "Executions, namespaces, and the execution lifecycle",
+          body: `**Executions** are runtime instances of a flow. Every time a flow runs — whether triggered by a schedule, webhook, manual start, or another flow — it creates an execution. Each execution has:\n- A unique ID\n- A state: CREATED → RUNNING → SUCCESS / FAILED / KILLED / PAUSED\n- Task run records: one per task, each with its own state, inputs, outputs, and logs\n- Execution labels: key-value pairs for filtering and searching\n\nThe execution lifecycle is what makes observability possible. You can filter all executions by flow, namespace, state, label, or time range. You can drill into a specific execution and see exactly which task failed, what its inputs were, and what error it produced. This is the core value of an orchestration platform over cron — every run is a first-class record, not a line in a log file.\n\n**Namespaces** are the organizational layer. They work hierarchically (\`prod.data.finance\`, \`prod.data.marketing\`) and define:\n- Access control: which teams can see and modify which flows\n- Plugin defaults: default configurations that apply to all flows in a namespace (e.g., always use this AWS region)\n- Secrets inheritance: secrets defined at the namespace level are available to all flows within it\n- Task defaults: per-task-type configuration that overrides the defaults for the entire namespace\n\nFor a PM, namespaces are the enterprise feature that enables multi-tenant deployments. A bank running Kestra across 20 different business units uses namespaces to ensure each unit's workflows are isolated from others.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "A customer says: 'We're using Kestra to run an AI workflow that summarizes daily reports and sends them to executives. It's been running for 3 months and they love it.' Is this serious production AI? What's the key question to ask?",
+            "A user asks: 'Can Kestra run 100 API calls in parallel and wait for all of them to finish before continuing?' Which task type addresses this?",
           options: [
-            "Yes — 3 months of successful operation proves it's production-grade",
-            "It might be — the key question is: 'What happens when it produces a wrong or incomplete summary? Who notices and how?' If there's no detection mechanism, it's a demo running on a schedule",
-            "It depends on how many reports it processes per day",
-            "Yes — executive users provide implicit quality feedback by continuing to use it",
+            "A Runnable task with a parallel flag",
+            "The EachParallel flowable task: iterate over a list of 100 items, run a task (or subflow) for each item in parallel, continue when all complete",
+            "Multiple Sequential tasks with async configuration",
+            "A custom plugin that handles parallelism internally",
           ],
           correct: 1,
           explanation:
-            "Duration is not a quality signal — a prototype can run for 6 months if no one notices when it fails. The critical gap in most 'summary' workflows is detection: if the LLM returns an incomplete or hallucinated summary, does anyone know? Executive users often assume the AI is right and don't provide corrective feedback. The absence of a detection mechanism means this is likely a demo running on a schedule, not production AI.",
+            "EachParallel is the correct flowable task for this pattern. The user defines a list (the 100 items to call the API with), wraps the API call task in an EachParallel, and Kestra fans out to 100 concurrent task runs and fans back in when they complete. This is a flowable task — it doesn't do the work itself, it controls how the work is distributed. The API call is the runnable task inside it.",
         },
         {
           type: "multiple-choice",
           question:
-            "A PM candidate describes their AI product experience: 'I led the launch of an AI feature that used GPT-4 to auto-tag customer support tickets. We shipped it in 3 weeks and got great initial feedback.' What's the follow-up question that reveals whether this is serious experience?",
+            "A data engineering team wants to use Kestra but their security team is asking: 'How do we ensure the finance team's workflows can't access the marketing team's data or credentials?' What's the Kestra answer?",
           options: [
-            "'How many tickets did it tag per day?'",
-            "'What was the tagging accuracy, how did you measure it, and what did you do when it tagged a ticket incorrectly?'",
-            "'Did you get C-suite visibility for this project?'",
-            "'How did you decide to use GPT-4 vs. another model?'",
+            "Each team runs a separate Kestra installation",
+            "Namespaces with role-based access control: finance workflows live in the finance namespace with secrets scoped to that namespace, marketing workflows live in the marketing namespace. Enterprise RBAC controls which users can see, execute, or modify flows in each namespace",
+            "Flows are isolated by default and can't share credentials",
+            "API keys are managed outside Kestra and passed as environment variables",
           ],
           correct: 1,
           explanation:
-            "The accuracy + measurement + failure handling question reveals everything. If the candidate says 'we got positive feedback from support managers' — that's demo-level (subjective, no measurement). If they say 'we achieved 87% accuracy on our test set, tracked production accuracy weekly, and built a human review queue for low-confidence tags' — that's production-level experience. The other questions are interesting but don't distinguish prototype from production as sharply.",
+            "Namespace-based isolation with RBAC is Kestra's answer to multi-tenant enterprise deployments. Secrets, task defaults, and plugin configurations scoped to a namespace aren't visible or accessible to flows in other namespaces. This is an enterprise feature — the open-source version has namespaces for organization, the enterprise version adds the RBAC controls that security teams require before approving a production deployment.",
         },
         {
           type: "scenario",
           prompt:
-            "You're in a customer interview. The customer says: 'We want to use AI to automatically resolve simple support tickets — answer the question, close the ticket, no human involved.' How do you think about whether to build this, and what would you tell them?",
+            "A customer says: 'We want to run a workflow that calls an LLM for each of 10,000 rows in a database table.' Walk through how this would work in Kestra and what product considerations arise.",
           sampleAnswer:
-            "This is a real use case, but 'no human involved' is the part that needs scrutiny before we commit to building it. My response to the customer: 'This is exactly the kind of workflow Kestra can support — let's figure out what 'simple' means and what the failure mode looks like. A few questions: What % of your tickets would qualify as simple? How would you know if the AI answered incorrectly? What happens if a customer escalates a ticket that was auto-closed? Would your support team trust this enough to actually leave it unsupervised?' My hypothesis: the right first version isn't 'fully autonomous resolution' — it's 'AI-drafted response that a support agent approves with one click.' That's a human-in-the-loop workflow that proves value quickly, builds trust in the system, and creates an eval dataset (every approval/rejection) for improving accuracy. I'd build toward full autonomy, but I wouldn't ship it without a confidence threshold and a human review gate for the first 90 days.",
+            "The basic structure is: (1) a Runnable task queries the database and produces a list of rows as output; (2) a ForEachItem or EachParallel flowable task iterates over the rows; (3) inside the loop, a Runnable task calls the LLM with each row's data and produces output. The product considerations: first, 10,000 concurrent LLM calls would exhaust any API rate limit — the customer needs Kestra's concurrency control to cap parallel executions (e.g., max 50 concurrent). Second, some of those 10,000 calls will fail due to rate limiting or timeouts — the retry configuration on the LLM task needs to be set with exponential backoff. Third, what happens if 50 of the 10,000 fail after retries? Does the flow fail entirely, or does it continue and report which rows failed? This is the error handling / allowedFailures configuration. Fourth, 10,000 LLM calls has a real cost — the customer should instrument this with Kestra's execution metrics to understand cost per run. These are all things that a cron script or a Python script would require custom engineering to handle; Kestra handles them natively. This is the product story.",
           keyPoints: [
-            "Fully autonomous AI actions on external-facing workflows need high confidence bars — start with human-in-the-loop",
-            "Customer interviews should probe the failure mode before you commit to the happy path",
-            "'Human-in-the-loop then graduate to autonomous' is a safer roadmap than 'autonomous from day one'",
-            "The review queue creates the eval dataset you need to safely remove the human later",
+            "Concurrency limits prevent API rate limit exhaustion — native Kestra feature",
+            "Retry with backoff on LLM task types handles transient failures without restarting from row 1",
+            "Error handling / allowedFailures determines whether partial failures fail the whole execution",
+            "Kestra's execution metrics track cost and performance per run natively",
           ],
         },
       ],
-      resources: [],
+      resources: [
+        {
+          title: "Kestra Docs: Workflow Components",
+          url: "https://kestra.io/docs/workflow-components",
+          description: "The authoritative reference for all workflow components — flows, tasks, triggers, inputs, outputs, and more.",
+        },
+      ],
     },
     {
       id: "2-2",
       unitId: "unit2",
       companySlug: "kestra",
-      title: "The Quality / Cost / Reliability Triangle",
+      title: "Data Flow, Reliability Primitives & the Plugin System",
       tldr:
-        "Every AI product decision involves a tradeoff between output quality, cost per run, and reliability. A Kestra PM needs to reason about this triangle for every AI feature — and help customers reason about it for their workflows.",
-      skills: ["AI economics", "Product tradeoffs", "Model selection"],
+        "How data moves between tasks (outputs, inputs, the KV store), how Kestra handles failure (retries, timeouts, error handlers, SLAs), and how the plugin ecosystem works — 1300+ plugins, all JAR-based, versioned independently from the core platform.",
+      skills: ["Data flow", "Reliability", "Plugin architecture"],
       xp: 25,
       content: [
         {
-          heading: "The three axes and what they mean",
-          body: `**Quality:** How good is the AI output? For text tasks, this is accuracy, relevance, coherence. For structured output, it's whether the extracted fields are correct. For decisions, it's whether the AI chose the right path. Quality is almost never binary — it exists on a spectrum and degrades gradually.\n\n**Cost:** What does each run cost? LLM API cost is primarily driven by token volume (input + output) × price per token. Cost scales with usage — what's cheap at 100 runs/day may be prohibitive at 100,000 runs/day. Cost also includes engineering time for prompt tuning and eval maintenance.\n\n**Reliability:** Does the workflow run successfully? Reliability has two dimensions: (1) infrastructure reliability (does the API call succeed, does the task complete?) and (2) quality reliability (does the AI produce valid, usable output consistently?). A task can be infrastructure-reliable but quality-unreliable — it always returns something, but the output is sometimes wrong.\n\n**The tradeoff:** Better models cost more. Faster models are often less capable. Cheaper models may have worse reliability (more rate limiting, lower quality at edge cases). You can't optimize all three simultaneously — every AI feature involves making a call on where to land on this triangle.`,
+          heading: "Data flow between tasks",
+          body: `**Task outputs and Pebble expressions:**\nWhen a task completes, its outputs are accessible to subsequent tasks via Pebble template expressions:\n\n\`\`\`yaml\ntasks:\n  - id: fetch_data\n    type: io.kestra.plugin.http.Request\n    uri: https://api.example.com/data\n\n  - id: process\n    type: io.kestra.plugin.core.log.Log\n    message: "Got {{ outputs.fetch_data.body }}"\n\`\`\`\n\nPebble is Kestra's templating engine — a Java implementation of Jinja2-style expressions. It evaluates \`{{ }}\` expressions at runtime, providing access to: task outputs, flow inputs, execution metadata, environment variables, secrets, and KV store values. Every dynamic value in a Kestra flow goes through Pebble.\n\n**Internal storage for large outputs:**\nWhen tasks produce large data (a CSV file, a JSON response with thousands of records), Kestra stores them in internal storage (backed by local filesystem, S3, GCS, or Azure Blob) rather than in memory. Subsequent tasks reference these stored artifacts by URI. This is what makes Kestra work for data-heavy workflows without running out of memory.\n\n**The KV Store:**\nKestra's built-in Key-Value store provides state persistence across multiple flow executions. A flow run on Monday can write a value to the KV store; a flow run on Tuesday can read it. This is how Kestra handles stateful orchestration patterns: "only process records created after the last successful run" or "track which items have been processed to avoid duplicates."`,
           goAnalogy: {
-            term: "Komi",
-            reading: "こみ",
+            term: "Aji",
+            reading: "あじ",
             meaning:
-              "Points given as compensation — explicitly acknowledged starting asymmetry. The quality/cost/reliability tradeoffs are komi: acknowledge them explicitly at the start of every AI feature spec, not as an afterthought.",
+              "Latent potential — possibilities that remain in a position even after it seems settled. Task outputs are aji: they create potential in the flow that can be activated by subsequent tasks in ways not determined at flow design time.",
           },
         },
         {
-          heading: "Model selection as a PM decision",
-          body: `PMs don't write the API calls, but they make the call on which model to use — or rather, they set the criteria that engineering uses to make that call. Here's the framework:\n\n**Task complexity → model tier:**\n- Simple extraction, classification, routing → smaller, faster models (Claude Haiku 4.5, GPT-4o Mini). Low cost, high speed, sufficient quality for well-defined tasks.\n- Summarization, generation, analysis → mid-tier models (Claude Sonnet 5, GPT-4o). Higher cost, better quality for nuanced tasks.\n- Complex reasoning, multi-step agent decisions, code generation → top-tier models (Claude Opus 5). Highest cost, best quality for hard problems.\n\n**The PM call:** Define the task precisely enough that engineering can pick the right tier. "Classify this ticket into one of 12 categories" is a haiku-tier task. "Analyze this contract and identify 15 categories of risk clauses with confidence scores and explanations" is an opus-tier task. If you can't specify the task clearly, you can't make a principled model choice.\n\n**When to use multiple models:** A common production pattern is a cheap model as the first pass (route to the right category, check confidence), escalating to an expensive model only for low-confidence cases. This gives you good average-case cost with high-quality handling of hard cases.\n\n**What this means for Kestra features:** Native model routing — "use model A for confidence > 0.8, escalate to model B otherwise" — is a genuine product feature. It's not just a prompt engineering trick; it requires workflow branching, output validation, and cost tracking. A native Kestra pattern for this would be valuable.`,
+          heading: "Reliability primitives",
+          body: `**Retries:**\nConfigured per task or at the flow level. Three strategies:\n- **Constant**: retry after a fixed delay (e.g., retry every 30 seconds, up to 5 times)\n- **Exponential**: retry with increasing delays (e.g., 1s → 2s → 4s → 8s) — appropriate for rate-limited APIs\n- **Random**: retry with a random delay within a range — useful for reducing thundering herd effects\n\n**Timeouts:**\nSet maximum execution duration at the task level (\`timeout: PT30M\`) or the flow level. A task that runs longer than its timeout is killed and fails. Combined with retries, timeouts prevent a single hung task from blocking the entire workflow indefinitely.\n\n**Error handling:**\nKestra has two error handling layers:\n- **Task-level**: an \`errors\` block inside a task defines what to run if that specific task fails\n- **Flow-level**: a global \`errors\` block defines what to run if any task in the flow fails (send an alert, log the failure, trigger a remediation flow)\n\n**SLAs (Service Level Agreements):**\nNew in Kestra 1.0. Define expected execution duration (\`maxDuration: PT2H\`) and Kestra automatically takes actions if the SLA is breached: kill the execution, send an alert, or trigger another flow. This turns "hope this runs in under 2 hours" into "automatically handle it if it doesn't."\n\n**Subflows:**\nA task that calls another flow as a step. Enables modularity: a complex workflow is broken into smaller, reusable flows that are composed via subflow tasks. Subflows run as separate executions, so they have their own observability and can be triggered independently for testing.`,
         },
         {
-          heading: "Communicating tradeoffs to customers",
-          body: `One of the most important PM skills in AI is helping customers make principled tradeoff decisions — not just implementing whatever they ask for.\n\n**Scenario:** A customer wants AI to review every contract for risk clauses, using the best available model, with results in under 5 seconds.\n\n**The tradeoff conversation:**\n- Best model + 5-second requirement: probably achievable, but at $0.40 per contract at high volume. Is that cost worth it?\n- If they process 500 contracts/day: $200/day = $6,000/month. Is that in their budget?\n- What if you use a mid-tier model for the first pass (catches 90% of issues, $0.04/contract) and only escalate to the best model for flagged contracts? $0.04 × 450 + $0.40 × 50 = $38/day = ~$1,140/month. Same quality for 90% of cases, 5x cheaper.\n- What if 5 seconds isn't actually a hard requirement — the contract review takes 3 days anyway, and they just want results before the lawyer reviews? Then latency isn't the constraint, and you can use an async approach with batching.\n\n**The PM's job is to surface these questions before committing to a solution.** Customers often specify requirements that embed hidden assumptions. Your job is to find the assumptions and test them.`,
+          heading: "The plugin system: 1300+ integrations",
+          body: `**How plugins work:**\nEach Kestra plugin is a Java JAR file that implements the plugin API. Plugins define new task types (runnable and flowable), new trigger types, and new condition types. They're distributed via Maven repositories and installed into a Kestra instance without restarting the server.\n\n**Plugin versioning (new in 1.0):**\nBefore 1.0, all plugins had to be the same version as the Kestra server. This meant upgrading one plugin required upgrading all plugins — a risky operation for large deployments. Plugin versioning allows different plugin versions to coexist, enabling gradual migration: upgrade the Kafka plugin independently of the S3 plugin without touching the others.\n\n**What 1300+ plugins means:**\nThe plugin catalog covers:\n- **Cloud providers**: AWS (S3, Lambda, RDS, Glue, SageMaker, Redshift...), GCP (BigQuery, GCS, Dataflow...), Azure (Blob Storage, Data Factory...)\n- **Data systems**: Snowflake, Databricks, dbt, Fivetran, Kafka, Elasticsearch, MongoDB, PostgreSQL, MySQL...\n- **DevOps**: Docker, Kubernetes, Terraform, Ansible, Helm...\n- **Communication**: Slack, PagerDuty, email, GitHub, Jira...\n- **AI/LLM**: Anthropic (Claude), OpenAI, Google AI — and the AI Agent plugin\n- **Scripting**: Python, R, Node.js, Go, Bash, PowerShell\n\n**The open-source plugin contribution model:**\nMost plugins are open source and community-maintained. Kestra curates the official plugin library and maintains a core set of plugins. The breadth of the ecosystem is a network-effects moat: more plugins → more use cases covered → more users → more plugin contributions.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "A customer wants to use AI to classify incoming data integration errors into 8 categories to route them to the right on-call team. They need results in under 2 seconds. What model tier is appropriate and why?",
+            "A data pipeline runs every night and needs to only process records created since the last successful run. How does Kestra support this stateful pattern?",
           options: [
-            "Top-tier model — on-call routing is high-stakes and needs maximum accuracy",
-            "Small/fast model — 8-category classification is a well-defined task where a capable small model will achieve high accuracy, and 2-second latency requirements favor models optimized for speed",
-            "Mid-tier model — balance quality and cost for an important use case",
-            "Multiple models — use a small model for common errors, escalate to top-tier for novel ones",
+            "Kestra automatically tracks which records were processed in each execution",
+            "The KV store: the flow writes the last successful run timestamp to a KV key after completion; the next execution reads that key at the start to construct its query filter ('WHERE created_at > {{ kv('last_run_timestamp') }}')",
+            "Execution history: the flow queries Kestra's API for the last successful execution time",
+            "This pattern requires a database external to Kestra to maintain state",
           ],
           correct: 1,
           explanation:
-            "8-category classification is exactly the kind of well-structured, repetitive task where small models perform at near-parity with large models. The categories are known, the input (error messages) is structured, and the task doesn't require complex reasoning. A small model will meet the 2-second requirement easily. The multiple-model approach (Option D) adds complexity without meaningful quality gain for this task — save that pattern for tasks with genuinely high variance in difficulty.",
+            "The KV store is purpose-built for cross-execution state. The flow writes the timestamp after successfully processing; the next run reads it to filter. This keeps the state in Kestra rather than requiring an external database, and the KV key is namespaced (scoped to the flow's namespace), so different flows don't interfere with each other. Option C (querying the API) works but is more fragile and more complex to implement.",
         },
         {
           type: "multiple-choice",
           question:
-            "A customer's AI workflow costs $800/month at current volume. They're planning to expand usage 10x. Before the expansion, what conversation should a PM initiate?",
+            "A customer's data pipeline calls a third-party API that has a rate limit of 100 requests/minute and returns HTTP 429 when the limit is exceeded. Which Kestra configuration handles this?",
           options: [
-            "Confirm the customer's budget can handle $8,000/month",
-            "Work with the customer to identify cost optimization opportunities — model tiering, batching, caching common inputs, reducing output length — before the 10x expansion locks in the current architecture",
-            "Recommend migrating to a cheaper model provider",
-            "Escalate to the customer's engineering team to optimize the prompt",
+            "Set maxRetries: 5 on the task",
+            "Configure an exponential retry on the API task: 3 retries with a 30-second initial delay. When the task receives a 429, it waits 30s, then 60s, then 120s before each retry — respecting the rate limit window without manual intervention",
+            "Set a 1-second delay between task executions in the flow",
+            "Use a Parallel task to reduce individual request volume",
           ],
           correct: 1,
           explanation:
-            "10x scale is the right time to revisit the architecture, not after the bill arrives. The PM conversation should happen before the expansion: what % of their runs are high-complexity (need the current model tier) vs. routine (could use a cheaper model)? Do they cache results for repeated inputs? Can they batch non-time-sensitive runs for cheaper pricing? These architectural decisions are much easier to make before scale than after. A PM who surfaces this conversation proactively adds real value.",
+            "Exponential retry with appropriate initial delay is the correct solution for rate-limited APIs. The 30-60-120 second backoff gives the rate limit window time to reset. A constant retry (Option A with just maxRetries) would retry too quickly and continue hitting the limit. Adding a delay between ALL tasks (Option C) would slow the entire pipeline unnecessarily. The key is task-level exponential retry specifically on the API call task.",
         },
       ],
-      resources: [],
+      resources: [
+        {
+          title: "Kestra Plugin Library",
+          url: "https://kestra.io/plugins",
+          description: "Browse the full plugin catalog — useful for understanding what integrations exist and identifying gaps.",
+        },
+        {
+          title: "Kestra Docs: AI Tools",
+          url: "https://kestra.io/docs/ai-tools",
+          description: "The AI tools section covering Copilot, AI Agents, MCP Resources, and Agent Skills.",
+        },
+      ],
     },
     {
       id: "2-3",
       unitId: "unit2",
       companySlug: "kestra",
-      title: "What to Build vs. What Not to Build",
+      title: "Blueprints, Triggers, and the Developer Experience",
       tldr:
-        "The Kestra posting specifically calls out 'making decisive calls about what not to build.' This lesson covers the frameworks and signals that help a PM say no confidently — and when to say yes.",
-      skills: ["Prioritization", "Scope management", "Strategic focus"],
+        "How Kestra's trigger system works (schedule, webhook, flow-completion, polling), what Blueprints are and why they matter for adoption, and how the full developer experience — from the embedded editor to Git Sync — fits together.",
+      skills: ["Triggers", "Developer experience", "Blueprints"],
       xp: 20,
       content: [
         {
-          heading: "Why 'what not to build' is called out explicitly",
-          body: `For a Series A company in AI, the list of things you could build is effectively infinite. Every customer has different needs. Every competitor makes moves you could respond to. Every developer on the team has features they think would be interesting.\n\nThe PM's hardest job is not finding ideas — it's maintaining conviction about what not to build, even under pressure from:\n- A customer who's asking urgently (and implying they might churn if you don't build it)\n- A competitor who just shipped a similar feature\n- An investor who saw a demo of something and wants to know if Kestra does it\n- An engineer who built a prototype in a hackathon and wants to ship it\n\n**Why this is especially hard in AI:** AI makes everything feel possible. Demos are cheap and impressive. A prototype that impresses a customer in a meeting is 90% of the way to "we need this feature" — even when the productionization work is enormous and the use case is narrow.\n\n**The discipline Kestra needs:** Enough internal conviction about the AI roadmap direction that individual anecdotes (one customer request, one competitor feature) don't cause constant thrash.`,
+          heading: "The trigger system",
+          body: `Triggers define how a flow starts. Kestra supports four trigger categories:\n\n**Schedule triggers:** cron-based scheduling. Run at specific times, with timezone support, backfill for missed executions, and configurable catchup behavior. This is the simplest and most common trigger type for batch workflows.\n\n**Webhook triggers:** HTTP-based event triggers. An external system calls a Kestra-generated webhook URL → flow starts immediately. Used for: CI/CD integration (GitHub → Kestra), external event handling, and connecting to systems that push events rather than being polled.\n\n**Flow triggers (flow-completion events):** a flow starts when another flow completes — successfully, with a failure, or when a specific output condition is met. This enables event-driven pipeline compositions without central orchestration: Flow A completes, Flow B automatically starts. Multiple flows can listen to the same completion event.\n\n**Polling triggers:** periodically check an external source for new data or events. A Kafka trigger polls a topic for new messages; an S3 trigger watches a bucket for new files; a database trigger queries for new rows. When the condition is met, the flow executes. This is how Kestra handles event-driven patterns for systems that don't support webhooks.\n\n**For the PM:** the trigger system is what makes Kestra "event-driven" in its product positioning. Cron is the basic case. Webhooks, flow triggers, and polling triggers are what enable reactive, real-time workflows — including the "run the agent when new data arrives" pattern that's central to AI workflow use cases.`,
           goAnalogy: {
-            term: "Tenuki",
-            reading: "てぬき",
+            term: "Sente",
+            reading: "せんて",
             meaning:
-              "Playing elsewhere — ignoring a local threat to take a larger initiative. Deciding what not to build is tenuki: recognizing when a local demand (one customer's request) is less valuable than the global initiative (the platform-wide AI strategy).",
+              "Having the initiative — your move forces a response. A webhook trigger gives the workflow sente: an external event initiates the sequence, and Kestra responds rather than waiting for a scheduled moment.",
           },
         },
         {
-          heading: "Signals that something should NOT be on the roadmap",
-          body: `**1. One customer, no pattern**\nA single customer asks for a very specific feature. Investigation reveals no other customer has expressed this need, and it wouldn't be useful to any other segment. Unless this customer is strategic for other reasons, this is custom development, not product development.\n\n**2. The demo is more impressive than the feature**\nSome AI features produce spectacular demos that customers love in the room but don't actually need in production. Flow generation from natural language is like this — the demo wows, but most customers can write YAML faster than describing what they want in natural language, especially for complex flows. The demo ≠ the value delivered.\n\n**3. The real problem is elsewhere**\nCustomers often request solutions to surface symptoms. "We want AI to automatically retry failed tasks" might actually be a symptom of "our retry configuration is too complex and we don't know how to set it up." The right solution might be better retry UI, not AI.\n\n**4. Technical dependencies aren't ready**\nSome AI features require infrastructure that doesn't exist yet. Building "AI that learns from your workflow patterns" requires extensive telemetry and ML infrastructure that Kestra doesn't have. Don't put it on the roadmap if the dependencies aren't on the roadmap.\n\n**5. You can't define success**\nIf you can't specify what "good" looks like for an AI feature — what metric goes up, what user behavior changes — you don't understand the problem well enough to build it yet.`,
+          heading: "Blueprints: reducing time-to-value",
+          body: `**What Blueprints are:**\nPre-built, ready-to-use flow templates covering common use cases. A Blueprint is a complete YAML flow that demonstrates a specific pattern: "sync data from Postgres to Snowflake," "run a dbt transformation after an S3 file arrives," "call an LLM to classify support tickets."\n\n**Why Blueprints matter for adoption:**\nNew users face a blank canvas problem. Even with 1300+ plugins and a clean YAML model, knowing how to compose them into a working flow for a specific use case requires expertise. Blueprints solve this: a user searches "LLM" in the Blueprint catalog, finds a template that does what they need, clicks to open it in the editor, customizes the namespace and credentials, and they're running in 10 minutes instead of 2 hours.\n\n**The AI Copilot and Blueprints:**\nThey serve related but distinct needs:\n- **Blueprint**: "I know what use case I want — show me a complete, working example"\n- **AI Copilot**: "I'll describe what I want in natural language — generate the YAML for me"\n\nBlueprints are curated and quality-controlled (they work, they have documentation, they handle errors). AI Copilot output is generated on-demand and requires review. Both reduce time-to-value; they're complementary not competitive.\n\n**The PM question for Blueprints:** which AI workflow patterns are common enough and generalizable enough to become official Blueprints? The "LLM-powered document classification" pattern is a Blueprint candidate. A highly customer-specific agent loop probably isn't. This curatorial decision is a product call.`,
         },
         {
-          heading: "Signals that something SHOULD be on the roadmap",
-          body: `**1. Multiple independent customers, same pain**\nWhen 3+ customers independently describe the same friction without being prompted, you've found a real product gap. The pattern is the signal, not any individual customer.\n\n**2. It unlocks the platform, not just the feature**\nSome features are infrastructure for other features. Native LLM task types enable all future AI workflow patterns. First-party evals enable quality tracking across all AI workflows. These platform bets compound.\n\n**3. You can define the before/after clearly**\nA buildable feature has a clear "jobs to be done" articulation: users who want to do X currently have to do Y (which is slow/fragile/expensive). This feature lets them do X directly. If you can't articulate the before/after, you can't validate it with customers.\n\n**4. Competitors haven't shipped it yet**\nIf a feature is on the right track and no competitor has shipped it, there's a window. Wait too long and the category expectation gets set by someone else.\n\n**5. It removes a blocker that stops deals**\nIn sales conversations, if one feature gap is consistently cited as the reason prospects don't convert, that feature has commercial urgency independent of general appeal.`,
+          heading: "The developer experience ecosystem",
+          body: `**The embedded editor:**\nKestra's UI includes a flow editor with syntax highlighting, auto-complete for task types and properties, inline documentation, and real-time validation. This is important because it means YAML editing is guided — users get error feedback before they run the flow, not after.\n\n**Git Sync:**\nNew plugin in 1.0. Bidirectional sync between Kestra and a Git repository: push changes from the UI → they're committed to Git; pull from Git → they're deployed to Kestra. This is how teams implement GitOps workflows: flows are the source of truth in Git, Kestra is the runtime. CI/CD pipelines can validate and deploy flow changes automatically.\n\n**The Playground:**\nA new 1.0 feature: an isolated execution environment for iteratively developing and testing flows without affecting production namespaces. Useful for developing new flows, testing edge cases, and demonstrating features.\n\n**MCP Resources:**\nKestra exposes its documentation and live instance state via the Model Context Protocol (MCP). This means AI coding assistants like Claude Code and Cursor can query Kestra's live documentation at runtime rather than relying on potentially stale training data. When a developer asks Claude Code "how do I configure the S3 trigger?", the MCP resource fetches the current documentation from the running Kestra instance.\n\n**Agent Skills:**\nStructured knowledge files (in the style of CLAUDE.md) that teach external AI coding agents how to generate valid Kestra flows and operate \`kestractl\`. This extends Kestra expertise into the developer's existing AI coding environment.`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
           question:
-            "A large enterprise customer (significant ARR potential) asks Kestra to build a custom AI feature: a compliance workflow that maps to their specific regulatory requirements. No other customer needs this. How should the PM respond?",
+            "A machine learning team wants to automatically retrain their model when a new dataset file arrives in an S3 bucket. Which trigger type should they use?",
           options: [
-            "Build it — revenue from a large enterprise customer justifies custom development",
-            "Decline and explain why general-purpose compliance features would serve them better",
-            "Offer to build it as a paid professional services engagement, not as a product feature — or explore whether the underlying capability (configurable compliance rules) could be generalized into a platform feature that serves multiple customers",
-            "Put it at the bottom of the roadmap as a low-priority backlog item",
+            "Schedule trigger: check the S3 bucket every hour",
+            "S3 polling trigger: watch the bucket for new files matching a pattern; when one arrives, start the retraining flow immediately with the file URI as an input",
+            "Webhook trigger: the S3 bucket sends a notification to the Kestra webhook",
+            "Flow trigger: another flow deposits the file and triggers the retraining flow on completion",
           ],
-          correct: 2,
+          correct: 1,
           explanation:
-            "Custom development for a single customer is a product trap: it takes engineering resources away from platform work, creates a maintenance burden, and doesn't compound. The right answer is to find the generalization ('configurable compliance rules that any customer can configure for their jurisdiction') or move it to paid professional services (which prices in the custom work appropriately). A PM who says yes to all enterprise custom requests ends up with a consulting business, not a product.",
+            "The S3 polling trigger is designed exactly for this: it watches a bucket for new objects matching a filter, and when one arrives, it triggers the flow with the file's URI as an input. This is reactive (starts as soon as the file arrives) without requiring the S3 bucket to support webhooks. Option A (hourly schedule) introduces up to 59 minutes of latency. Option C (S3 webhook) would work if S3 event notifications were configured to call Kestra's webhook URL — also a valid approach, but requires more infrastructure configuration.",
         },
         {
-          type: "scenario",
-          prompt:
-            "Your engineering team built an AI feature during a hackathon: 'AI-powered anomaly detection for workflow execution metrics — it learns your normal patterns and alerts on unusual behavior.' The demo is impressive and the team is excited to ship it. Should you put it on the roadmap? Walk through your evaluation.",
-          sampleAnswer:
-            "I need to evaluate this against the 'what not to build' signals before committing. First question: do customers actually need this? I'd do 5 customer interviews focused on: 'When a workflow behaves unexpectedly, how do you find out? How long does it take? What do you do about it?' If customers are already satisfied with existing alerting tools, this feature doesn't solve a real pain. Second question: what does the demo actually deliver vs. what production would require? The hackathon demo probably learns on the team's own workflow history. A real product needs: customer-specific baseline learning periods (30+ days of data), configurable sensitivity thresholds, integration with their existing alerting tools (PagerDuty, Slack), explainable alerts (not just 'something is weird'), and low false-positive rates. That's months of work, not a sprint. Third question: can I define success? If I can't say 'this feature is working if X% of production anomalies are caught before customers notice them, with fewer than Y false positives per week' — I don't understand the feature well enough to build it. My recommendation: run the customer interviews. If the pain is real and validated, the hackathon prototype becomes the basis for a real spec. If not, celebrate the hack but park the feature.",
-          keyPoints: [
-            "Impressive demos require validation before they become roadmap commitments",
-            "Hackathon prototypes rarely account for the productionization work — investigate the gap",
-            "Define success before committing, not after",
-            "Customer interview findings should drive the decision, not team excitement",
+          type: "multiple-choice",
+          question:
+            "Why does Kestra's MCP Resource integration (connecting Claude Code and Cursor to live Kestra documentation) matter as a product feature?",
+          options: [
+            "It makes Kestra's documentation always available offline",
+            "LLMs' training data about Kestra's API is always months out of date; the MCP resource enables AI coding assistants to fetch current task properties and configuration options from the live Kestra instance, reducing hallucinations and incorrect plugin usage",
+            "It allows Kestra to track which developers are using AI coding assistants",
+            "It's a marketing integration with Claude and Cursor to increase brand visibility",
           ],
+          correct: 1,
+          explanation:
+            "The training data staleness problem is real and significant for rapidly evolving platforms like Kestra. Claude or Cursor trained on data from 6 months ago will suggest deprecated parameters or miss new plugin features. The MCP resource solves this by enabling the AI to fetch current documentation at query time from the live Kestra instance. This is a genuine product value: fewer incorrect plugin configurations, faster developer onboarding, and higher quality AI-assisted flow generation.",
         },
       ],
-      resources: [],
+      resources: [
+        {
+          title: "Kestra Blueprint Gallery",
+          url: "https://kestra.io/blueprints",
+          description: "Browse the Blueprint catalog to understand what use cases Kestra considers important enough to provide as pre-built templates.",
+        },
+      ],
     },
   ],
   quiz: [
     {
       type: "multiple-choice",
-      question:
-        "A PM says: 'I've never rolled back an AI feature after launch.' Is this a good signal or a concerning one?",
+      question: "A Kestra flow has 5 tasks. Task 3 fails. What does Kestra do by default, and what options exist?",
       options: [
-        "Good signal — it means their features were well-designed and didn't have problems",
-        "Concerning — rolling back and adjusting AI features in response to quality issues is normal production behavior; never rolling back suggests either very limited AI experience or not measuring quality closely enough to know when to act",
-        "Neutral — rollback decisions depend on the specific features built",
-        "Good signal — rollbacks are costly and avoiding them is a PM skill",
+        "The flow fails immediately; to continue, you must restart from task 1",
+        "The flow marks task 3 as FAILED, marks the execution as FAILED, executes any flow-level error handler tasks, and preserves the execution record. A user can then replay the execution from task 3 (not task 1) after fixing the underlying issue",
+        "Kestra automatically retries task 3 indefinitely until it succeeds",
+        "The flow skips task 3 and continues with tasks 4 and 5",
       ],
       correct: 1,
       explanation:
-        "Production AI features degrade as models change, data distributions shift, and edge cases emerge. A PM who has shipped AI features to real users and tracked quality carefully will almost certainly have made rollback decisions. Never rolling back suggests either a very short track record, or not measuring quality well enough to know when a feature has degraded.",
+        "The default Kestra behavior on task failure: the task fails, the execution fails, any flow-level error handlers run (alerts, cleanup tasks). The execution record is preserved with full context. Importantly, users can replay from the failed task — this is the recoverability property that separates orchestration from cron. Retry behavior is configurable per task; without explicit retry configuration, a task fails on its first error.",
     },
     {
       type: "multiple-choice",
-      question: "Which of these is the strongest signal that an AI use case is worth building into the Kestra platform?",
+      question: "What makes Kestra's plugin versioning (introduced in 1.0) significant for enterprise deployments?",
       options: [
-        "A large enterprise customer is requesting it urgently",
-        "A competitor just shipped a similar feature",
-        "Five different customers independently described the same friction in discovery interviews, and solving it would require a platform capability (not just a plugin) that multiple future features could build on",
-        "The engineering team has a working prototype that demonstrates feasibility",
+        "It allows enterprise users to use plugins that are not open source",
+        "Large enterprise deployments often can't do big-bang upgrades of all plugins simultaneously — plugin versioning allows upgrading the Kafka plugin to fix a bug without touching the S3, Snowflake, or dbt plugins, reducing risk and enabling incremental migration",
+        "Plugin versioning enables rollback of specific plugin changes without rolling back the entire Kestra server",
+        "It allows multiple teams to use different plugin versions for the same integration",
+      ],
+      correct: 1,
+      explanation:
+            "The enterprise deployment constraint is real: an organization with 200 production flows using 40 different plugins cannot safely upgrade all plugins simultaneously. Before plugin versioning, a bug fix in one plugin required a coordinated upgrade of all plugins and the Kestra server. Plugin versioning removes this coupling — each plugin can be upgraded independently and rolled back independently. This is a critical enterprise deployment requirement, not a developer convenience feature.",
+    },
+    {
+      type: "multiple-choice",
+      question: "Which component is most important for enabling Kestra to serve the 'event-driven' use case rather than just the 'scheduled batch' use case?",
+      options: [
+        "The KV Store (persistent state across executions)",
+        "Flowable tasks (control flow logic)",
+        "Polling triggers, webhook triggers, and flow-completion triggers — these enable flows to react to external events as they occur rather than waiting for a scheduled time",
+        "Plugin versioning (safe independent plugin upgrades)",
       ],
       correct: 2,
       explanation:
-        "Pattern across multiple independent customers + platform leverage = the strongest roadmap signal. Single customer urgency creates custom development pressure. Competitive response creates reactive, not strategic, roadmaps. A working prototype proves feasibility, not value. Five independent customers who found the same pain without being prompted is strong market signal; the platform leverage (it enables multiple future features) makes the investment compound.",
+        "The trigger system is what makes a workflow orchestrator event-driven. Without polling, webhook, and flow-completion triggers, Kestra would be a sophisticated cron replacement — scheduled batch processing only. With these triggers, Kestra can react to: a new file in S3 (polling trigger), a GitHub push (webhook trigger), or another flow completing (flow trigger). This is what enables AI agent workflows that react to incoming data rather than running on a fixed schedule.",
     },
   ],
   quizXp: 30,
