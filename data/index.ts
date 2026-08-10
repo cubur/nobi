@@ -2,11 +2,13 @@ import type { CompanyModule, Lesson, Unit } from "@/data/types";
 import { ghostdraft } from "@/data/companies/ghostdraft";
 import { enginy } from "@/data/companies/enginy";
 import { tightly } from "@/data/companies/tightly";
+import { buzzboard } from "@/data/companies/buzzboard";
 
 export const COMPANIES: Record<string, CompanyModule> = {
   ghostdraft,
   enginy,
   tightly,
+  buzzboard,
 };
 
 export function getCompany(slug: string): CompanyModule | undefined {
