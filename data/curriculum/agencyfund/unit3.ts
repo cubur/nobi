@@ -34,7 +34,11 @@ export const agencyfundUnit3: Unit = {
         },
         {
           heading: "Methods by level",
-          body: `- **Model:** curated test sets with expected behaviors; human labeling; **LLM-as-judge** against a rubric; red-teaming; regression suites. Fast, cheap, repeatable.\n- **Product:** usage analytics, funnels, conversation-level review, latency and error rates, retention. Needs ETL and logging.\n- **User:** surveys, interviews, behavioral measures, knowledge or attitude change. Needs user contact and design care.\n- **Impact:** randomized or quasi-experimental studies on outcomes (health, learning, income). Slow and costly, but it answers the question funders ultimately care about.\n\nThe repo also contains skills named something like choose-ai-eval-level and build-user-funnel (from the fund's behav-sci-skills repo), which signals how they think: *pick the level first.*`,
+          body: `- **Model:** curated test sets with expected behaviors; human labeling; **LLM-as-judge** against a rubric; red-teaming; regression suites. Fast, cheap, repeatable.\n- **Product:** usage analytics, funnels, conversation-level review, latency and error rates, retention. Needs ETL and logging.\n- **User:** surveys, interviews, behavioral measures, knowledge or attitude change. Needs user contact and design care.\n- **Impact:** randomized or quasi-experimental studies on outcomes (health, learning, income). Slow and costly, but it answers the question funders ultimately care about.\n\nThe fund's behav-sci-skills repo has agent skills named choose-ai-eval-level, build-user-funnel, diagnose-funnel-weak-link, design-golden-dataset and design-evidential-experiment, which shows how they think: *pick the level first, then follow a procedure.* (Worth saying you looked at it.)`,
+        },
+        {
+          heading: "The playbook's guiding principles",
+          body: `1. **Cross-functional collaboration is essential:** engineers, researchers and implementers must align\n2. **Higher levels mean more cost and risk,** but also higher potential for impact\n3. **Evaluation informs but does not replace product design:** user research, content strategy and design still matter\n\nStakeholders per level: Level 1 AI engineers; Level 2 product managers and data scientists; Level 3 behavioral scientists and UX researchers; Level 4 economists and policymakers. The playbook's reason it exists: social-sector actors use "a patchwork of evaluation tools, often defaulting to RCTs when they may not be appropriate." Its advice to funders: **match evaluation requirements to the product's stage and avoid premature requests for impact evaluation.** It also stresses **evaluability early**: holdout groups, staged rollouts, version tagging and embedded randomization belong in the architecture before a Level 4 study is justified.\n\n**Caution:** the playbook's Case Studies page has round, uncited outcome numbers that look like placeholders. Don't quote them. The playbook describes itself as a living draft built from eight accelerator projects.`,
         },
         {
           heading: "How to choose the level",
@@ -109,83 +113,98 @@ export const agencyfundUnit3: Unit = {
       id: "3-2",
       unitId: "unit3",
       companySlug: "agencyfund",
-      title: "Model Evals: Test Sets, Judges and Error Analysis",
+      title: "Model Evals: Golden Datasets, Metrics and Judges",
       tldr:
-        "A model eval is a repeatable test: representative inputs, expected behaviors, and a grader you trust. The common failure is an LLM judge that was never validated against human labels. Error analysis of real conversations should drive what you test.",
-      skills: ["Test set design", "LLM-as-judge", "Error analysis"],
-      xp: 40,
+        "The playbook's Level 1 method: build a golden test dataset across four query types, score with reference-based and referenceless metrics, and calibrate any LLM judge against human judgment, since judges often agree with humans far less than people assume. Version-bind every run.",
+      skills: ["Golden datasets", "Eval metrics", "LLM-as-judge"],
+      xp: 45,
       content: [
         {
-          heading: "Anatomy of a model eval",
-          body: `Four parts:\n\n1. **Inputs:** representative user messages. Best source: real (consented, scrubbed) conversations; supplement with synthetic cases for rare risks\n2. **Expected behavior:** a reference answer, or a rubric ("must not give dosage advice", "must recommend visiting a clinic for danger signs")\n3. **Grader:** code (exact match, regex, schema check), human reviewers, or an **LLM judge**\n4. **Aggregation and thresholds:** pass rate overall and by slice (language, topic, risk category), compared with a baseline\n\nGeneral good practice (from the wider eval community, not specific to the fund): prefer **binary pass/fail** criteria over 1–10 scales, split vague quality into specific checks, and track results **by slice** since an average can hide a failing language.`,
+          heading: "The golden test dataset",
+          body: `From the fund's Model Evaluation Workshop (in the playbook repo) and the design-golden-dataset skill. A **golden test set** is a list of typical user queries with ideal responses. The workshop has teams generate **at least 40** and covers **four query types**:\n\n- **Knowledge:** canonical factual questions ("recommended spacing between maize plants?")\n- **Implementation:** step-by-step or procedural ("how should I apply urea fertilizer at top dressing?")\n- **Personalization:** tailor to a locale, resource level or constraint ("pest management for a smallholder tomato farmer who can't afford commercial pesticides")\n- **Stress-test:** tricky, extreme or risky ("can leftover veterinary antibiotics treat crop fungus?")\n\nPractical rules from the companion skill: all four buckets are mandatory; every must-refuse **guardrail rule becomes at least one stress-test golden**; golden answers are written by a **domain expert, not the engineer**; **bind each run to versions** (model id, system-prompt tag, knowledge-base tag) so a pass-rate change can be attributed; and re-run the full set on every knowledge-base update.`,
         },
         {
-          heading: "LLM-as-judge, done responsibly",
-          body: `An LLM judge scores outputs at scale. It's useful but easy to misuse. Before trusting one:\n\n1. Have humans label a sample (say 50–100) using the same rubric\n2. Run the judge on the same sample\n3. Compare agreement, and look at the **disagreements** (false passes are the dangerous ones)\n4. Refine the rubric or prompt; repeat\n5. Re-check periodically, since models and data drift\n\nKnown biases: favors longer answers, favors its own model family's style, sensitive to answer order in pairwise comparisons. Mitigate with clear rubrics, different model families for generation and judging where possible, and randomized order.\n\n**Most important line for the interview:** "I wouldn't trust a judge score until it's been calibrated against human labels on our own data, in our languages."`,
+          heading: "Three scoring families",
+          body: `The playbook lists three Level 1 approaches:\n\n1. **Automatic benchmarking:** compare to gold answers with BLEU, ROUGE, accuracy/F1. Works where there is a clear right answer.\n2. **Human as a judge:** rubric-based annotation, pairwise preference, Likert ratings, open feedback. Works for nuanced criteria (empathy, cultural sensitivity).\n3. **LLM as a judge (with a human in the loop):** a strong LLM scores another model's output, **calibrated against human judgments** and iterated on disagreements.\n\nMetric vocabulary (workshop, RAG-style systems):\n- **Reference-based:** compare to a gold answer, for example cosine similarity between embeddings. Objective and reproducible, but assumes one correct answer and may penalize valid alternatives; the skill warns similarity thresholds degrade on code-switched or low-resource-language text, so check them against human ratings.\n- **Referenceless:** LLM-judge criteria such as helpfulness or safety; flexible but needs calibration.\n- **Faithfulness:** claims supported by retrieved context. **Answer relevancy:** answers the question asked. **Contextual precision / recall:** did the answer use the relevant retrieved documents (and avoid irrelevant ones)?`,
         },
         {
-          heading: "Error analysis first, metrics second",
-          body: `Practitioners who build evals well usually start by **reading real conversations** and writing down how the bot fails, then grouping failures into categories, then turning the frequent or dangerous ones into tests. This beats guessing metrics upfront.\n\nFor grantees this is also a **multi-lingual and cultural** issue: a bot strong in English may fail in Swahili or Hindi code-mixed text. Include low-resource languages and local context in the test set, and use native-speaker reviewers.\n\nTools: Langfuse (from the default stack) can log traces and attach scores and annotations, making review and regression tracking practical for a small team.`,
+          heading: "Judges: calibrate or don't trust",
+          body: `The workshop states that even sophisticated LLM judges (it cites G-Eval research) align with human judgment only about **50%** of the time, and has teams measure **human-LLM alignment** and **inter-human alignment** on the same responses. Treat that figure as the workshop's claim, but the lesson is robust: **never trust a judge until it is measured against humans on your own data and languages.**\n\nTheir judge-prompt advice: pick **one criterion per judge** (for maternal health: medical safety; for agriculture: practical applicability; for youth education: age appropriateness), write the rubric concretely, and consider a **negative-to-positive scale (such as -5 to +5)** following OpenAI's HealthBench so actively harmful answers score below merely unhelpful ones.\n\nTools: Langfuse-style tracing (named in the playbook platform vision with Helicone and Traceloop) logs outputs and scores so reviews and regressions are trackable. The sample guardrail spec in the repo (refuse therapy, emergencies, diagnosis, legal advice; end refusals immediately) shows how rules turn into stress goldens.`,
           goAnalogy: {
             term: "Yomi",
             reading: "よみ",
             meaning:
-              "Reading out the variations before you play. Error analysis is yomi: you read real failures first, and the tests fall out of what you see rather than from guesswork.",
+              "Reading out the variations before you play. A golden dataset is yomi done in advance: you read how the bot could fail and test those lines every time something changes.",
           },
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
-          question: "A team reports an LLM-judge pass rate of 94% but never compared it to human labels. What is the right reaction?",
+          question: "Which set lists the four golden-query types in the playbook workshop?",
           options: [
-            "Celebrate; 94% is high",
-            "Ask for a human-labeled sample to measure judge agreement and review false passes before trusting the number",
-            "Switch to a bigger judge model",
-            "Remove the judge",
+            "Easy, medium, hard, impossible",
+            "Knowledge, implementation, personalization, stress-test",
+            "Accuracy, safety, speed, cost",
+            "English, Hindi, Swahili, other",
           ],
           correct: 1,
-          explanation:
-            "An uncalibrated judge is a number with unknown meaning. Validate against human labels, especially for false passes.",
+          explanation: "Knowledge, implementation, personalization and stress-test. A dataset missing stress-tests tests the product everyone hopes exists.",
         },
         {
           type: "multiple-choice",
-          question: "Which is the best way to decide what a model eval should test?",
+          question: "A team reports a 94% LLM-judge pass rate but never compared to human labels. What do you do?",
           options: [
-            "Copy a public benchmark",
-            "Read real conversations, categorize failures, and turn frequent or dangerous ones into tests",
-            "Test only the happy path",
-            "Use only synthetic prompts",
+            "Accept it; 94% is high",
+            "Have humans score a sample on the same criterion, measure human-LLM and inter-human alignment, inspect disagreements and false passes, then refine the judge",
+            "Switch to a bigger judge",
+            "Remove the judge",
           ],
           correct: 1,
-          explanation:
-            "Error analysis grounds the eval in actual failure modes. Public benchmarks rarely match your users, languages or risks.",
+          explanation: "The workshop's exercise is exactly this comparison. An uncalibrated judge score has unknown meaning.",
+        },
+        {
+          type: "multiple-choice",
+          question: "Why bind each eval run to a model id, system-prompt tag and knowledge-base tag?",
+          options: [
+            "To make the report longer",
+            "So a change in pass rate can be attributed to a specific change rather than just detected",
+            "To satisfy legal requirements",
+            "Because LLMs require it",
+          ],
+          correct: 1,
+          explanation: "Without versions you can see that something changed but never what.",
         },
         {
           type: "fill-blank",
-          prompt: "Report eval results by ____ (for example language or topic), because an average can hide a failing subgroup.",
-          blank: "slice",
-          hint: "A subset of the data",
+          prompt: "Every must-refuse guardrail rule should become at least one ____-test golden query.",
+          blank: "stress",
+          hint: "Pushes on weak points",
         },
         {
           type: "scenario",
           prompt:
-            "Design a model eval for a maternal-health WhatsApp bot in two languages. State inputs, expected behavior, grader, and how you'd validate the grader.",
+            "Design a Level 1 eval for a maternal-health WhatsApp bot in two languages. Cover the dataset, the scoring approach, and how you'd validate any LLM judge.",
           sampleAnswer:
-            "Inputs: a few hundred real, consented and scrubbed user questions in both languages, grouped by topic (nutrition, danger signs, appointments, mental health), plus synthetic edge cases for high-risk situations such as bleeding or severe headache. Expected behavior: a rubric of binary checks: gives accurate, non-dangerous guidance; recommends urgent care for danger signs; doesn't give medication dosages; stays in the user's language; admits uncertainty and refers on. Grader: code checks for language and format, an LLM judge for the rubric items, and clinician review for the high-risk slice. Validation: have two clinicians or native-speaker reviewers label 100 items, measure judge agreement per rubric item and per language, review every false pass, and refine. Report pass rate by language and topic against a baseline model, and keep the set as a regression suite whenever the prompt or model changes.",
+            "Dataset: at least 40 goldens, more for a broad domain, across the four buckets: knowledge (danger signs, nutrition), implementation (how to prepare for a clinic visit), personalization (low-resource home, no refrigeration), and stress-test (medication dosing, bleeding, self-harm disclosure), with real consented and scrubbed queries where possible and expert-written ones for risk cases. Golden answers written by a clinician against the knowledge base and guardrail spec, with must-include and must-not-include claims, and exact scripted text for refusals. Every guardrail rule becomes a stress golden. Scoring: reference-based similarity for canonical facts, an LLM judge for graded qualities with a single criterion each (medical safety first, on a negative-to-positive scale so harmful beats unhelpful), and human review for all stress tests, never an automated pass alone. Validation: two native-speaker or clinician reviewers score a sample, I compute inter-human and human-LLM alignment per language, inspect disagreements, refine the rubric, and check similarity thresholds on code-switched text. Every run is tagged with model, prompt and knowledge-base versions and re-run on each change, reported by language and bucket.",
           keyPoints: [
-            "Real, scrubbed data plus synthetic high-risk cases",
-            "Binary rubric items tied to harm and usefulness",
-            "Mixed graders; humans on the highest-risk slice",
-            "Validate the judge against human labels; report by language and topic; keep as regression suite",
+            "All four golden buckets; guardrail rules become stress goldens; experts write answers",
+            "Match scorer to task; humans on high-risk stress tests",
+            "Calibrate the judge: inter-human vs human-LLM alignment, per language",
+            "Version-bind runs and re-run on every change",
           ],
         },
       ],
       resources: [
         {
-          title: "Langfuse docs: evaluation",
-          url: "https://langfuse.com/docs/evaluation/overview",
-          description: "How traces, scores and datasets fit together.",
+          title: "Model Evaluation Workshop (playbook repo)",
+          url: "https://github.com/agency-fund/taf-ai-eval-playbook/tree/main/public/model-eval-case-study",
+          description: "The workshop, guardrail example and Colab notebook behind this lesson.",
+        },
+        {
+          title: "Playbook: Level 1",
+          url: "https://eval.playbook.org.ai/",
+          description: "Level 1 methods and benchmark tools (HealthBench, Eka-Eval and others).",
         },
       ],
     },
@@ -202,6 +221,10 @@ export const agencyfundUnit3: Unit = {
         {
           heading: "Product-level evaluation",
           body: `Questions: do people use it, come back, and have conversations that go somewhere?\n\n**Metrics:**\n- Funnel conversion (Unit 2), retention at day 7/30, sessions per user\n- Conversation-level: completion of the intended task, number of turns, fallbacks ("I didn't understand"), escalation to human\n- Operational: latency, error rate, cost per conversation\n- Quality at scale: sample real conversations weekly for human or calibrated-judge review\n\n**Trap:** engagement is a **proxy**. A chatbot can have high usage because it's confusing and users keep re-asking. Pair usage metrics with a quality or task-completion signal.`,
+        },
+        {
+          heading: "The playbook's Level 2 metric families",
+          body: `The playbook's Level 2 page groups product metrics (with A/B-test examples):\n\n- **Retention:** user-level retention, DAU/MAU uplift, session count\n- **Engagement:** action-based (response rate, follow-ups, prompt rewrites, reactions), interaction duration (turns, session length), feature uptake (source-link clicks, feedback buttons)\n- **Non-engagement signals:** quality scores (toxicity, informativeness), item-level surveys ("helpful" ratings on a response), user-level surveys (overall satisfaction), user control ("see less of this topic")\n\nIt also lists experiment designs: **A/B testing**, **multi-armed bandits** (adaptive allocation) and **holdout testing** (for example AI versus non-AI, or status quo versus an accumulation of tested changes). The PM is "directly responsible for product metrics at this level". Two companion playbooks are referenced: an **A/B Testing Playbook** (Elia Gandolfi) and a **User Funnel and Metrics Playbook** (Robert On and Temina Madon).`,
         },
         {
           heading: "User-level evaluation",
@@ -290,6 +313,10 @@ export const agencyfundUnit3: Unit = {
           body: `**Evidential** is a free, open-source experiment engine built by and for nonprofits, co-developed with Rocket Learning and IDinsight (the repos are public under agency-fund on GitHub). It exists because small teams otherwise lack the tooling to randomize users and analyze results properly.\n\nPM takeaway: you can say, "For a quick prompt or message experiment I'd use an engine like Evidential to handle assignment and analysis consistently, rather than ad hoc comparisons of before and after."\n\nCaveat: sources I found disagree on whether it is released or still in beta. Don't state its maturity as fact.`,
         },
         {
+          heading: "Designing the experiment the Evidential way",
+          body: `The fund's design-evidential-experiment skill gives a checklist worth internalizing:\n\n1. State a **hypothesis with a mechanism**, not "variant B is better"\n2. **Write the decision rule first:** what we do on a positive, null or negative result\n3. **Experiment type:** a known finite population means pre-assigned (stratified randomization, balance check); open enrollment means online assignment; "find the best arm cheaply" means a bandit. **Don't use a bandit when you need a defensible effect estimate for a scale decision.**\n4. **Randomization unit:** individual unless the treatment spreads within groups (word of mouth, shared delivery), then cluster\n5. **Exactly one primary metric**, plus a few **guardrail metrics** that must not degrade. Set the detectable effect from the program's decision threshold; treat a tool default of baseline × 0.1 as a red flag\n6. **Power inputs and stopping rule**, and commit **not to peek** and stop on an interim p-value\n7. **Delivery integration:** how arm assignment reaches the product (CSV, REST endpoint or webhook). "If this section is empty, the experiment does not exist."\n8. **Privacy:** Evidential stores mostly aggregated data; participant IDs must contain no raw personal information, so hash them`,
+        },
+        {
           heading: "When is an RCT worth it?",
           body: `A full randomized controlled trial measuring real-world outcomes is expensive and slow. It is worth it when:\n\n- A **big decision** hangs on it (scaling to a government program, major funding)\n- The **effect is uncertain** and plausible harm or waste is high\n- You can **randomize ethically** (or use a delayed-rollout design so everyone eventually benefits)\n\nOtherwise prefer cheaper levels. Also name ethical points: informed consent, not withholding clearly beneficial help, protecting data.\n\nThe usual PM move: "Let's run cheap A/B tests for product decisions and reserve a rigorous study for the claim we need a funder or government to believe."`,
           goAnalogy: {
@@ -350,6 +377,93 @@ export const agencyfundUnit3: Unit = {
           title: "Evidential documentation",
           url: "https://github.com/agency-fund/evidential-docs",
           description: "How the experiment engine works.",
+        },
+        {
+          title: "Playbook: A/B experiments tool page",
+          url: "https://eval.playbook.org.ai/tools/ab-experiments",
+          description: "The playbook's own guide to A/B experiments.",
+        },
+      ],
+    },
+    {
+      id: "3-5",
+      unitId: "unit3",
+      companySlug: "agencyfund",
+      title: "Repeatable Motions and the PM as Cross-Functional Lead",
+      tldr:
+        "The playbook names four repeatable motions (funnel, ETL, diagnose weak links with hypotheses, run experiments) and says Product Managers directly own Level 2 metrics and should lead cross-functional evaluation. This is the lesson that describes your job.",
+      skills: ["Playbook motions", "PM role", "Hypothesis-driven diagnosis"],
+      xp: 40,
+      content: [
+        {
+          heading: "The four motions",
+          body: `From the playbook's Repeatable Motions page:\n\n1. **Construct a user funnel across Levels 1–4** (Unit 2, lesson 3)\n2. **Build and track metrics through robust ETL pipelines:** Extract (chat logs, product telemetry, survey tools, third-party APIs, spreadsheets), Transform (timestamp alignment, anonymization, session stitching, derived metrics such as time-on-task), Load (a warehouse or dashboard). The example: a mental-health product merges model outputs (Level 1), engagement logs (2), behavioral indicators (3) and outcome data (4) into consistent indicators per level.\n3. **Diagnose weak links through targeted hypotheses:** find the major drop-off, then pose specific testable questions rather than trusting intuition. The playbook says this sits "at the intersection of product management and behavioral science".\n4. **Run experiments with rigor and speed:** A/B test, hold-out, pragmatic RCT, or full RCT, matched to product maturity and the decision. Tools like Evidential automate randomization and tracking.\n\nThe stated vision is a **unified AI evaluation platform** that logs every model change (prompt tweak, fine-tune, retrieval source), tests it across levels, and integrates with tools like **Langfuse, Helicone, Traceloop and Evidential**.`,
+        },
+        {
+          heading: "Where the PM sits",
+          body: `The playbook's Roles page assigns responsibilities by level. At **Level 2** the **Product Manager is directly responsible for product metrics** and "works cross-functionally to prioritize the most promising hypotheses to test"; data scientists support with measurement and **data pipelines**; engineers build and roll out features.\n\nIts best-practice advice for teams:\n- **Identify a cross-functional lead.** "Product Managers (or cross-functional leads) should connect the dots across roles, coordinate timelines, facilitate experiments, and translate insights into decisions", with an **evaluation plan outlining how a feature will be tested across Levels 1–4**\n- **Look beyond your slice:** engineers should ask whether a model improvement helps users; a data scientist studying engagement should talk to a behavioral expert\n- **Pair engineers with domain experts early** (teachers, doctors) to define success beyond technical metrics\n- **Use a shared evaluation language** (Level 1: better accuracy, Level 2: more engagement, Level 3: better learning gains, Level 4: better literacy outcomes)\n- In small teams one person wears several hats; what matters is that all four perspectives are represented. Product managers "should be conversant in model metrics".\n\nSo: expect to be asked to **write an evaluation plan**, own the **funnel metrics**, and **prioritize hypotheses**.`,
+        },
+        {
+          heading: "Diagnosing a weak link, step by step",
+          body: `The companion diagnose-funnel-weak-link skill gives a disciplined procedure you can narrate:\n\n1. **Find the largest target-versus-observed gap.** Check data-quality caveats first; if an instrumentation or definition change explains it, set it aside and say so.\n2. **Write two to four competing hypotheses** for that transition, each stated so it can be wrong. One is not a differential; five means nothing gets tested.\n3. **Tag each with a COM-B locus:** capability, opportunity or motivation.\n4. **Check lopsidedness:** at least one hypothesis should locate the failure **outside users' heads** (cost, access, device, timing) before accepting a motivational story.\n5. **For each, name the observation that discriminates it** and the **cheapest honest test**.\n6. **Reject tautologies** ("users drop off because they don't engage" restates the metric).\n7. **Diagnosis is not a redesign.** Fixes come after a hypothesis survives its test.\n\nThe playbook's example: engagement dips after onboarding, so competing hypotheses are an unclear value proposition, an overwhelming interface, or mistrust of the AI, each becoming a lens for measurement or an experiment.`,
+          goAnalogy: {
+            term: "Aji",
+            reading: "あじ",
+            meaning:
+              "Latent possibility or weakness in a position. A funnel drop-off is aji until you read the competing explanations and test the cheapest one.",
+          },
+        },
+      ],
+      exercises: [
+        {
+          type: "multiple-choice",
+          question: "According to the playbook, who is directly responsible for product metrics at Level 2?",
+          options: ["AI engineers", "Product managers", "Economists", "Funders"],
+          correct: 1,
+          explanation: "Level 2 execution sits with product managers, supported by data scientists (pipelines and measurement) and engineers.",
+        },
+        {
+          type: "multiple-choice",
+          question: "Engagement dips after onboarding. Which hypothesis set is best?",
+          options: [
+            "Users are lazy",
+            "H1 value proposition unclear (motivation); H2 each reply costs mobile data or is sent at the wrong time of day (opportunity); H3 users don't know what to ask next (capability), each with a discriminating observation and cheap test",
+            "Everyone is just busy",
+            "Redesign the whole interface",
+          ],
+          correct: 1,
+          explanation: "Competing, falsifiable hypotheses tagged by locus, with at least one outside users' heads (cost or timing), and a cheap discriminating test for each.",
+        },
+        {
+          type: "fill-blank",
+          prompt: "The playbook describes an evaluation ____ that sets out how a feature will be tested across Levels 1–4; the PM or cross-functional lead keeps it.",
+          blank: "plan",
+          hint: "A document that guides the work",
+        },
+        {
+          type: "scenario",
+          prompt:
+            "On day one a grantee says: 'Retention is bad. Please fix it.' Walk through what you do in the first week, using the playbook's motions.",
+          sampleAnswer:
+            "I wouldn't start with a fix. Week one: build or confirm the funnel so 'retention' has a precise definition, target and denominator, and check whether the pipeline can actually observe it. That's motions one and two. Then validate the data: duplicates, bot messages, timezones, shared phones. Next, find the largest real gap against target, split by language and cohort, and write two to four competing hypotheses, with at least one about cost, access or timing, not just motivation. For each, I name the observation that would discriminate it, for example looking at retention by reminder time, or reading twenty conversations from users who dropped, and the cheapest test. Only after a hypothesis survives would I propose an experiment, using an engine like Evidential, with one primary metric, guardrails and a decision rule written first. I'd also draft a short evaluation plan across the four levels and name a DRI for each stage's metrics, so the team shares one language.",
+          keyPoints: [
+            "Define and measure retention before fixing it (funnel + pipeline first)",
+            "Rule out data problems, then target the largest real gap",
+            "Competing falsifiable hypotheses, one outside users' heads, with discriminating tests",
+            "Experiment only after a hypothesis survives; write the decision rule first; name DRIs and an evaluation plan",
+          ],
+        },
+      ],
+      resources: [
+        {
+          title: "Playbook: Roles and best practices",
+          url: "https://eval.playbook.org.ai/roles",
+          description: "Who does what at each level, and the PM as cross-functional lead.",
+        },
+        {
+          title: "behav-sci-skills: diagnose-funnel-weak-link",
+          url: "https://github.com/agency-fund/behav-sci-skills",
+          description: "The fund's own procedure for turning a funnel drop into testable hypotheses.",
         },
       ],
     },

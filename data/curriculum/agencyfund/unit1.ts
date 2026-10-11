@@ -1,9 +1,9 @@
 import type { Unit } from "@/data/types";
 
-// Research note: the job posting and Agency Fund pages could not be fetched
-// directly (network blocked); facts here come from search summaries of Agency
-// Fund posts, GitHub and partner sites. Role-specific points are inferred.
-// Re-read the posting tonight and verify anything you plan to quote.
+// Research note: the job posting and Substack posts could not be fetched
+// (network policy blocked those hosts). The eval playbook, behav-sci-skills and
+// Evidential docs were read directly from their public GitHub repos. Stack-post
+// details and role-specific points are from search summaries or inferred.
 
 export const agencyfundUnit1: Unit = {
   id: "unit1",
@@ -176,7 +176,7 @@ export const agencyfundUnit1: Unit = {
       content: [
         {
           heading: "Why pipelines and evals are the likely territory",
-          body: `The fund's flagship public work: a **default tech stack** (ingest, warehouse, transform, dashboard, LLM observability) and an **AI evaluation playbook** with step-by-step guides "from user funnels to ETL pipelines." A product role supporting grantees will likely be tested on whether you can reason about these.\n\nTreat this as a hypothesis, not a leak. The posting is the source of truth.`,
+          body: `The fund's flagship public work: a **default tech stack** (ingest, warehouse, transform, dashboard, LLM observability) and an **AI evaluation playbook** with step-by-step guides "from user funnels to ETL pipelines." A product role supporting grantees will likely be tested on whether you can reason about these.\n\nThe playbook (read directly from its repo) confirms this: its "Repeatable Motions" are literally (1) build a user funnel, (2) build metrics through ETL pipelines, (3) diagnose weak links with hypotheses, (4) run experiments, and its Roles page makes the **Product Manager directly responsible for Level 2 product metrics and the cross-functional lead for evaluation**. Still treat the exercise shape as a hypothesis; the posting is the source of truth.`,
         },
         {
           heading: "Likely live-exercise shapes",

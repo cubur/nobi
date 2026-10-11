@@ -33,6 +33,10 @@ export const agencyfundUnit2: Unit = {
           },
         },
         {
+          heading: "How the playbook frames ETL (Motion 02)",
+          body: `The Agency Fund's playbook calls "build and track metrics through robust ETL pipelines" its second repeatable motion. Its framing, which you can echo:\n\n- **Extract:** chat logs, product telemetry, survey tools, third-party APIs, even spreadsheets\n- **Transform:** clean, standardize and reshape: **timestamp alignment, anonymization, session stitching**, and derived metrics such as time-on-task or trust indicators\n- **Load:** a centralized warehouse or analytics dashboard that teams can access\n\nWhy it matters for AI products: generative models emit high volumes of messy, unstructured data (prompts, outputs, clicks, feedback). Their example is an adolescent mental-health product that must integrate **model outputs (Level 1), engagement logs (Level 2), behavioral indicators (Level 3) and outcome data (Level 4)** into consistent indicators per level. Note that the playbook uses the older ETL label for the whole idea; in practice the modern stack does the transform step after loading (ELT).`,
+        },
+        {
           heading: "Five properties you can defend in an interview",
           body: `1. **Incremental:** move only new or changed rows, not everything each run\n2. **Idempotent:** running twice gives the same result (no duplicates after a retry)\n3. **Observable:** you find out when it fails or data is stale (freshness checks, alerts)\n4. **Schema-aware:** a renamed source column should not silently break reports\n5. **Documented grain:** every table states what one row represents\n\n**Interview move:** when asked to design a pipeline, say the **grain** first ("one row per message"), then the **load strategy** (incremental on a timestamp or ID, with a dedupe key), then the **checks**. That order signals you understand the real failure modes.`,
         },
@@ -102,6 +106,10 @@ export const agencyfundUnit2: Unit = {
         {
           heading: "What they recommend",
           body: `From the fund's 'default tech stack for the social sector' work (with data.org, Fast Forward and IDinsight), based on a mapping of **50+ tools** and partnerships with **30+ nonprofits**. Based on published summaries (I could not read the post itself, so verify the exact picks):\n\n- **Ingestion:** Airbyte\n- **Warehouse:** BigQuery\n- **Transformation:** dbt\n- **Dashboards:** Looker Studio by default; Metabase for self-hosting or deeper drill-down\n- **Catalog:** dbt docs\n- **Ad-hoc analysis:** Colab notebooks\n- **LLM layer (as named in summaries):** OpenRouter for model flexibility, Langfuse for monitoring and evaluation, n8n for workflow automation\n\nSelection criteria were reliability in low-connectivity settings, long-term sustainability and real cost at scale. Tools are mostly open source or have generous free tiers and nonprofit discounts.`,
+        },
+        {
+          heading: "What the playbook itself names (verified)",
+          body: `In the playbook's vision for a unified evaluation platform it names **Langfuse, Helicone, Traceloop** (LLM observability) and **Evidential** (experiments) as tools to integrate, and lists "dashboards and data pipelines", an "experimentation platform" and "project and knowledge tools" as collaboration infrastructure. So Langfuse and Evidential are safe to mention confidently; for the Airbyte/BigQuery/dbt picks, check the stack post.`,
         },
         {
           heading: "One sentence per tool",
@@ -181,77 +189,93 @@ export const agencyfundUnit2: Unit = {
       id: "2-3",
       unitId: "unit2",
       companySlug: "agencyfund",
-      title: "Chatbot Data Model & the User Funnel",
+      title: "The Playbook's User Funnel (Motion 01)",
       tldr:
-        "Model raw chatbot events into a few clean tables (users, conversations, messages, events) and define a user funnel: reached, engaged, activated, retained, outcome. The playbook has a dedicated guide on this, so expect it to be a probe.",
-      skills: ["Data modeling", "Funnel design", "Metric definition"],
-      xp: 35,
+        "The playbook's first 'repeatable motion' is a six-stage user funnel worked backward from the development outcome: recruitment, onboarding, engagement, retention, proximal outcome, development outcome. Each stage needs a user-action entry condition, a metric, a target, a cost and an owner. Expect this to be the center of the live exercise.",
+      skills: ["Funnel design", "Data modeling", "Metric definition"],
+      xp: 40,
       content: [
         {
-          heading: "A minimal data model",
-          body: `A WhatsApp-style bot emits raw events: message in, message out, template delivered/read. Model them into a few tables, always stating **what one row represents**:\n\n- **users:** one row per person. Stable user_id (e.g. hashed phone number), first_seen_at, language, cohort, opt-in status\n- **conversations (sessions):** one row per run of related messages; start a new one after, say, 30 minutes of inactivity\n- **messages:** one row per message. message_id, user_id, direction (in/out), timestamp, text, model used, latency, tokens, error flag\n- **events:** one row per product event (opted_in, completed_lesson, thumbs_up)\n\nMessage-level grain is the most flexible; sessions and users are aggregations built from it.`,
-        },
-        {
-          heading: "The user funnel",
-          body: `A funnel is a set of nested stages. Report conversion at each step, split by cohort and language:\n\n1. **Reached:** template delivered\n2. **Engaged:** replied at least once\n3. **Activated:** completed the first genuinely useful interaction\n4. **Retained:** active again at day 7 / day 30\n5. **Outcome:** did the behavior we care about (e.g. attended a clinic visit, used the technique)\n\nThe **biggest relative drop** is where to dig first, but weigh it against how fixable it is and against cohort splits. Say that reasoning aloud.\n\nThe fund's playbook describes guides for building out user funnels. Expect the exercise to resemble this.`,
-        },
-        {
-          heading: "Classic funnel pitfalls",
-          body: `- **Denominator drift:** measuring retention against users who never received the message\n- **Duplicate users:** the same person with two numbers or re-registered\n- **Timezones:** day boundaries differ by region; define one timezone and stick to it\n- **Bot messages counted as user activity:** always filter by direction\n- **Delivery receipts mistaken for engagement:** delivered or read is not a reply\n- **Survivorship:** retained users differ from churned ones; compare cohorts, not just totals\n\nA candidate who volunteers two or three of these unprompted sounds like someone who has debugged real data.`,
+          heading: "Six stages, worked backward from the outcome",
+          body: `From the Agency Fund's AI evaluation playbook ("Repeatable Motions", Motion 01) and the matching build-user-funnel skill in their behav-sci-skills repo. Start with the **development outcome** you ultimately target (Level 4), then work backward:\n\n1. **Recruitment:** the beneficiary is identified and enters the program (Level 2)\n2. **Onboarding:** introduced to the AI product, completes initial setup (Level 2)\n3. **Engagement:** actively interacting with the product (Level 2)\n4. **Retention:** continues over time rather than dropping off (Level 2)\n5. **Proximal outcome:** near-term cognitive or behavioral change (Level 3)\n6. **Development outcome:** the long-term result (Level 4)\n\nLevel 1 (model-quality monitoring) runs **underneath every stage**. The playbook's example: a prompt change (Level 1) can be traced through to engagement (Level 2), behavior (Level 3) and outcomes (Level 4).`,
           goAnalogy: {
             term: "Ladder",
             reading: "しちょう",
             meaning:
-              "A ladder (shicho) either works or fails at one specific stone. A funnel is a ladder: find the single step where it breaks before you play elsewhere.",
+              "A ladder either works or fails at one specific stone. A funnel is a ladder: find the single step where it breaks before you play elsewhere.",
           },
+        },
+        {
+          heading: "What each stage must define",
+          body: `For every stage the playbook says to define:\n\n- What **the program does** to bring users into the stage\n- What **the user must do** to count as having entered it\n- The **metric** that confirms entry (login rate, session length, quiz completion)\n- **Target values and transition rates** between stages\n- The **cost** of moving a user through the stage\n- The **DRI** (directly responsible individual) for metrics at that stage\n\nThis turns a theory of change into "a measurable, cost-aware program design tool" (the playbook's phrase).\n\n**Two rules the companion skill enforces (good things to say aloud):**\n- **Entry is a user action, not a program action.** "We sent 10,000 invitations" is program activity. "The farmer sends a first message" is stage entry.\n- **The proximal outcome is a real change, not more usage.** If it reads "asks 3+ questions", that is engagement again, and the funnel has no Level 3 rung.`,
+        },
+        {
+          heading: "From funnel to tables",
+          body: `A minimal data model to support it, always stating the grain:\n\n- **users:** one row per person; stable pseudonymous user_id (hashed phone number), first_seen_at, language, cohort\n- **conversations:** one row per run of related messages (new one after, say, 30 minutes idle) \n- **messages:** one row per message; message_id, user_id, direction in/out, timestamp, text, model/prompt version, latency, tokens, error flag\n- **events:** one row per product event (enrolled, completed_onboarding, completed_lesson)\n- **surveys / outcomes:** one row per response, keyed to user_id, for Level 3–4 stages\n\nReport conversion at each step by cohort and language. The biggest relative drop is the first place to look, weighed against how fixable it is.\n\n**Pitfalls:** denominator drift (retention measured against people never reached), duplicate users, timezones, bot messages counted as activity, delivery receipts mistaken for engagement, and **shared phones and channel switching**, which quietly break telemetry assumptions. Run an **instrumentation reality check**: for each stage, can we actually observe the metric today?`,
         },
       ],
       exercises: [
         {
           type: "multiple-choice",
-          question: "Funnel: 10,000 reached, 4,000 replied, 1,500 completed a first lesson, 300 active at day 7. What are the step conversions?",
+          question: "Which is a valid stage-entry condition for 'Engagement' in the playbook's sense?",
           options: [
-            "40%, 37.5%, 20%",
-            "40%, 15%, 3%",
-            "60%, 62.5%, 80%",
-            "4%, 1.5%, 0.3%",
+            "We broadcast the program on radio",
+            "We sent 10,000 invitation messages",
+            "The farmer sends a first message to the bot",
+            "The team approved the launch",
           ],
-          correct: 0,
-          explanation:
-            "4,000/10,000 = 40%; 1,500/4,000 = 37.5%; 300/1,500 = 20%. Always compute step-to-step conversion, not just cumulative.",
+          correct: 2,
+          explanation: "Entry is something the user does. The other options are program activity.",
         },
         {
           type: "multiple-choice",
-          question: "What should one row in a messages table represent?",
-          options: ["One user", "One message, inbound or outbound", "One day", "One conversation"],
+          question: "A funnel defines its proximal outcome as 'user asks 3 or more questions'. What is wrong?",
+          options: [
+            "Nothing; it is a good Level 3 outcome",
+            "It is just engagement again; the proximal outcome should be a change in knowledge, decision or behavior that plausibly mediates the final outcome",
+            "Three is too small",
+            "It should be a Level 1 metric",
+          ],
           correct: 1,
-          explanation: "Message grain is the most flexible base; other levels are aggregations.",
+          explanation: "If the proximal outcome is more usage, the funnel has no Level 3 rung and can't support user evaluation later.",
+        },
+        {
+          type: "multiple-choice",
+          question: "Funnel counts: 10,000 recruited, 4,000 onboarded, 1,500 engaged, 300 retained at day 7. What are the step conversions?",
+          options: ["40%, 37.5%, 20%", "40%, 15%, 3%", "60%, 62.5%, 80%", "4%, 1.5%, 0.3%"],
+          correct: 0,
+          explanation: "4,000/10,000 = 40%; 1,500/4,000 = 37.5%; 300/1,500 = 20%. Compute step-to-step conversion, not just cumulative.",
         },
         {
           type: "fill-blank",
-          prompt: "Hash the phone number into a stable ____ so you can join across tables without storing raw PII in analytics.",
-          blank: "user_id",
-          hint: "Pseudonymous key",
+          prompt: "Before trusting any stage metric, run an ____ reality check: can we actually observe it for this population today?",
+          blank: "instrumentation",
+          hint: "Measurement plumbing",
         },
         {
           type: "scenario",
           prompt:
-            "Using the funnel above (10,000 reached, 4,000 replied, 1,500 activated, 300 retained at day 7), where would you investigate first, and what would you check before concluding?",
+            "A WhatsApp coaching bot for caregivers reports 'total messages' as its only metric. Build the funnel in about two minutes: outcome, stages, one entry action and metric each, and your first diagnostic move.",
           sampleAnswer:
-            "Step conversions are 40%, 37.5% and 20%. The day-7 retention step is the weakest relatively, so I'd lean there, but I'd check three things before concluding. First, data validity: is the denominator right (only users who could be retained by day 7) and are bot messages or duplicate users distorting it? Second, cohort splits by language, entry channel and signup week, since an average can hide one cohort at 5% and another at 40%. Third, fixability: a reminder or content cadence change is cheap to test, while a drop at 'reached to replied' might be a template or timing issue. I'd pick the step with the largest fixable gap, design a small experiment for it, and define the success metric up front.",
+            "I'd start from the outcome: say caregivers using a recommended early-learning activity with their child (Level 4 later: child development). Working backward: Development outcome, long-term, measured by a partner assessment. Proximal outcome (Level 3): the caregiver reports doing the activity this week, a behavior not a message count. Retention: still messaging after day 7 and 30. Engagement: completes a first activity conversation. Onboarding: replies to the welcome message and sets language. Recruitment: enrolled through the community worker. For each stage I'd write the user action that counts as entry, the confirming metric, a provisional target and transition rate, the cost, and an owner. I'd run an instrumentation check, since shared phones may break user-level counts and the Level 3 stage needs a survey or in-chat question that doesn't exist yet. First diagnostic move: compute step conversions by language and cohort, set aside any gap explained by a data issue, then take the largest real gap and write two to four competing hypotheses before touching the product.",
           keyPoints: [
-            "Compute step conversions, not cumulative rates",
-            "Validate the data and denominators before interpreting",
-            "Split by cohort; averages hide the story",
-            "Prioritize by size of drop AND fixability, then propose an experiment",
+            "Work backward from the outcome; six stages with Level 1 monitoring underneath",
+            "Entry conditions are user actions; the proximal outcome is behavior change, not usage",
+            "Per stage: metric, target/transition, cost, owner; flag unobservable metrics",
+            "Diagnose from the largest real gap after ruling out data issues",
           ],
         },
       ],
       resources: [
         {
-          title: "AI Eval Playbook (user funnel and ETL guides)",
-          url: "https://github.com/agency-fund/taf-ai-eval-playbook",
-          description: "The playbook describes step-by-step guides for user funnels and ETL pipelines.",
+          title: "Playbook: Repeatable Motions",
+          url: "https://eval.playbook.org.ai/motions",
+          description: "Motion 01 (funnel) and Motion 02 (ETL). Read tonight.",
+        },
+        {
+          title: "behav-sci-skills: build-user-funnel",
+          url: "https://github.com/agency-fund/behav-sci-skills",
+          description: "The fund's own skill spec for building a funnel, with a worked example.",
         },
       ],
     },
