@@ -201,7 +201,7 @@ export const agencyfundUnit4: Unit = {
       content: [
         {
           heading: "Questions they may probe",
-          body: `1. **'What's your experience with data pipelines and ETL?'** Honest, specific, forward-looking: what you understand (ELT, grain, idempotency, tests), what you'd build first, and how you verify AI-assisted work.\n2. **'How would you evaluate an AI product for a low-resource language?'** Native-speaker reviewers, real conversations, slice by language, calibrate judges, compare against baseline.\n3. **'A grantee disagrees with your recommendation. What do you do?'** Seek the evidence and the constraint behind their view; propose a cheap test to settle it; accept that they own the decision.\n4. **'How do you prioritize across three grantees in a sprint?'** By decision value, effort, risk, and reusability for the cohort; make trade-offs visible.\n5. **'What would you do in your first 30 days?'** Embed with one team, read the playbook and stack, build one end-to-end funnel from real data, write down what's reusable.\n6. **'Where can AI go wrong for these users?'** Wrong medical or agricultural advice, language and cultural mismatch, privacy, over-trust, access inequality.`,
+          body: `1. **'The posting wants someone who has actually built alongside engineers. What have you built?'** Give one real example with your exact role; be honest about gaps (see Unit 1, lesson 3).\n2. **'Explain an A/B test to a non-technical program director.'** One sentence of purpose, randomization as a fair coin flip per person, one metric, what you'll do with each outcome, and what it can't tell you.\n3. **'You have 3–4 partners and one week. How do you split your time?'** By decision value, sprint deadlines and risk of blocked engineers; protect the 50/50 balance; make trade-offs visible to partners.\n4. **'What's your experience with data pipelines and ETL?'** Honest, specific, forward-looking: what you understand (ELT, grain, idempotency, tests), what you'd build first, and how you verify AI-assisted work.\n5. **'How would you evaluate an AI product for a low-resource language?'** Native-speaker reviewers, real conversations, slice by language, calibrate judges, compare against baseline.\n6. **'A grantee disagrees with your recommendation. What do you do?'** Seek the evidence and the constraint behind their view; propose a cheap test to settle it; accept that they own the decision.\n7. **'How do you prioritize across three grantees in a sprint?'** By decision value, effort, risk, and reusability for the cohort; make trade-offs visible.\n8. **'What would you do in your first 30 days?'** Embed with one team, read the playbook and stack, build one end-to-end funnel from real data, write down what's reusable.\n9. **'Where can AI go wrong for these users?'** Wrong medical or agricultural advice, language and cultural mismatch, privacy, over-trust, access inequality.`,
         },
         {
           heading: "Questions you can ask",
@@ -261,6 +261,89 @@ export const agencyfundUnit4: Unit = {
           title: "Agency Fund Substack",
           url: "https://theagencyfund.substack.com/",
           description: "Latest posts; mention one you've read.",
+        },
+      ],
+    },
+    {
+      id: "4-5",
+      unitId: "unit4",
+      companySlug: "agencyfund",
+      title: "Mock Exercise C: Discovery, Roadmap and Stakeholders",
+      tldr:
+        "Half the job is partner-facing: structured discovery, turning needs into a roadmap, running agile with a tiny team, and handling engineers, behavioral scientists and program leads without formal authority. Practice the full loop in one scenario.",
+      skills: ["Partner discovery", "Roadmapping", "Stakeholder management", "Agile"],
+      xp: 45,
+      content: [
+        {
+          heading: "The prompt",
+          body: `**Setup.** You're newly embedded with an agricultural-advisory NGO in East Africa. They collect farmer registrations with **KoboToolbox forms**, send advice over a **WhatsApp bot** their two developers built, and want to "use AI to improve advice". The program director wants a donor report in 6 weeks. A behavioral scientist on the team wants a proper randomized trial. One developer wants to switch models and rewrite the bot. You have 3 other partners.\n\n**Task (about 20 minutes):**\n1. Run (describe) your first discovery call: what you ask and why\n2. Produce a 90-day plan and the first two-week sprint\n3. Resolve the three-way tension between director, scientist and developer\n4. Say what you'd document for TAF's playbook`,
+        },
+        {
+          heading: "Structured discovery: what to ask",
+          body: `Aim for facts and decisions, not wishes:\n\n- **Outcome:** what changes in a farmer's life if this works, and how will you know?\n- **Users and channel:** who, language, phone sharing, connectivity, when they use it\n- **Current workflow:** show me one real conversation and one real registration end to end\n- **Data that exists:** Kobo forms, bot logs, any outcome records; who owns them; how they join (what identifier); how often they sync\n- **Decisions:** what will you decide differently with better data? (report to donor? improve answers? scale?)\n- **Constraints:** team capacity, budget after the grant, data-protection obligations\n- **Pain:** what has gone wrong, what are you embarrassed by\n\nClose by playing back what you heard and naming one thing you'd test first.`,
+        },
+        {
+          heading: "A strong shape for the plan",
+          body: `**Days 0–30:** map the funnel and the data (Kobo to bot to outcome), build a first dashboard on existing data, read 50–100 conversations, draft a golden set with a domain expert, agree metric definitions. **Quick win:** a funnel dashboard the director trusts.\n\n**Days 31–60:** model evals by language, calibrate a judge on human labels, diagnose the biggest real funnel gap with competing hypotheses, run the first A/B test (for example message timing or first-question menu) with a decision rule written first.\n\n**Days 61–90:** act on results, set the evaluation plan across Levels 1–4 including what evidence the donor report can honestly claim, hand over documentation, coach their analyst.\n\n**Sprint 1 (two weeks):** goal: a trusted funnel dashboard. Backlog: ingest Kobo and bot logs, message-grain model, dedupe and tests, funnel SQL, dashboard, definitions doc. Estimate roughly, protect capacity for the partner's own work, run a retrospective at the end.\n\n**Stakeholders:** the director needs a credible report in 6 weeks (funnel plus model-quality evidence now, outcome study scoped for later). The scientist's rigor is right for the claim that needs causal evidence; sequence it, don't oppose it (a cheap A/B test first, holdout or staggered rollout to keep the option). The developer's model switch is a testable hypothesis: put it behind a golden set and an A/B comparison, not a rewrite. Offer each person their win in the plan.`,
+        },
+      ],
+      exercises: [
+        {
+          type: "multiple-choice",
+          question: "In the first discovery call, which opener is strongest?",
+          options: [
+            "Pitching what AI could do for them",
+            "Asking them to show one real conversation and one registration end to end, then asking what decision better data would change",
+            "Asking for their budget",
+            "Reviewing their code",
+          ],
+          correct: 1,
+          explanation: "Discovery surfaces real workflow, data and decisions. Pitching first teaches you nothing and builds no trust.",
+        },
+        {
+          type: "multiple-choice",
+          question: "The behavioral scientist wants an RCT; the director wants a report in 6 weeks. Best resolution?",
+          options: [
+            "Run the RCT and miss the report",
+            "Skip evidence and write a narrative",
+            "Sequence them: honest funnel and model-quality evidence for the report now, a cheap A/B test next, and an outcome study scoped for when it is justified, keeping options open with holdouts",
+            "Let them argue it out",
+          ],
+          correct: 2,
+          explanation: "Match evidence to stage and to what each stakeholder needs, and show how each gets a win.",
+        },
+        {
+          type: "scenario",
+          prompt:
+            "A developer insists on switching the bot to a new model and rewriting it next sprint. You have no formal authority. What do you say and do?",
+          sampleAnswer:
+            "I'd take the idea seriously, since they know the system best. I'd ask what problem it solves (cost, quality, latency, a particular failure) and what evidence suggests the new model helps. Then I'd turn it into a testable hypothesis: build or reuse a golden set that includes stress cases in the farmers' languages, run both models behind the same prompt and knowledge base, compare scored results with human review, and, if it looks promising, run a small A/B test with a guardrail on safety and cost before any rewrite. That costs a few days instead of a sprint and gives the developer a credible path to the change. I'd agree the decision rule up front, and if the evidence supports it, I'd help scope the migration into the backlog. If they disagree with the result, the team owns the call, but we'd have shared evidence to discuss.",
+          keyPoints: [
+            "Respect expertise; ask what problem and what evidence",
+            "Convert opinion into a cheap, testable hypothesis with a decision rule",
+            "Use golden set + A/B + guardrails before a rewrite",
+            "Influence without authority: shared evidence, visible trade-offs",
+          ],
+        },
+        {
+          type: "scenario",
+          prompt:
+            "In about two minutes: give the 90-day plan and the goal of sprint 1 for this partner, and name one thing you would write up for TAF's playbook.",
+          sampleAnswer:
+            "Sprint 1 goal: a funnel dashboard the director trusts, built on their existing Kobo and bot data. First 30 days: map the journey from registration to outcome, define stage entry actions and metrics with the team, build the message-grain model with dedupe and tests, read 50 to 100 real conversations, and start a golden set with a domain expert. Days 31 to 60: run model evals by language with a calibrated judge, diagnose the largest real funnel gap with competing hypotheses, and run the first A/B test with a decision rule written first. Days 61 to 90: act on results, set out an evaluation plan across the four levels that tells the donor honestly what evidence we have, hand over documentation and coach their analyst so they can run it without me. For the playbook: a short engagement template covering discovery questions, the first-sprint backlog, and a data-checklist for Kobo-plus-chatbot setups, since every partner will need it.",
+          keyPoints: [
+            "Clear sprint-1 goal that delivers a quick win",
+            "Sequenced 30/60/90 using funnel, evals, experiment",
+            "Evidence plan honest about what can be claimed",
+            "Coaching the partner and contributing a reusable artifact to the playbook",
+          ],
+        },
+      ],
+      resources: [
+        {
+          title: "Technical Product Manager posting",
+          url: "https://jobs.ashbyhq.com/The%20Agency%20Fund/c687cd01-229c-49a4-836f-b0551da8c279",
+          description: "The 90-day and one-year success criteria are your plan's targets.",
         },
       ],
     },

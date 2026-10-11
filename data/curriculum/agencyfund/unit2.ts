@@ -112,6 +112,10 @@ export const agencyfundUnit2: Unit = {
           body: `In the playbook's vision for a unified evaluation platform it names **Langfuse, Helicone, Traceloop** (LLM observability) and **Evidential** (experiments) as tools to integrate, and lists "dashboards and data pipelines", an "experimentation platform" and "project and knowledge tools" as collaboration infrastructure. So Langfuse and Evidential are safe to mention confidently; for the Airbyte/BigQuery/dbt picks, check the stack post.`,
         },
         {
+          heading: "Global-development data tools the posting names",
+          body: `The posting lists **ODK, DHIS2, Kobo, Metabase, dbt** as bonus experience. One line each, enough to hold a conversation:\n\n- **ODK (Open Data Kit) and KoboToolbox:** open-source mobile data collection. Field staff fill forms on phones, often offline, and sync later. Common sources for surveys and program monitoring, so they feed your pipeline.\n- **DHIS2:** open-source health information platform used by many ministries of health for aggregate and tracker data. Partners in health often report into it, so it's both a source and a stakeholder constraint.\n- **Metabase:** open-source BI dashboards on top of the warehouse (the stack's self-hosted dashboard option).\n- **dbt:** versioned, tested SQL transformations.\n\nPM angle: partners already have data in these systems. Your job is to ask what exists, how often it syncs, who owns it, and what identifiers let you join survey data to chatbot usage.`,
+        },
+        {
           heading: "One sentence per tool",
           body: `If you can say each in one sentence, you can discuss the stack:\n\n- **Airbyte:** connectors that copy data from source apps into the warehouse on a schedule\n- **BigQuery:** the warehouse; serverless, pay per query, generous free tier\n- **dbt:** turns raw tables into clean, tested, documented models using SQL files in git\n- **Looker Studio / Metabase:** dashboards on the modeled tables\n- **Langfuse:** logs each LLM call as a trace, with scores and review of conversations\n- **OpenRouter:** one API for many models so you can swap without rewriting\n- **n8n:** low-code automation that glues systems together`,
         },
@@ -346,6 +350,100 @@ export const agencyfundUnit2: Unit = {
           title: "dbt data tests",
           url: "https://docs.getdbt.com/docs/build/data-tests",
           description: "The standard set of tests: unique, not_null, relationships, accepted_values.",
+        },
+      ],
+    },
+    {
+      id: "2-5",
+      unitId: "unit2",
+      companySlug: "agencyfund",
+      title: "SQL You Will Be Expected to Write",
+      tldr:
+        "The posting says you should be 'as comfortable in SQL query as you are in a partner discovery call.' Learn the five patterns that cover funnel work: dedupe, conditional counts, retention windows, join pitfalls, and session stitching, plus how to sanity-check SQL an AI wrote for you.",
+      skills: ["SQL for funnels", "Join pitfalls", "Verifying generated SQL"],
+      xp: 45,
+      content: [
+        {
+          heading: "Assume these tables",
+          body: `**users**(user_id, enrolled_at, language)  one row per person\n**messages**(message_id, user_id, direction, sent_at, loaded_at)  one row per message; direction is 'in' (from user) or 'out' (from bot)\n\nExamples use BigQuery-style standard SQL (the stack's warehouse); other dialects differ slightly on date functions. If the interviewer's dialect differs, say so and adapt aloud.`,
+        },
+        {
+          heading: "Five patterns that cover most funnel work",
+          body: `**1. Dedupe (idempotency in SQL).** Keep the latest copy of each message:\n\`SELECT * FROM messages QUALIFY ROW_NUMBER() OVER (PARTITION BY message_id ORDER BY loaded_at DESC) = 1\`\n(Where QUALIFY isn't available, wrap in a subquery and filter row number = 1.)\n\n**2. Stage counts with conditional aggregation.** One pass over data, one row of results:\n\`SELECT COUNT(DISTINCT u.user_id) AS enrolled, COUNT(DISTINCT IF(m.direction = 'in', m.user_id, NULL)) AS replied FROM users u LEFT JOIN messages m ON m.user_id = u.user_id\`\n\n**3. Retention window (day 7 to 13 after enrollment).** The denominator is everyone enrolled, the numerator is those with an inbound message in the window:\n\`COUNT(DISTINCT IF(m.direction = 'in' AND m.sent_at >= TIMESTAMP_ADD(u.enrolled_at, INTERVAL 7 DAY) AND m.sent_at < TIMESTAMP_ADD(u.enrolled_at, INTERVAL 14 DAY), u.user_id, NULL))\`\nState the definition aloud and note you should only count users old enough to have reached day 14.\n\n**4. Avoid fan-out.** Aggregate to the grain you need first, then join:\n\`WITH per_user AS (SELECT user_id, COUNT(*) AS n_in FROM messages WHERE direction = 'in' GROUP BY user_id) SELECT COUNT(*) FROM users u LEFT JOIN per_user p USING (user_id)\`\n\n**5. Session stitching with window functions.** Flag a new session after 30 idle minutes, then take a running sum:\n\`SUM(IF(TIMESTAMP_DIFF(sent_at, LAG(sent_at) OVER (PARTITION BY user_id ORDER BY sent_at), MINUTE) > 30 OR LAG(sent_at) OVER (PARTITION BY user_id ORDER BY sent_at) IS NULL, 1, 0)) OVER (PARTITION BY user_id ORDER BY sent_at)\` gives a per-user session number.`,
+        },
+        {
+          heading: "Join pitfalls and how to check SQL you didn't write",
+          body: `**Classic traps:**\n- A **WHERE** on the right-hand table of a LEFT JOIN (for example \`WHERE m.direction = 'in'\`) silently turns it into an INNER JOIN, dropping users with no messages and **inflating** reply rates. Put the condition in the ON clause or in a conditional aggregate.\n- Counting \`COUNT(*)\` after a one-to-many join counts rows, not users. Use \`COUNT(DISTINCT user_id)\` or aggregate first.\n- \`DISTINCT\` used to hide duplicates instead of fixing the cause.\n- Timezones: \`sent_at\` in UTC versus a local day boundary.\n- NULL handling: \`NULL\` never equals anything; use \`IS NULL\`.\n\n**Checks to narrate when verifying AI-written SQL:**\n1. What is the grain of each input and of the output?\n2. Which join type, and does any filter undo it?\n3. Do row counts before and after each join behave as expected?\n4. Does \`COUNT(*)\` differ from \`COUNT(DISTINCT key)\` where it shouldn't?\n5. Spot-check one user's rows by hand.\n6. Reconcile the total with a number you already trust.`,
+          goAnalogy: {
+            term: "Kosumi",
+            reading: "こすみ",
+            meaning:
+              "A diagonal move that looks small but connects stones safely. Small, careful checks (row counts, one user's rows by hand) connect your query to reality before it gets trusted.",
+          },
+        },
+      ],
+      exercises: [
+        {
+          type: "multiple-choice",
+          question: "A query does users LEFT JOIN messages and then adds WHERE m.direction = 'in'. What is the effect?",
+          options: [
+            "Nothing; LEFT JOIN is preserved",
+            "It behaves like an INNER JOIN, dropping users with no inbound messages and inflating the reply rate",
+            "It doubles every row",
+            "It sorts the output",
+          ],
+          correct: 1,
+          explanation: "A WHERE filter on the right table removes the NULL-extended rows, undoing the LEFT JOIN. Put the condition in ON or use conditional aggregation.",
+        },
+        {
+          type: "multiple-choice",
+          question: "After joining users to messages, COUNT(*) is far larger than the number of users. Why?",
+          options: [
+            "The warehouse is broken",
+            "COUNT(*) counts joined rows (one per message); you need COUNT(DISTINCT user_id) or to aggregate messages to user level first",
+            "Timezone drift",
+            "Too many columns",
+          ],
+          correct: 1,
+          explanation: "A one-to-many join multiplies rows. Count distinct keys or aggregate before joining.",
+        },
+        {
+          type: "multiple-choice",
+          question: "Which approach keeps exactly one row per message_id, the most recently loaded?",
+          options: [
+            "SELECT DISTINCT *",
+            "ROW_NUMBER() OVER (PARTITION BY message_id ORDER BY loaded_at DESC) = 1",
+            "GROUP BY sent_at",
+            "ORDER BY message_id",
+          ],
+          correct: 1,
+          explanation: "SELECT DISTINCT only removes fully identical rows. Window-function dedupe picks a deterministic winner per key.",
+        },
+        {
+          type: "fill-blank",
+          prompt: "To count each person once regardless of how many messages they sent, use COUNT(____ user_id).",
+          blank: "DISTINCT",
+          hint: "Removes repeats",
+        },
+        {
+          type: "scenario",
+          prompt:
+            "Narrate how you'd compute day-7 retention for users enrolled last month, including definition, SQL structure, and the checks you'd run before showing the result.",
+          sampleAnswer:
+            "First the definition: day-7 retention is the share of users enrolled in the month who send at least one inbound message between day 7 and day 13 after enrollment. The denominator is all users enrolled in that month who are old enough to have reached day 14, otherwise I'd understate it. Structure: start from users filtered to the cohort, LEFT JOIN messages on user_id with the direction and the time window in the ON clause so users with no messages stay in the denominator, then COUNT(DISTINCT) the retained users over COUNT(DISTINCT) of all users, split by language. Before showing it: dedupe messages on message_id so a retried load doesn't inflate activity, check the row count of users before and after the join, confirm COUNT(DISTINCT user_id) in the output equals the cohort size, spot-check two users by hand, and reconcile total inbound messages against the source export. I'd also state the timezone used for enrolled_at.",
+          keyPoints: [
+            "Define retention precisely, with the denominator (only users old enough)",
+            "LEFT JOIN with conditions in ON so non-retained users stay in the denominator",
+            "COUNT(DISTINCT) and dedupe on message_id",
+            "Narrate sanity checks: row counts, hand spot-check, reconciliation, timezone",
+          ],
+        },
+      ],
+      resources: [
+        {
+          title: "BigQuery standard SQL: window functions",
+          url: "https://cloud.google.com/bigquery/docs/reference/standard-sql/window-function-calls",
+          description: "Reference for ROW_NUMBER, LAG and running sums.",
         },
       ],
     },

@@ -8,8 +8,8 @@ export const agencyfund: CompanyModule = {
   slug: "agencyfund",
   name: "The Agency Fund",
   tagline: "AI for human agency in global development",
-  industry: "Philanthropy / AI for Social Good",
-  techStack: ["Airbyte", "BigQuery", "dbt", "Langfuse", "OpenRouter", "Evidential", "WhatsApp bots"],
-  why: "Technical / live-exercise prep for a product role at the Agency Fund. Focused on your weak spots: data pipelines and ETL, and AI evals (the fund's four-level framework), plus how the fund and its grantees operate, two mock exercises, and tough questions. The eval playbook, behav-sci-skills and Evidential docs were read directly from GitHub; the job posting and Substack posts could not be fetched, so verify those tonight.",
+  industry: "Funder-Doer / AI for Global Development",
+  techStack: ["Airbyte", "BigQuery", "dbt", "Langfuse", "OpenRouter", "Evidential", "SQL", "Kobo / ODK / DHIS2", "WhatsApp bots"],
+  why: "Prep for the Agency Fund's Technical Product Manager role: senior, hands-on, embedded with 3–4 NGO partners, roughly half partner-facing and half engineering execution, with SQL, data pipelines, AI evals and A/B tests named in the posting. Built from the actual job posting and the fund's public eval playbook, behav-sci-skills and Evidential repos. The Substack stack post could not be fetched, so verify its tool picks yourself.",
   units: [agencyfundUnit1, agencyfundUnit2, agencyfundUnit3, agencyfundUnit4],
 };

@@ -1,9 +1,9 @@
 import type { Unit } from "@/data/types";
 
-// Research note: the job posting and Substack posts could not be fetched
-// (network policy blocked those hosts). The eval playbook, behav-sci-skills and
-// Evidential docs were read directly from their public GitHub repos. Stack-post
-// details and role-specific points are from search summaries or inferred.
+// Research note: the job posting was read from a saved copy of the Ashby page.
+// The eval playbook, behav-sci-skills and Evidential docs were read from public
+// GitHub repos. The Substack stack post could not be fetched (network policy), so
+// its details come from search summaries.
 
 export const agencyfundUnit1: Unit = {
   id: "unit1",
@@ -29,7 +29,7 @@ export const agencyfundUnit1: Unit = {
       content: [
         {
           heading: "What they are",
-          body: `The Agency Fund is a philanthropic fund focused on **human agency**: people's capacity to make and act on choices that matter in their lives. Its AI work centers on the **AI for Global Development Accelerator**, run with **OpenAI** and the **Center for Global Development (CGD)**.\n\n- Launched January 2025 with **eight organizations** across health, agriculture and education\n- A **second cohort** is running in 2026 (a third is in planning, per their posts)\n- Earlier: a December 2023 call allocating roughly $2–4M to projects using AI for human agency; first program run with South Park Commons\n- Edmund Korley leads the AI for Global Development accelerator; Temina Madon co-authors much of the public writing\n\n**Caveat:** I could not read the job posting itself. Re-read it tonight and underline every verb. Those verbs are your likely live-exercise tasks.`,
+          body: `The Agency Fund is a philanthropic fund focused on **human agency**: people's capacity to make and act on choices that matter in their lives. Its AI work centers on the **AI for Global Development Accelerator**, run with **OpenAI** and the **Center for Global Development (CGD)**.\n\n- Launched January 2025 with **eight organizations** across health, agriculture and education\n- A **second cohort** is running in 2026 (a third is in planning, per their posts)\n- Earlier: a December 2023 call allocating roughly $2–4M to projects using AI for human agency; first program run with South Park Commons\n- Edmund Korley leads the AI for Global Development accelerator; Temina Madon co-authors much of the public writing\n\nFrom the job posting: TAF describes itself as a US non-profit **funder-doer** that builds projects to expand human agency at scale, embeds engineers and product managers inside evidence-based nonprofits across East Africa, South Asia and beyond, and has a community of **200+ partner organizations**. The team combines software, AI, social psychology and development economics, with minimal hierarchy.`,
           goAnalogy: {
             term: "Fuseki",
             reading: "ふゆき",
@@ -168,26 +168,42 @@ export const agencyfundUnit1: Unit = {
       id: "1-3",
       unitId: "unit1",
       companySlug: "agencyfund",
-      title: "Decoding the Role and the Live Exercise",
+      title: "Decoding the Actual Job Posting",
       tldr:
-        "Your two weak areas, pipelines and evals, are exactly what the fund publishes the most about, so they are the most probable exercise territory. Know the likely shapes and how to use AI openly without looking dependent on it.",
+        "The role is a Technical Product Manager: senior, hands-on, embedded with 3–4 NGO partners, split roughly 50/50 between partner-facing and internal engineering work, with SQL, pipelines, AI evals and A/B tests named outright. Map every line of the posting to a likely exercise.",
       skills: ["Role decoding", "Exercise anticipation", "Using AI credibly"],
-      xp: 25,
+      xp: 30,
       content: [
         {
-          heading: "Why pipelines and evals are the likely territory",
-          body: `The fund's flagship public work: a **default tech stack** (ingest, warehouse, transform, dashboard, LLM observability) and an **AI evaluation playbook** with step-by-step guides "from user funnels to ETL pipelines." A product role supporting grantees will likely be tested on whether you can reason about these.\n\nThe playbook (read directly from its repo) confirms this: its "Repeatable Motions" are literally (1) build a user funnel, (2) build metrics through ETL pipelines, (3) diagnose weak links with hypotheses, (4) run experiments, and its Roles page makes the **Product Manager directly responsible for Level 2 product metrics and the cross-functional lead for evaluation**. Still treat the exercise shape as a hypothesis; the posting is the source of truth.`,
+          heading: "What the posting says (read from the saved page)",
+          body: `**Title:** Technical Product Manager, Engineering department, full-time, remote. The description says "Remote (Sub-Saharan African or South Asia)" with flexible time zone, while the board lists "Global". Confirm eligibility if that isn't already settled.\n\n**The role:** "a senior, delivery-focused role at the center of TAF's accelerator work", embedded with **3–4 NGO partners at a time**, leading product engagements end-to-end. Time split **roughly 50/50** partner-facing and internal-facing.\n\n**Hands-on, in their words:** "build dashboards, scoping data pipelines, designing A/B tests, and unblocking engineers. You are expected to be as comfortable in SQL query as you are in a partner discovery call."\n\n**Partner engagement (50%):** primary interface with partners; structured discovery; translate needs into roadmaps and technical advisory on product, data, evaluation and experimentation; report patterns across organizations into public goods for the sector.\n\n**Product and engineering (50%):** build dashboards, data pipelines, **AI evaluations** and production integrations; analyze data; run A/B tests and user research; define roadmaps across TAF's tools and run agile sprints with TAF's engineering team; own the loop from partner need to shipped product to feedback.\n\n**Team and talent:** coach partner staff and help them hire; mentor **Lighthouse Fellows**; contribute to TAF's internal playbook.\n\n**Success:** at **90 days** independent agency with at least two partners, own sprint cadence, one quick win (an experiment run, a feature shipped, a dashboard built). At **one year** led 3–4 engagements end-to-end, training others, contributed to a framework or playbook.`,
         },
         {
-          heading: "Likely live-exercise shapes",
-          body: `Practice each of these in Unit 4:\n\n1. **Design the data model and funnel.** Given raw chatbot events, define tables and a user funnel, and say what you'd measure first\n2. **Pick an eval level.** Given a vague goal ("is our bot helping farmers?"), choose among the four eval levels and defend it\n3. **Critique a flawed eval.** LLM judge never validated against humans, tiny sample, no baseline\n4. **Debug a number.** A funnel or pipeline output doesn't reconcile: duplicates, a missing day, bot traffic\n5. **Prioritize under constraints.** Limited sprint capacity across needs; defend trade-offs\n\nMost of these reward **structure and judgment** more than syntax.`,
+          heading: "Who they say they want",
+          body: `- 5+ years in technical product management, solutions engineering or tech consulting, with client-facing and engineering-facing work\n- "shipped AI/LLM product features, data pipelines or warehouses, and production APIs, **not just managed people who did, but actually built alongside them**"\n- "can read and write **SQL**, navigate a codebase, build data pipelines and dashboards"\n- Quantitative and qualitative methods for problem statements and **causal inference (A/B tests etc.)**; "design a study, interpret the results, and present them to a non-technical program director"\n- **Agile fluency:** sprints, backlog grooming, estimation, retrospectives, run well in small teams\n- Managed **competing stakeholders across engineers, behavioral scientists and NGO program teams without formal authority**\n\n**Bonus:** global development data stacks (**ODK, DHIS2, Kobo, Metabase, dbt**), the evidence ecosystem (**J-PAL, IPA, IDinsight**), scaling products with data, GenAI product exposure (**evaluation frameworks, prompt engineering, LLM integrations**), low-resource or mission-driven track record.`,
         },
         {
-          heading: "Your AI-assist edge, stated openly",
-          body: `You said you can manage the rest with AI. Say so, and show you verify.\n\n**Weak:** "I'd just ask ChatGPT to write the pipeline."\n\n**Strong:** "I'd have an assistant draft the dbt model, then check the grain, null handling, and reconcile row counts against the source before trusting any dashboard."\n\nThe second shows you know what correct looks like, which is the actual skill. Interviewers probe for exactly the gap between *generating* and *verifying*.\n\nIf they name a tool you don't know, say what the concept does, name the gap, and describe how you'd check the output. Never bluff.`,
+          heading: "Posting line to likely exercise",
+          body: `- "scoping data pipelines" and "dashboards" means: design a data model and pipeline for chatbot data; write or read SQL for a funnel (Unit 2)\n- "AI evaluations" means: choose an eval level, design a golden set and judge (Unit 3)\n- "A/B tests", "causal inference", "present to a program director" means: design an experiment and explain it to a non-technical person (Unit 3)\n- "structured discovery", "translate needs into roadmaps" means: run or critique a partner discovery call and produce a roadmap (Unit 4, Mock C)\n- "agile in a small team", "estimation" means: plan a two-week sprint with limited capacity (Unit 4)\n- "competing stakeholders without authority" means: a conflict scenario between engineer, behavioral scientist and program lead (Unit 4)\n- "coach partner staff", "mentor Fellows", "playbook" means: explain a concept simply, show how you'd document and teach it\n\nExpect a mix of **doing** (SQL, data model, funnel) and **judgment** (what to measure, what to build first, how to talk to a partner).`,
+        },
+        {
+          heading: "Be truthful about 'actually built alongside'",
+          body: `The posting wants someone who built, not only managed. You told me pipelines and evals are your weakest area, so do not overclaim.\n\n**Weak:** implying you've run production ETL when you haven't.\n\n**Strong:** "Here's what I've shipped and my role in it (real example). Pipelines are where I'm least experienced hands-on, so I prepared on your stack: I can model events at message grain, write funnel SQL, and I verify any AI-drafted query by checking grain, join type and reconciliation. In my first 90 days I'd pair with your engineers on a partner's pipeline to close the gap."\n\nIf they name a tool you don't know, say what the concept does, name the gap, and explain how you'd verify the output. Bluffing is the failure mode they'll probe for.`,
         },
       ],
       exercises: [
+        {
+          type: "multiple-choice",
+          question: "What time split does the posting describe for the Technical PM?",
+          options: [
+            "100% partner-facing",
+            "Roughly 50/50 between partner-facing work and internal engineering execution",
+            "Mostly internal planning",
+            "80% research, 20% delivery",
+          ],
+          correct: 1,
+          explanation: "The role is explicitly split about evenly between partner engagement and product and engineering execution.",
+        },
         {
           type: "multiple-choice",
           question: "Midway through the exercise they mention dbt, which you haven't used. What do you do?",
@@ -198,28 +214,32 @@ export const agencyfundUnit1: Unit = {
             "Ask to skip that section",
           ],
           correct: 1,
-          explanation:
-            "Honest scope plus a verification plan reads as senior. Bluffing is the failure mode interviewers probe for.",
+          explanation: "Honest scope plus a verification plan reads as senior. Bluffing is what interviewers probe for.",
         },
         {
           type: "scenario",
           prompt:
-            "In three or four sentences, how would you describe your experience gaps in pipelines and evals and how you close them on the job?",
+            "They say: 'The role needs someone who has actually built pipelines, not just managed people who did. Where are you on that?' Answer in three or four sentences.",
           sampleAnswer:
-            "Hands-on ETL and eval design is my least-practiced area, so I prepared specifically on your default stack and eval playbook. I learn fastest by building a small end-to-end version, so in the first sprint I'd pair with a data engineer to build a funnel from real events. I use AI to draft queries and models, but I always verify grain, tests and row-count reconciliation against the source rather than trusting output. And I'm strong on the product side: deciding which metric matters, which eval level to run, and what decision it informs.",
+            "I'll be straightforward: hands-on pipeline engineering is my least-practiced area, and I don't want to oversell it. What I have done is [your real example of shipping an AI feature or working with data, and exactly what you built]. For this role I prepared specifically on your stack: I can model chatbot events at message grain, write funnel and retention SQL, and I check any AI-drafted query for grain, join type and reconciliation against source counts. In the first 90 days I'd pair with your engineers on a partner's pipeline, ship a dashboard as the quick win, and close the gap quickly.",
           keyPoints: [
-            "Name the gap plainly without apologizing",
-            "Show a concrete learning loop, not a vague 'I learn fast'",
-            "State your verification habit when using AI",
-            "Anchor on the strength you bring: judgment about what to measure and decide",
+            "Honest about the gap, no overclaiming",
+            "Give one real example of what you did build",
+            "Show concrete preparation and a verification habit",
+            "Tie to the 90-day plan the posting itself describes",
           ],
         },
       ],
       resources: [
         {
+          title: "Technical Product Manager posting (Agency Fund, Ashby)",
+          url: "https://jobs.ashbyhq.com/The%20Agency%20Fund/c687cd01-229c-49a4-836f-b0551da8c279",
+          description: "The source. Re-read tonight and underline every verb.",
+        },
+        {
           title: "AI Eval Playbook (living playbook, GitHub)",
           url: "https://github.com/agency-fund/taf-ai-eval-playbook",
-          description: "The playbook repo; skim the structure tonight.",
+          description: "The playbook repo behind Unit 3.",
         },
       ],
     },
